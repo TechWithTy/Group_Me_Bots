@@ -1,3 +1,22 @@
+Group Me Bots
+This is a Python application that allows you to add a bot to every group you have permission to and post messages periodically.
+
+Installation
+Clone the repository
+
+Install dependencies
+
+
+pip install -r requirements.txt
+Create a .env file with your Pushbullet API key:
+makefile
+
+PUSH_BULLET=YOUR_API_KEY
+and create a variable for your group me api key importing and  assigning it wherever (ACCESS_TOKEN = ) is
+Usage
+Import the required modules
+python
+
 from myapp import bots, posting, messages
 import pushbullet
 import traceback
@@ -17,17 +36,14 @@ pb = pushbullet.Pushbullet(PUSHBULLET_KEY)
 
 # Add a bot to every group you have permissions in
 filtered_bots = []
-
+Define the post_message_to_groups() and main() functions
+python
 
 def post_message_to_groups(bots,message,interval):
     # Get all bots under a person
-    
     posting.send_message_to_groups(bots, message)
 
     # Set post interval
- 
-
-    # Post message periodically
     posting.post_periodically(interval, filtered_bots, message)
     
     
@@ -43,10 +59,8 @@ def main():
     filtered_bots = bots.filter_bots(Bots)
 
     post_message_to_groups(filtered_bots,messages.test_text,2)
-   
-
-  
-
+Run the application using a try-catch block that sends a Pushbullet notification of the error if the main() function fails three times:
+python
 
 if __name__ == "__main__":
     failure_count = 0
@@ -71,4 +85,5 @@ if __name__ == "__main__":
         schedule.run_pending()
         # wait for 1 minute before checking again
         time.sleep(60)
-
+License
+This project is licensed under the MIT License - see the LICENSE.md file for details.
