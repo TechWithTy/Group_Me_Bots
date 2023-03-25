@@ -19,12 +19,16 @@ jobs:
           aws-region: us-east-2
           role-session-name: MySessionName
 
-      - name: Manage Secrets
+      - name: Get Secrets
+        id: get-secrets
         uses: aws-actions/aws-secretsmanager-get-secrets@v1
         with:
-          secret-ids: secretId1, ENV_VAR, secretId2
-          parse-json-secrets: (Optional) true|false
+          secret-ids: ZB_PROMO,TWIN_NEM,PUSH_BULLET
+          parse-json-secrets: true
+
       - name: Print secrets
         run: |
-          echo "${{ toJSON(steps.<step_name>.outputs.aws-secrets) }}"
+          echo "::set-env name=ZB_PROMO::${{ steps.get-secrets.outputs.ZB_PROMO }}"
+          echo "::set-env name=TWIN_NEM::${{ steps.get-secrets.outputs.TWIN_NEM }}"
+          echo "::set-env name=PUSH_BULLET::${{ steps.get-secrets.outputs.PUSH_BULLET}}"
 
