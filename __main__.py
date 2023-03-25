@@ -1,5 +1,5 @@
 from myapp import bots, posting, messages
-from tests import __main__
+
 import pushbullet
 import traceback
 import time
