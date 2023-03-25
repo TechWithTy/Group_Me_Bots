@@ -43,12 +43,14 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
     Sends a message to the specified GroupMe groups via the corresponding bots.
 
     Args:
-        auth_token (str): The GroupMe access token for authentication.
-        bots (list): A list of bot objects, where each object contains a 'bot_id' and 'group_id'.
+        new_bots (list): A list of bot objects, where each object contains a 'bot_id' and 'group_id'.
         message (str): The message to be sent to the groups.
 
     Returns:
-        None
+        str: A string indicating the message was sent to all groups successfully.
+
+    Raises:
+        Exception: If an error occurs while sending the message to any of the groups.
     """
     url = 'https://api.groupme.com/v3/bots/post'
     headers = {'Content-Type': 'application/json',
@@ -66,12 +68,10 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
         if response.status_code == 202:
             print(f"Message sent by bot '{bot_id}' to group '{group_id}'.")
         else:
-            print(
+            raise Exception(
                 f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: {response.status_code}")
 
     return "Message sent to all groups successfully."
-
-
 
 
 
@@ -101,6 +101,7 @@ def post_periodically(post_interval,filtered_bots,new_message):
     while True:
         time.sleep(post_interval * 3600)
         send_message_to_groups(filtered_bots, new_message)
+
 
 
 

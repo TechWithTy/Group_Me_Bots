@@ -92,7 +92,7 @@ def get_bots() -> list:
 
 # @title Filter Bots 2
 
-def filter_bots(bots):
+def filter_bots(bots: list)-> list:
     """
     Filters and removes duplicates from the Bots array by comparing group IDs and bot names.
     Keeps only bot names starting with "Zo" and removes those starting with "Gort".

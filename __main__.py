@@ -1,4 +1,5 @@
 from myapp import bots, posting, messages
+from tests import __main__
 import pushbullet
 import traceback
 import time
@@ -32,6 +33,9 @@ def post_message_to_groups(bots,message,interval):
     
     
 def main():
+    #Test Components
+    # components_passed = __main__.main()
+    
     # Add bots to groups
     add_bots_to_groups = bots.add_bots_to_groups
     add_bots_to_groups()
@@ -59,8 +63,8 @@ if __name__ == "__main__":
             # increment failure count
             failure_count += 1
             # send pushbullet notification on third failure
-            if failure_count == 3:
-                pb.push_note("Group Me -","Error in main function ", str(e))
+            if failure_count == 3 and components_passed == False:
+                pb.push_note("Group Me -","Error in main function  and function tests failing", str(e))
                 print(f"Error in main function: {e}")
                 failure_count = 0
             # wait for 5 minutes before trying again
