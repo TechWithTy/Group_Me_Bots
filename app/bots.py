@@ -12,9 +12,9 @@ ACCESS_TOKEN = os.environ.get('ZB_PROMO')
 
 if not ACCESS_TOKEN:
     TOKEN_OBJ = json.loads(keys.get_secret("ZB_PROMO"))
-    print("TOKEN_OBJ", TOKEN_OBJ)
-    # ACCESS_TOKEN = TOKEN_OBJ.get('ZB_PROMO')
-    
+  
+    ACCESS_TOKEN = TOKEN_OBJ.get('ZB_PROMO')
+    print("ACCESS_TOKEN", ACCESS_TOKEN)
     
 Bot_Name = 'Zort Pro'
 
