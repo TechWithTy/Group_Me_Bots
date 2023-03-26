@@ -30,7 +30,7 @@ filtered_bots = []
 def post_message_to_groups(bots,message,interval):
     # Get all bots under a person
     
-    posting.send_message_to_groups(bots, message)
+    posting.send_message_to_groups(filtered_bots, message)
 
     # Set post interval
  
