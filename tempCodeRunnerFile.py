@@ -1,4 +1,4 @@
-from myapp import bots, posting, messages
+from app import bots, posting, messages
 import pushbullet
 import traceback
 import time

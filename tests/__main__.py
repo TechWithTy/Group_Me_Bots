@@ -1,4 +1,3 @@
-#
 import pytest
 
 
@@ -7,4 +6,5 @@ def main():
                 'tests/posting_test.py'])
 
 
-main()
+if __name__ == '__main__':
+    main()

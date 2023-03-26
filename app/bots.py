@@ -4,11 +4,17 @@ import __main__
 from dotenv import load_dotenv
 import os
 import json
+from AWS import  keys
 # Load environment variables from .env file
 load_dotenv()
 ACCESS_TOKEN = os.environ.get('ZB_PROMO')
 # print(ACCESS_TOKEN, 'ACCESS_TOKEN')
 
+if not ACCESS_TOKEN:
+    TOKEN_OBJ = json.load(keys.get_secret("ZB_PROMO"))
+    ACCESS_TOKEN = TOKEN_OBJ.get('ZB_PROMO')
+    
+    
 Bot_Name = 'Zort Pro'
 
 #@title Add a bot to every group you have privileges in 

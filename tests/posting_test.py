@@ -5,19 +5,19 @@ from pytest_mock import mocker
 from dotenv import load_dotenv
 import os
 import json
-
+from ..app import posting
 
 # Load environment variables from .env file
 load_dotenv()
 
 ACCESS_TOKEN = os.environ.get('ZB_PROMO')
-sys.path.append('/workspace/Group_Me_Bots/myapp')
-# in this order
 
-#!Important
-# fmt: off
-from posting import *
-# fmt: on
+
+
+# 
+# # fmt: off
+# from posting import *
+# # fmt: on
 
 
 @pytest.fixture

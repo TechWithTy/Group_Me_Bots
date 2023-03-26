@@ -1,5 +1,5 @@
-from myapp import bots, posting, messages
-
+from app import bots, posting, messages
+from AWS import keys
 import pushbullet
 import traceback
 import time
@@ -7,11 +7,16 @@ from dotenv import load_dotenv
 import os
 import json
 from pushbullet import Pushbullet
-
+import schedule
 load_dotenv()
 
 PUSHBULLET_KEY = os.environ.get('PUSH_BULLET')
 
+
+if not PUSHBULLET_KEY:
+    PUSHBULLET_OBJ = json.load(keys.get_secret("PUSH_BULLET"))
+    PUSHBULLET_KEY = PUSHBULLET_OBJ.get('PUSH_BULLET')
+    
 restart_days = 3
 
 pb = pushbullet.Pushbullet(PUSHBULLET_KEY)
@@ -32,7 +37,7 @@ def post_message_to_groups(bots,message,interval):
     posting.post_periodically(interval, filtered_bots, message)
     
     
-def main():
+def keys():
     #Test Components
     # components_passed = __main__.main()
     
@@ -56,21 +61,21 @@ if __name__ == "__main__":
     failure_count = 0
     while True:
         try:
-            main()
+            keys()
             # reset failure count if successful
             failure_count = 0
         except Exception as e:
             # increment failure count
             failure_count += 1
             # send pushbullet notification on third failure
-            if failure_count == 3 and components_passed == False:
+            if failure_count == 3 :
                 pb.push_note("Group Me -","Error in main function  and function tests failing", str(e))
                 print(f"Error in main function: {e}")
                 failure_count = 0
             # wait for 5 minutes before trying again
             time.sleep(300)
         # Schedule the program to run every 3 days at 2am EST
-        schedule.every(restart_days).days.at("02:00").do(main)
+        schedule.every(restart_days).days.at("02:00").do(keys)
         # Check if any scheduled tasks are pending and run them
         schedule.run_pending()
         # wait for 1 minute before checking again

@@ -10,19 +10,29 @@ Original file is located at
 # Commented out IPython magic to ensure Python compatibility.
 # %pip install requests
 # %pip install json
-
-import requests
-import json
 import time
+import requests
+import __main__
+from dotenv import load_dotenv
+import os
+import json
+from AWS import  keys
 # Replace these values with your own GroupMe access token and group IDs
-Zb_Promo = "BxqbDXTL1uWYbFVeYFLwYyhloIOb1aS3mMMQOO60"
-Twin_Nem =  "tL3KIMhqTZO1mfpkzoqhgHhMcT1dHaQaLwwhbHPF"
+load_dotenv()
+ACCESS_TOKEN = os.environ.get('ZB_PROMO')
+# print(ACCESS_TOKEN, 'ACCESS_TOKEN')
+
+if not ACCESS_TOKEN:
+    TOKEN_OBJ = json.load(keys.get_secret("ZB_PROMO"))
+    ACCESS_TOKEN = TOKEN_OBJ.get('ZB_PROMO')
+    
+
+
 tally_tree = {}
 atl_tree = {}
 tx_tree = {}
 group_tree = {}
 
-ACCESS_TOKEN = Zb_Promo
 tally_tree['main'] ="91209188"
 tally_tree['main_subleasing'] ="29789330"
 tally_tree['trvphouse'] ="46205813"
