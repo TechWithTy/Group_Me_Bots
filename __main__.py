@@ -14,8 +14,8 @@ PUSHBULLET_KEY = os.environ.get('PUSH_BULLET')
 
 
 if not PUSHBULLET_KEY:
-    PUSHBULLET_OBJ = json.load(keys.get_secret("PUSH_BULLET"))
-    PUSHBULLET_KEY = PUSHBULLET_OBJ.get('PUSH_BULLET')
+    PUSHBULLET_STR = keys.get_secret("PUSH_BULLET")
+    PUSHBULLET_KEY = PUSHBULLET_STR.get('PUSH_BULLET')
     
 restart_days = 3
 
