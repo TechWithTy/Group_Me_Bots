@@ -11,7 +11,7 @@ ACCESS_TOKEN = os.environ.get('ZB_PROMO')
 # print(ACCESS_TOKEN, 'ACCESS_TOKEN')
 
 if not ACCESS_TOKEN:
-    TOKEN_OBJ = json.load(keys.get_secret("ZB_PROMO"))
+    TOKEN_OBJ = keys.get_secret("ZB_PROMO")
     ACCESS_TOKEN = TOKEN_OBJ.get('ZB_PROMO')
 # Load environment variables from .env file
 
