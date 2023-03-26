@@ -72,14 +72,14 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
         payload['bot_id'] = bot_id
         if i > 0:
             time.sleep(1)
-        response = requests.post(
-            url, headers=headers, data=json.dumps(payload))
-        if response.status_code == 202:
-            print(f"Message sent by bot '{bot_id}' to group '{group_id}'.")
-        else:
-            raise Exception(
-                f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: {response.status_code}")
-
+            try:
+                response = requests.post(
+                url, headers=headers, data=json.dumps(payload))
+            except Exception:
+                pass
+                raise Exception(
+                    f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: {response.status_code}")
+                            
     return "Message sent to all groups successfully."
 
 
