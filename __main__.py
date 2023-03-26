@@ -39,7 +39,7 @@ def post_message_to_groups(bots,message,interval):
     posting.post_periodically(interval, filtered_bots, message)
     
     
-def keys():
+def __main__():
     #Test Components
     # components_passed = __main__.main()
     
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     failure_count = 0
     while True:
         try:
-            keys()
+            __main__()
             # reset failure count if successful
             failure_count = 0
         except Exception as e:
@@ -77,7 +77,7 @@ if __name__ == "__main__":
             # wait for 5 minutes before trying again
             time.sleep(300)
         # Schedule the program to run every 3 days at 2am EST
-        schedule.every(restart_days).days.at("02:00").do(keys)
+        schedule.every(restart_days).days.at("02:00").do(__main__)
         # Check if any scheduled tasks are pending and run them
         schedule.run_pending()
         # wait for 1 minute before checking again
