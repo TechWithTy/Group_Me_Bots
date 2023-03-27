@@ -50,22 +50,24 @@ def post_periodically(post_interval, filtered_bots, new_message):
     
     
 def post_message_to_groups(bots):
-    # Get all bots under a person
 
-    # Set post interval
-    
-
-   
     for message in messages.message_duration:
             duration = message.get('duration')
             message_text = message.get('message')
             posting.send_message_to_groups(bots, message_text)
             t = threading.Thread(target=post_periodically, args=(duration, bots, message_text))
             t.start()    
-        # Post message periodically
-  
+    
     scheduler.start()
     scheduler.print_jobs()
+        # Post message periodically
+    try:
+        while True:
+            pass
+    except (KeyboardInterrupt, SystemExit):
+        scheduler.shutdown()
+        
+    
 def __main__():
     #Test Components
     # components_passed = __main__.main()
