@@ -57,15 +57,16 @@ def post_message_to_groups(bots):
     # Set post interval
     
 
-    def post_messages():
-        for message in messages.message_duration:
+   
+    for message in messages.message_duration:
             duration = message.get('duration')
             message_text = message.get('message')
+            print(message_text)
             posting.send_message_to_groups(bots, message_text)
             t = threading.Thread(target=post_periodically, args=(duration, bots, message_text))
-            t.start()
+            t.start()    
         # Post message periodically
-    post_messages()
+  
     scheduler.start()
     
 def __main__(i):
