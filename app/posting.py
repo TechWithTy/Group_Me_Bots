@@ -6,6 +6,9 @@ import os
 import json
 import schedule
 from AWS import  keys
+from apscheduler.schedulers.background import BackgroundScheduler
+
+scheduler = BackgroundScheduler()
 load_dotenv()
 
 ACCESS_TOKEN = os.environ.get('ZB_PROMO')
@@ -107,9 +110,10 @@ def post_periodically(post_interval,filtered_bots,new_message):
         None
     """
     print("Post Run")
-    schedule.every(post_interval).hours.do(send_message_to_groups(filtered_bots, new_message))
-
-
+    schedule.every(post_interval).hours.do()
+    scheduler.add_job(send_message_to_groups, 'interval',
+                      hours=post_interval, args=[filtered_bots, new_message])
+    scheduler.start()
 
 
 
