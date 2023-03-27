@@ -8,7 +8,7 @@ import os
 import json
 from pushbullet import Pushbullet
 import schedule
-import threading
+import multiprocessing
 
 load_dotenv()
 
@@ -41,7 +41,7 @@ def post_message_to_groups(bots,message,interval):
     posting.post_periodically(interval, bots, message)
     
     
-def __main__(i):
+def __main__():
     #Test Components
     # components_passed = __main__.main()
     
@@ -55,23 +55,34 @@ def __main__(i):
     # Filter the Duplicate bots to avoid multiple postings
     filtered_bots = bots.filter_bots(Bots)
 
-    post_message_to_groups(filtered_bots, messages.mlightm, 6)
-    post_message_to_groups(filtered_bots, messages.docs, 8)
-    post_message_to_groups(filtered_bots, messages.automated_posts, 8)
+    
+    
 
-
-
+    # Create and start two processes, one for each function
+    p1 = multiprocessing.Process(target=post_message_to_groups(
+        filtered_bots, messages.mlightm, 6))
+    p2 = multiprocessing.Process(
+        target=post_message_to_groups(filtered_bots, messages.docs, 8))
+    p3 = multiprocessing.Process(
+        target=post_message_to_groups(
+            filtered_bots, messages.automated_posts, 8))
+    p1.start()
+    p2.start()
+    p3.start()
+    # Wait for both processes to finish
+    p1.join()
+    p2.join()
+    p3.join()
+  
 
 
 if __name__ == "__main__":
     failure_count = 0
     while True:
         try:
-           for i in range(5):
-                t = threading.Thread(target=__main__, args=(i,))
-                t.start()
+            __main__()
             # reset failure count if successful
-                failure_count =  0 
+            failure_count = 0
         except Exception as e:
             # increment failure count
             failure_count += 1
