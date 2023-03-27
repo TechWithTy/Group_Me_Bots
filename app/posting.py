@@ -86,7 +86,6 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
 
 
 
-
 # @title  Post Message Periodically
 
 

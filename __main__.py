@@ -53,8 +53,10 @@ def __main__():
     # Filter the Duplicate bots to avoid multiple postings
     filtered_bots = bots.filter_bots(Bots)
 
-    post_message_to_groups(filtered_bots,messages.test_text,2)
-   
+    post_message_to_groups(filtered_bots, messages.mlightm, 6)
+    post_message_to_groups(filtered_bots, messages.docs, 8)
+    post_message_to_groups(filtered_bots, messages.automated_posts, 8)
+
 
   
 
