@@ -95,25 +95,7 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
 
 
 
-def post_periodically(post_interval,filtered_bots,new_message):
-    """
-    Posts a message to the specified GroupMe groups via the corresponding bots
-    every specified number of hours.
 
-    Args:
-        auth_token (str): The GroupMe access token for authentication.
-        bots (list): A list of bot objects, where each object contains a 'bot_id' and 'group_id'.
-        message (str): The message to be sent to the groups.
-        post_interval (int): The number of hours to wait between each post.
-
-    Returns:
-        None
-    """
-    print("Post Run")
-    schedule.every(post_interval).hours.do()
-    scheduler.add_job(send_message_to_groups, 'interval',
-                      hours=post_interval, args=[filtered_bots, new_message])
-    scheduler.start()
 
 
 

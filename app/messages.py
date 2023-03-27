@@ -53,3 +53,11 @@ $5 a week
 $1 a day
 @Telegram - flrsntza #PROMO 🆕  
 (Dank Depot -OF Leaks -Sneaker Bots and Releases) https://mlightm.my.canva.site/"""
+
+
+
+message_duration = [
+    {'duration': 6, 'message': mlightm},
+    {'duration': 8, 'message': docs},
+    {'duration': 2, 'message': automated_posts}
+]

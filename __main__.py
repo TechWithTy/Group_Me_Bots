@@ -8,8 +8,10 @@ import os
 import json
 from pushbullet import Pushbullet
 import schedule
-import multiprocessing
+import threading
+from apscheduler.schedulers.background import BackgroundScheduler
 
+scheduler = BackgroundScheduler()
 load_dotenv()
 
 PUSHBULLET_KEY = os.environ.get('PUSH_BULLET')
@@ -29,19 +31,44 @@ pb = pushbullet.Pushbullet(PUSHBULLET_KEY)
 filtered_bots = []
 
 
-def post_message_to_groups(bots,message,interval):
-    # Get all bots under a person
+def post_periodically(post_interval, filtered_bots, new_message):
+    """
+    Posts a message to the specified GroupMe groups via the corresponding bots
+    every specified number of hours.
+
+    Args:
+        auth_token (str): The GroupMe access token for authentication.
+        bots (list): A list of bot objects, where each object contains a 'bot_id' and 'group_id'.
+        message (str): The message to be sent to the groups.
+        post_interval (int): The number of hours to wait between each post.
+
+    Returns:
+        None
+    """
+    print("Post Run")
+    schedule.every(post_interval).hours.do()
+    scheduler.add_job(posting.send_message_to_groups, 'interval',
+                      hours=post_interval, args=[filtered_bots, new_message])
     
-    posting.send_message_to_groups(bots, message)
+    
+def post_message_to_groups(bots):
+    # Get all bots under a person
 
     # Set post interval
- 
+    
 
-    # Post message periodically
-    posting.post_periodically(interval, bots, message)
+    def post_messages():
+        for message in messages.message_duration:
+            duration = message.get('duration')
+            message_text = message.get('message')
+            posting.send_message_to_groups(bots, message)
+            t = threading.Thread(target=post_periodically, args=(duration, bots, message_text))
+            t.start()
+        # Post message periodically
+    post_messages()
+    scheduler.start()
     
-    
-def __main__():
+def __main__(i):
     #Test Components
     # components_passed = __main__.main()
     
@@ -55,24 +82,11 @@ def __main__():
     # Filter the Duplicate bots to avoid multiple postings
     filtered_bots = bots.filter_bots(Bots)
 
-    
-    
+    post_message_to_groups(filtered_bots, messages.mlightm, 6)
+    post_message_to_groups(filtered_bots, messages.docs, 8)
+    post_message_to_groups(filtered_bots, messages.automated_posts, 8)
 
-    # Create and start two processes, one for each function
-    p1 = multiprocessing.Process(target=post_message_to_groups(
-        filtered_bots, messages.mlightm, 6))
-    p2 = multiprocessing.Process(
-        target=post_message_to_groups(filtered_bots, messages.docs, 8))
-    p3 = multiprocessing.Process(
-        target=post_message_to_groups(
-            filtered_bots, messages.automated_posts, 8))
-    # p1.start()
-    p2.start()
-    p3.start()
-    # Wait for both processes to finish
-    # p1.join()
-    p2.join()
-    p3.join()
+
   
 
 
