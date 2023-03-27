@@ -48,6 +48,7 @@ Able to call manager from hospital number and leave a message for an additional 
 
 automated_posts = f"""
 👾Automated posts available
+10,000 + Members
 $20 a month
 $5 a week
 $1 a day

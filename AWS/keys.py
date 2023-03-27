@@ -32,7 +32,7 @@ def get_secret(secret_str: str) -> str:
 
     # Decrypts secret using the associated KMS key.
     secret = get_secret_value_response['SecretString']
-    print(secret)
+    # print(secret)
     return(secret)
     # Your code goes here.
 get_secret(push_bullet)
