@@ -66,11 +66,11 @@ def __main__():
     p3 = multiprocessing.Process(
         target=post_message_to_groups(
             filtered_bots, messages.automated_posts, 8))
-    p1.start()
+    # p1.start()
     p2.start()
     p3.start()
     # Wait for both processes to finish
-    p1.join()
+    # p1.join()
     p2.join()
     p3.join()
   
