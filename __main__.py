@@ -86,24 +86,29 @@ def __main__():
 
   
 
-failure_count = 0
-if __name__ == "__main__" and failure_count < 4:
-   
-    try:
+
+if __name__ == "__main__":
         __main__()
-                # reset failure count if successful
-        failure_count = 0
-    except Exception as e:
-                # increment failure count
-                failure_count += 1
-                # send pushbullet notification on third failure
-                if failure_count == 3 :
-                    pb.push_note("Group Me -","Error in main function  and function tests failing", str(e))
-                    print(f"Error in main function: {e}")
-                    failure_count =+ 1
-                    
-                # wait for 5 minutes before trying again
-                time.sleep(300)
-                __main__()
+      
         
 
+# failure_count = 0
+# if __name__ == "__main__" and failure_count < 4:
+   
+#     try:
+#         __main__()
+#                 # reset failure count if successful
+#         failure_count = 0
+#     except Exception as e:
+#                 # increment failure count
+#                 failure_count += 1
+#                 # send pushbullet notification on third failure
+#                 if failure_count == 3 :
+#                     pb.push_note("Group Me -","Error in main function  and function tests failing", str(e))
+#                     print(f"Error in main function: {e}")
+#                     failure_count =+ 1
+                    
+#                 # wait for 5 minutes before trying again
+#                 time.sleep(300)
+#                 __main__()
+        
