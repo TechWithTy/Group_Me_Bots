@@ -8,6 +8,7 @@ import os
 import json
 from pushbullet import Pushbullet
 import schedule
+import multiprocessing
 load_dotenv()
 
 PUSHBULLET_KEY = os.environ.get('PUSH_BULLET')

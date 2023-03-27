@@ -4,6 +4,7 @@ import __main__
 from dotenv import load_dotenv
 import os
 import json
+import schedule
 from AWS import  keys
 load_dotenv()
 
@@ -106,9 +107,7 @@ def post_periodically(post_interval,filtered_bots,new_message):
         None
     """
     print("Post Run")
-    while True:
-        time.sleep(post_interval * 3600)
-        send_message_to_groups(filtered_bots, new_message)
+    schedule.every(post_interval).hours.do(send_message_to_groups(filtered_bots, new_message))
 
 
 
