@@ -8,7 +8,8 @@ import os
 import json
 from pushbullet import Pushbullet
 import schedule
-import multiprocessing
+import threading
+
 load_dotenv()
 
 PUSHBULLET_KEY = os.environ.get('PUSH_BULLET')
@@ -40,7 +41,7 @@ def post_message_to_groups(bots,message,interval):
     posting.post_periodically(interval, bots, message)
     
     
-def __main__():
+def __main__(i):
     #Test Components
     # components_passed = __main__.main()
     
@@ -59,16 +60,18 @@ def __main__():
     post_message_to_groups(filtered_bots, messages.automated_posts, 8)
 
 
-  
+
 
 
 if __name__ == "__main__":
     failure_count = 0
     while True:
         try:
-            __main__()
+           for i in range(5):
+                t = threading.Thread(target=__main__, args=(i,))
+                t.start()
             # reset failure count if successful
-            failure_count = 0
+                failure_count =  0 
         except Exception as e:
             # increment failure count
             failure_count += 1
