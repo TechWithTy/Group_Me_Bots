@@ -61,7 +61,7 @@ def post_message_to_groups(bots):
         for message in messages.message_duration:
             duration = message.get('duration')
             message_text = message.get('message')
-            posting.send_message_to_groups(bots, message)
+            posting.send_message_to_groups(bots, message_text)
             t = threading.Thread(target=post_periodically, args=(duration, bots, message_text))
             t.start()
         # Post message periodically
