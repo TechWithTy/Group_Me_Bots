@@ -80,12 +80,12 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
                 # response = requests.post(
                 # url, headers=headers, data=json.dumps(payload))
                 print(new_bots)
-                print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {}")
+                print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: ")
                            
             except Exception:
                 pass
                 raise Exception(
-                    f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: {}")
+                    f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: ")
                             
     return "Message sent to all groups successfully."
 
