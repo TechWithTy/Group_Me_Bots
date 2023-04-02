@@ -82,7 +82,7 @@ def __main__():
     # Filter the Duplicate bots to avoid multiple postings
     filtered_bots = bots.filter_bots(Bots)
     print(filtered_bots)
-    # post_message_to_groups(filtered_bots)
+    post_message_to_groups(filtered_bots)
     
 
 
