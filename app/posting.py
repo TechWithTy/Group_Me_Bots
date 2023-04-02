@@ -77,8 +77,8 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
        
         time.sleep(1)
         try:
-            response = requests.post(
-                url, headers=headers, data=json.dumps(payload))
+            # response = requests.post(
+            #     url, headers=headers, data=json.dumps(payload))
                 
             print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
                            
