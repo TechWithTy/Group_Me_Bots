@@ -77,10 +77,10 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
         if i > 0:
             time.sleep(1)
             try:
-                response = requests.post(
-                url, headers=headers, data=json.dumps(payload))
-                if(bot_id == "91204401"):
-                    print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
+                # response = requests.post(
+                # url, headers=headers, data=json.dumps(payload))
+                print(new_bots)
+                print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
                            
             except Exception:
                 pass
