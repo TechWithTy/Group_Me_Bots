@@ -40,18 +40,24 @@ Able to call manager from hospital number and leave a message for an additional 
 📃- Resume Rewriting and Redesign
 
 📈-Business services from marketing to graphic design.
-
-📥 Text
+  
+  How it works 🔢:
+  1: Text Me Your Name and the company or doctors office you want
+  2: Include all information like dates and reason out or last pay checl
+  3: I tell you a price once you give me the ok, i make the document
+  4: I show you a preview, once you're satisfied you cashapp  the payment 
+📥 Text -(Window Shoppers Will Not Be Responded To)
 (720) 258-6576
 """
 
 
 automated_posts = f"""
-👾Automated posts available
+👾Automated posts available (1) a day
 10,000 + Members
 $20 a month
 $5 a week
 $1 a day
+🧲 - Secure your time slot , reach twice the people at half the cost
 @Telegram - flrsntza #PROMO 🆕  
 (Dank Depot -OF Leaks -Sneaker Bots and Releases) https://mlightm.my.canva.site/"""
 

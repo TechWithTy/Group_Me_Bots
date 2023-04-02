@@ -79,7 +79,7 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
             try:
                 response = requests.post(
                 url, headers=headers, data=json.dumps(payload))
-                print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
+                # print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
                             
             except Exception:
                 pass
