@@ -74,29 +74,20 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
         bot_id = bot['bot_id']
         group_id = bot['group_id']
         payload['bot_id'] = bot_id
-        if i > 0:
-            time.sleep(1)
-            try:
-                response = requests.post(
+       
+        time.sleep(1)
+        try:
+            response = requests.post(
                 url, headers=headers, data=json.dumps(payload))
                 
-                print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code:{response.status_code} ")
+            print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
                            
-            except Exception:
+        except Exception:
                 pass
                 raise Exception(
-                    f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code:{response.status_code} ")
-            else:
-                try:
-                    response = requests.post(
-                    url, headers=headers, data=json.dumps(payload))
+                    f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: {response.status_code}")
+           
                 
-                    print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
-                           
-                except Exception:
-                    pass
-                    raise Exception(
-                        f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code:{response.status_code} ")
     print(new_bots)                        
     return "Message sent to all groups successfully."
 
