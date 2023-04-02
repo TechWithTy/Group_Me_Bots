@@ -35,7 +35,7 @@ Verifiable doctors notes
 
 Able to call manager from hospital number and leave a message for an additional fee
 
-✍️- Essays written, proofread and run through plagarism checker
+✍️- Essays written, proofread and run through plagiarism checker
 
 📃- Resume Rewriting and Redesign
 
@@ -43,7 +43,7 @@ Able to call manager from hospital number and leave a message for an additional 
   
   How it works 🔢:
   1: Text Me Your Name and the company or doctors office you want
-  2: Include all information like dates and reason out or last pay checl
+  2: Include all information like dates and reason out or last pay check
   3: I tell you a price once you give me the ok, i make the document
   4: I show you a preview, once you're satisfied you cashapp  the payment 
 📥 Text -(Window Shoppers Will Not Be Responded To)
