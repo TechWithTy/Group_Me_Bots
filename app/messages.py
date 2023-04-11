@@ -42,8 +42,8 @@ Able to call manager from hospital number and leave a message for an additional 
 📈-Business services from marketing to graphic design.
   
   How it works 🔢:
-  1: Text Me Your Name and the company or doctors office you want
-  2: Include all information like dates and reason out or last pay check
+  1: Text Me Your (Name) and the (company) or (doctors office) you want and your (budget).
+  2: Include all information like (dates) and( reason out) or (last pay check).
   3: I tell you a price once you give me the ok, i make the document
   4: I show you a preview, once you're satisfied you cashapp  the payment 
 📥 Text -(Window Shoppers Will Not Be Responded To)
