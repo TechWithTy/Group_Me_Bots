@@ -53,26 +53,33 @@ def post_periodically(post_interval, filtered_bots, new_message):
 def post_message_to_groups(bots):
 
     for message in messages.message_duration_data:
-        if (message.images):
+        if 'images' in message:
             converted_images = {}
-            for image in message.images:
+            for image in message['images']:
                 uploaded_url = posting.upload_image_to_groupme(image)
                 converted_images[image] = uploaded_url
 
-    # Choose a random image
-        random_image = random.choice(list(converted_images.values()))
+            # Choose a random image
+            random_image = random.choice(list(converted_images.values()))
 
+            duration = message.get('duration')
+            message_text = message.get('message')
 
-        duration = message.get('duration')
-        message_text = message.get('message')
+            # Append the random image URL to the message_text
+            message_text += f" {random_image}"
 
-        # Append the random image URL to the message_text
-        message_text += f" {random_image}"
+            posting.send_message_to_groups(bots, message_text)
+            t = threading.Thread(target=post_periodically,
+                                args=(duration, bots, message_text))
+            t.start()
+        else:
+            duration = message.get('duration')
+            message_text = message.get('message')
 
-        posting.send_message_to_groups(bots, message_text)
-        t = threading.Thread(target=post_periodically,
-                            args=(duration, bots, message_text))
-        t.start()
+            posting.send_message_to_groups(bots, message_text)
+            t = threading.Thread(target=post_periodically,
+                                args=(duration, bots, message_text))
+            t.start()
             
     
     scheduler.start()
