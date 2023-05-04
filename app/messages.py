@@ -62,12 +62,17 @@ $1 a day
 
 
 spray_bottle = f"""
-👀👂Attention Natural Baddies and Brothers with natural hair! 
+👀👂Attention Natural Baddies and Brothers with natural hair:
 🙌 Say hello to the ZIBARBER Salon Style Hair Spray Misting Bottle! 
+
 💆‍♀️ Keep your curls and kinks looking fresh with our high-quality mist-like-spray that spreads evenly and perfectly. 
+
 💦 With a 360o continuous spray, you can easily refresh your hair or distribute leave-in conditioner with little stress on your hands. 
+
 🌿 And the best part? Our refillable bottle design reduces plastic waste and allows you to make your own chemical-free cleaning solutions and air fresheners! 
+
 🌍 Ready to embrace a zero-footprint life and level up your natural hair routine? 🌿💆‍♀️ Click the link below to buy the ZIBARBER Salon Style Hair Spray Misting Bottle now on Amazon with 2-day free shipping and free returns! 
+
 🛍️ Don't wait, get yours today and start taking care of your hair the sustainable way! 🙌
 https://amzn.to/42s4QK9
 """
