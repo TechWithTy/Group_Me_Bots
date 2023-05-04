@@ -69,13 +69,14 @@ def upload_image_to_groupme(image_url):
     return response.json().get('payload').get('url')
 
 
-def send_message_to_groups(new_bots: list, message: str, files=None) -> str:
+def send_message_to_groups(new_bots: list, message: str, files: list = None) -> str:
     """
     Sends a message to the specified GroupMe groups via the corresponding bots.
 
     Args:
         new_bots (list): A list of bot objects, where each object contains a 'bot_id' and 'group_id'.
         message (str): The message to be sent to the groups.
+        files (list, optional): A list of file paths to be attached to the message. Defaults to None.
 
     Returns:
         str: A string indicating the message was sent to all groups successfully.
@@ -86,23 +87,37 @@ def send_message_to_groups(new_bots: list, message: str, files=None) -> str:
     url = 'https://api.groupme.com/v3/bots/post'
     headers = {'Content-Type': 'application/json',
                'X-Access-Token': ACCESS_TOKEN}
-    payload = {'text': message, 'attachments': files}
+    payload = {'text': message, 'attachments': []}
+
+    if files:
+        for file_path in files:
+            file_type = os.path.splitext(file_path)[1]
+            if file_type in ['.jpg', '.jpeg', '.png', '.gif']:
+                # Upload image to GroupMe and add it to the message's attachments
+                uploaded_url = upload_image_to_groupme(file_path)
+                payload['attachments'].append(
+                    {'type': 'image', 'url': uploaded_url})
+            elif file_type in ['.mp4', '.mov']:
+                # Add video to the message's attachments
+                payload['attachments'].append(
+                    {'type': 'video', 'url': file_path})
+            else:
+                print(f"Unsupported file type: {file_type}")
 
     for i, bot in enumerate(new_bots):
         bot_id = bot['bot_id']
         group_id = bot['group_id']
         payload['bot_id'] = bot_id
 
-        time.sleep(1)
+        response = requests.post(url, headers=headers, json=payload)
 
-        try:
-            response = requests.post(url, headers=headers, json=payload)
-            response.raise_for_status()
-
+        if response.status_code != 202:
+            print(
+                f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: {response.status_code}")
+        else:
             print(
                 f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
-        except requests.exceptions.RequestException as e:
-            logging.error(f"Error sending message by bot '{bot_id}' to group '{group_id}': {e}")
+
     return "Message sent to all groups successfully."
 
 

@@ -79,8 +79,9 @@ https://amzn.to/42s4QK9
 
 
 message_duration_data = [
-    {'duration': 48, 'message': docs},
-    {'duration': 24, 'message': automated_posts},
     {'duration': 12, 'message': spray_bottle, 'images': [
         'https://m.media-amazon.com/images/I/71zRZKZHdeL._AC_SX425_.jpg', 'https://m.media-amazon.com/images/I/71GLsqq8tiL._AC_SX425_.jpg']},
+    {'duration': 48, 'message': docs},
+    {'duration': 24, 'message': automated_posts},
+
 ]
