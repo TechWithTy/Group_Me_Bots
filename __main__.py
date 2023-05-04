@@ -32,7 +32,7 @@ pb = pushbullet.Pushbullet(PUSHBULLET_KEY)
 filtered_bots = []
 
 
-def post_periodically(post_interval, filtered_bots, new_message):
+def post_periodically(post_interval, filtered_bots, new_message, uploaded_images):
     """
     Posts a message to the specified GroupMe groups via the corresponding bots
     every specified number of hours.
@@ -47,7 +47,7 @@ def post_periodically(post_interval, filtered_bots, new_message):
     """
     print("Post Run")
     scheduler.add_job(posting.send_message_to_groups, 'interval',
-                      hours=post_interval, args=[filtered_bots, new_message])
+                      hours=post_interval, args=[filtered_bots, new_message,uploaded_images])
     
     
 def post_message_to_groups(bots):
@@ -69,7 +69,7 @@ def post_message_to_groups(bots):
 
         posting.send_message_to_groups(bots, message_text,uploaded_images)
         t = threading.Thread(target=post_periodically,
-                            args=(duration, bots, message_text))
+                            args=(duration, bots, message_text,uploaded_images))
         t.start()
     else:
             duration = message.get('duration')
