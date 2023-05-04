@@ -5,8 +5,9 @@ from dotenv import load_dotenv
 import os
 import json
 import schedule
-from AWS import  keys
+from AWS import keys
 from apscheduler.schedulers.background import BackgroundScheduler
+import requests
 
 scheduler = BackgroundScheduler()
 load_dotenv()
@@ -16,11 +17,10 @@ ACCESS_TOKEN = os.environ.get('ZB_PROMO')
 
 if not ACCESS_TOKEN:
     TOKEN_OBJ = json.loads(keys.get_secret("ZB_PROMO"))
-  
+
     ACCESS_TOKEN = TOKEN_OBJ.get('ZB_PROMO')
     print("ACCESS_TOKEN", ACCESS_TOKEN)
 # Load environment variables from .env file
-
 
 
 """Group_Me_Auto_Post.ipynb
@@ -37,7 +37,6 @@ bloody in gym
 post_interval = 2
 
 
-
 # Commented out IPython magic to ensure Python compatibility.
 # %pip install json
 # %pip install markdown
@@ -45,11 +44,8 @@ post_interval = 2
 # @title Formatted Text
 
 
-
-
 #################################################################
-# @title Post function 
-
+# @title Post function
 
 
 # Get Group me Url For Images
@@ -65,10 +61,12 @@ def upload_image_to_groupme(image_url):
     data = image_data
 
     # Make the API request to upload the image
-    response = requests.post("https://image.groupme.com/pictures", headers=headers, data=data)
+    response = requests.post(
+        "https://image.groupme.com/pictures", headers=headers, data=data)
 
     # Return the URL of the uploaded image
     return response.json().get('payload').get('url')
+
 
 def send_message_to_groups(new_bots: list, message: str) -> str:
     """
@@ -88,38 +86,25 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
     headers = {'Content-Type': 'application/json',
                'X-Access-Token': ACCESS_TOKEN}
     payload = {'text': message, 'attachments': []}
-    # print('new_bots)', new_bots)
+
     for i, bot in enumerate(new_bots):
         bot_id = bot['bot_id']
         group_id = bot['group_id']
         payload['bot_id'] = bot_id
-       
+
         time.sleep(1)
+
         try:
-           
-            
-                
-            print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
-                           
-        except Exception:
-                pass
-                raise Exception(
-                    f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: {response.status_code}")
-           
-                
-    print(new_bots)                        
+            response = requests.post(url, headers=headers, json=payload)
+            response.raise_for_status()
+
+            print(
+                f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
+        except requests.exceptions.HTTPError as e:
+            raise Exception(
+                f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: {response.status_code}") from e
+
     return "Message sent to all groups successfully."
 
 
-
-
-
 # @title  Post Message Periodically
-
-
-
-
-
-
-
-
