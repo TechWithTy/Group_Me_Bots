@@ -51,6 +51,25 @@ post_interval = 2
 # @title Post function 
 
 
+
+# Get Group me Url For Images
+def upload_image_to_groupme(image_url):
+    # Download the image from the URL
+    image_data = requests.get(image_url).content
+
+    # Set up the headers and data for the GroupMe API request
+    headers = {
+        "X-Access-Token": "sfWtsmhMR1II4z7WKxPqtXXV7ny10lM1SDnn0QbV",
+        "Content-Type": "image/jpeg"
+    }
+    data = image_data
+
+    # Make the API request to upload the image
+    response = requests.post("https://image.groupme.com/pictures", headers=headers, data=data)
+
+    # Return the URL of the uploaded image
+    return response.json().get('payload').get('url')
+
 def send_message_to_groups(new_bots: list, message: str) -> str:
     """
     Sends a message to the specified GroupMe groups via the corresponding bots.
@@ -77,8 +96,8 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
        
         time.sleep(1)
         try:
-            response = requests.post(
-                url, headers=headers, data=json.dumps(payload))
+           
+            
                 
             print(f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
                            

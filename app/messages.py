@@ -19,7 +19,6 @@ mlightm = f"""\
 ~Join and share our community to 
 ~[Visit our site for a free resume template] support.
 https://mlightm.my.canva.site/
-https://i.groupme.com/500x500.gif.2b9a55d25084437bab7d1413f73d4919.large
 """
 
 docs = f"""
@@ -62,9 +61,21 @@ $1 a day
 (Dank Depot -OF Leaks -Sneaker Bots and Releases) https://mlightm.my.canva.site/"""
 
 
+spray_bottle = f"""
+👾Automated posts available (1) a day
+10,000 + Members
+$20 a month
+$5 a week
+$1 a day
+🧲 - Secure your time slot , reach twice the people at half the cost
+@Telegram - flrsntza #PROMO 🆕  
+(Dank Depot -OF Leaks -Sneaker Bots and Releases) https://mlightm.my.canva.site/"""
+
 
 message_duration = [
     {'duration': 6, 'message': mlightm},
     {'duration': 8, 'message': docs},
-    {'duration': 2, 'message': automated_posts}
+    {'duration': 2, 'message': automated_posts},
+    {'duration': 2, 'message': spray_bottle, 'images': [
+        'https://m.media-amazon.com/images/I/71zRZKZHdeL._AC_SX425_.jpg', 'https://m.media-amazon.com/images/I/71GLsqq8tiL._AC_SX425_.jpg']},
 ]
