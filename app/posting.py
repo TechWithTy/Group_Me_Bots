@@ -91,19 +91,19 @@ def send_message_to_groups(new_bots: list, message: str, files: list = None) -> 
 
     if files:
         for file_path in files:
-            file_type = os.path.splitext(file_path)[1]
-            if file_type in ['.jpg', '.jpeg', '.png', '.gif']:
-                # Upload image to GroupMe and add it to the message's attachments
-               
-                payload['attachments'].append(
-                    {'type': 'image', 'url': uploaded_url})
-            elif file_type in ['.mp4', '.mov']:
-                # Add video to the message's attachments
-                payload['attachments'].append(
-                    {'type': 'video', 'url': file_path})
-            else:
-                print(f"Unsupported file type: {file_type}")
-
+            ending_tag = os.path.splitext(file_path)[1].split('?')[0]
+            print(ending_tag)
+            try:
+                if ending_tag in ['.jpg', '.jpeg', '.png', '.gif']:
+                    # Upload image to GroupMe and add it to the message's attachments
+                    payload['attachments'].append({'type': 'image', 'url': file_path})
+                elif ending_tag in ['.mp4', '.mov']:
+                    # Add video to the message's attachments
+                    payload['attachments'].append({'type': 'video', 'url': file_path})
+                else:
+                    print(f"Unsupported file type: {file_type}")
+            except Exception as e:
+                print(f"Error adding attachment {file_path}: {str(e)}")
     for i, bot in enumerate(new_bots):
         bot_id = bot['bot_id']
         group_id = bot['group_id']
