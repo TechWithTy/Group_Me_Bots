@@ -94,7 +94,7 @@ def send_message_to_groups(new_bots: list, message: str, files: list = None) -> 
             file_type = os.path.splitext(file_path)[1]
             if file_type in ['.jpg', '.jpeg', '.png', '.gif']:
                 # Upload image to GroupMe and add it to the message's attachments
-                uploaded_url = upload_image_to_groupme(file_path)
+               
                 payload['attachments'].append(
                     {'type': 'image', 'url': uploaded_url})
             elif file_type in ['.mp4', '.mov']:
