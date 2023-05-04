@@ -69,7 +69,7 @@ def upload_image_to_groupme(image_url):
     return response.json().get('payload').get('url')
 
 
-def send_message_to_groups(new_bots: list, message: str) -> str:
+def send_message_to_groups(new_bots: list, message: str, files=None) -> str:
     """
     Sends a message to the specified GroupMe groups via the corresponding bots.
 
@@ -86,7 +86,7 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
     url = 'https://api.groupme.com/v3/bots/post'
     headers = {'Content-Type': 'application/json',
                'X-Access-Token': ACCESS_TOKEN}
-    payload = {'text': message, 'attachments': []}
+    payload = {'text': message, 'attachments': files}
 
     for i, bot in enumerate(new_bots):
         bot_id = bot['bot_id']
