@@ -121,6 +121,8 @@ Discounted Amazon Prime membership,
  And more! 🛒💻 
 
 Plus, you'll get access to all the perks of Prime, like streaming movies, TV shows, and ad-free music. Follow the link to register your EBT card with Amazon and start saving today! 🙌 
+
+https://amzn.to/3nAss07
 """
 
 message_duration_data = [
