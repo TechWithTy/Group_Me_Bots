@@ -8,6 +8,7 @@ import schedule
 from AWS import keys
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
+import logging
 
 scheduler = BackgroundScheduler()
 load_dotenv()
@@ -100,10 +101,8 @@ def send_message_to_groups(new_bots: list, message: str) -> str:
 
             print(
                 f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
-        except requests.exceptions.HTTPError as e:
-            raise Exception(
-                f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: {response.status_code}") from e
-
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Error sending message by bot '{bot_id}' to group '{group_id}': {e}")
     return "Message sent to all groups successfully."
 
 

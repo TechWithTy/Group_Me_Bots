@@ -67,7 +67,8 @@ def post_message_to_groups(bots):
 
             # Append the random image URL to the message_text
             message_text += f" {random_image}"
-
+            print('Image Message Test:',message_text)
+            
             posting.send_message_to_groups(bots, message_text)
             t = threading.Thread(target=post_periodically,
                                 args=(duration, bots, message_text))
@@ -75,6 +76,8 @@ def post_message_to_groups(bots):
         else:
             duration = message.get('duration')
             message_text = message.get('message')
+            print('Message Test:',message_text)
+
 
             posting.send_message_to_groups(bots, message_text)
             t = threading.Thread(target=post_periodically,
