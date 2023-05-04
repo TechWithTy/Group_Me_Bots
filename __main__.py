@@ -11,7 +11,7 @@ import schedule
 import threading
 from apscheduler.schedulers.background import BackgroundScheduler
 import random
-
+from typing import Optional
 scheduler = BackgroundScheduler()
 load_dotenv()
 
@@ -32,7 +32,7 @@ pb = pushbullet.Pushbullet(PUSHBULLET_KEY)
 filtered_bots = []
 
 
-def post_periodically(post_interval, filtered_bots, new_message, uploaded_images):
+def post_periodically(post_interval: str, filtered_bots: list, new_message: str, uploaded_images: Optional[str] = None) -> str:
     """
     Posts a message to the specified GroupMe groups via the corresponding bots
     every specified number of hours.
