@@ -73,7 +73,7 @@ https://amzn.to/42s4QK9
 """
 
 
-message_duration = [
+message_duration_data = [
     {'duration': 48, 'message': docs},
     {'duration': 24, 'message': automated_posts},
     {'duration': 12, 'message': spray_bottle, 'images': [

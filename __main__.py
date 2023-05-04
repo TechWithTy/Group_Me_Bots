@@ -52,7 +52,7 @@ def post_periodically(post_interval, filtered_bots, new_message):
     
 def post_message_to_groups(bots):
 
-    for message in messages:
+    for message in messages.message_duration_data:
         if (message.images):
             converted_images = {}
             for image in message.images:
