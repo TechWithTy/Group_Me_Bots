@@ -38,7 +38,7 @@ Able to call manager from hospital number and leave a message for an additional 
 
 📃- Resume Rewriting and Redesign
 
-📈-Business services from marketing to graphic design.
+
   
   How it works 🔢:
   1: Text Me Your (Name) and the (company) or (doctors office) you want and your (budget).
@@ -46,23 +46,27 @@ Able to call manager from hospital number and leave a message for an additional 
   3: I tell you a price once you give me the ok, i make the document
   4: I show you a preview, once you're satisfied you cashapp  the payment 
 📥 Text -(Window Shoppers Will Not Be Responded To)
-(720) 258-6576
+
+@Telegram - flrsntza   
+(720) 686-2362
+bendoverama@proton.me
 """
 
 
 automated_posts = f"""
 👾Automated posts available (1) a day
 10,000 + Members
-$20 a month
-$5 a week
-$1 a day
+- Message Us For a Quote
 🧲 - Secure your time slot , reach twice the people at half the cost
-@Telegram - flrsntza #PROMO 🆕  
-(Dank Depot -OF Leaks -Sneaker Bots and Releases) https://mlightm.my.canva.site/"""
+@Telegram - flrsntza   
+(720) 686-2362
+bendoverama@proton.me
+Check out our website for news https://mlightm.my.canva.site/"""
 
 
 spray_bottle = f"""
 👀👂Attention Natural Baddies and Brothers with natural hair:
+
 🙌 Say hello to the ZIBARBER Salon Style Hair Spray Misting Bottle! 
 
 💆‍♀️ Keep your curls and kinks looking fresh with our high-quality mist-like-spray that spreads evenly and perfectly. 
@@ -92,6 +96,7 @@ prime_student = f"""
 🚨 Students, listen up! 
 
 📚 Get 6 months of Amazon Prime for free and enjoy all the benefits that come with it. 
+
 🎁 From fast and free delivery to exclusive discounts on everyday favorites, ad-free music, and unlimited photo storage - there's something for everyone! Plus, as a student, you'll get special discounts on textbook and etextbook rentals. Don't miss out, sign up now and start saving! 🤑👨‍🎓👩‍🎓
 
 Get your free 6-month trial of Amazon Prime Student here: https://amzn.to/412WbwG
@@ -111,8 +116,9 @@ prime_ebt = f"""
 Did you know that you can register your EBT card with Amazon and enjoy exclusive benefits? 🤑 With your registered EBT card, you'll get access to:
  
 Discounted Amazon Prime membership, 
-Free grocery delivery
- and more. 🛒💻 
+
+🆓 Free grocery delivery
+ And more! 🛒💻 
 
 Plus, you'll get access to all the perks of Prime, like streaming movies, TV shows, and ad-free music. Follow the link to register your EBT card with Amazon and start saving today! 🙌 
 """
