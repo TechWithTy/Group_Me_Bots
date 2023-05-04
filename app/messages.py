@@ -62,20 +62,20 @@ $1 a day
 
 
 spray_bottle = f"""
-👾Automated posts available (1) a day
-10,000 + Members
-$20 a month
-$5 a week
-$1 a day
-🧲 - Secure your time slot , reach twice the people at half the cost
-@Telegram - flrsntza #PROMO 🆕  
-(Dank Depot -OF Leaks -Sneaker Bots and Releases) https://mlightm.my.canva.site/"""
+👀👂Attention Natural Baddies and Brothers with natural hair! 
+🙌 Say hello to the ZIBARBER Salon Style Hair Spray Misting Bottle! 
+💆‍♀️ Keep your curls and kinks looking fresh with our high-quality mist-like-spray that spreads evenly and perfectly. 
+💦 With a 360o continuous spray, you can easily refresh your hair or distribute leave-in conditioner with little stress on your hands. 
+🌿 And the best part? Our refillable bottle design reduces plastic waste and allows you to make your own chemical-free cleaning solutions and air fresheners! 
+🌍 Ready to embrace a zero-footprint life and level up your natural hair routine? 🌿💆‍♀️ Click the link below to buy the ZIBARBER Salon Style Hair Spray Misting Bottle now on Amazon with 2-day free shipping and free returns! 
+🛍️ Don't wait, get yours today and start taking care of your hair the sustainable way! 🙌
+https://amzn.to/42s4QK9
+"""
 
 
 message_duration = [
-    {'duration': 6, 'message': mlightm},
-    {'duration': 8, 'message': docs},
-    {'duration': 2, 'message': automated_posts},
-    {'duration': 2, 'message': spray_bottle, 'images': [
+    {'duration': 48, 'message': docs},
+    {'duration': 24, 'message': automated_posts},
+    {'duration': 12, 'message': spray_bottle, 'images': [
         'https://m.media-amazon.com/images/I/71zRZKZHdeL._AC_SX425_.jpg', 'https://m.media-amazon.com/images/I/71GLsqq8tiL._AC_SX425_.jpg']},
 ]
