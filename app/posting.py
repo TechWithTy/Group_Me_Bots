@@ -91,7 +91,9 @@ def send_message_to_groups(new_bots: list, message: str, files: list = None) -> 
 
     if files:
         for file_path in files:
-            ending_tag = os.path.splitext(file_path)[1].split('?')[0]
+            print(file_path)
+            cross_ending_tag = os.path.splitext(file_path)[0]
+            ending_tag = '.' + cross_ending_tag.split('.')[-1]
             try:
                 if ending_tag in ['.jpg', '.jpeg', '.png', '.gif']:
                     # Upload image to GroupMe and add it to the message's attachments
