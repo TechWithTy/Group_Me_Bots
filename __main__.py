@@ -59,14 +59,16 @@ def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = def
         for post_time in post_times:
             time_obj = datetime.datetime.strptime(post_time, "%H:%M").time()
             print(f"Post scheduled for {post_time}")
-            scheduler.add_job(posting.send_message_to_groups, 'date', run_date=post_time,
+            scheduler.add_job(posting.send_message_to_groups, 'date', run_date=time_obj,
                               args=[filtered_bots, new_message, uploaded_images])
+        return
  
         
     if post_interval:
         print("Post Run")
         scheduler.add_job(posting.send_message_to_groups, 'interval',
                         hours=post_interval, args=[filtered_bots, new_message,uploaded_images])
+        return
         
     
 def post_message_to_groups(bots):
