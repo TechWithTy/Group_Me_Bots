@@ -11,7 +11,7 @@ import schedule
 import threading
 from apscheduler.schedulers.background import BackgroundScheduler
 import random
-from typing import Optional
+from typing import Optional,List
 scheduler = BackgroundScheduler()
 load_dotenv()
 
@@ -30,9 +30,13 @@ pb = pushbullet.Pushbullet(PUSHBULLET_KEY)
 
 # Add a bot to every group you have permissions in
 filtered_bots = []
+default_values = {}
+
+default_values.get('interval',2)
+default_values.get('times', ['8:37','12:15','5:55'])
 
 
-def post_periodically(post_interval: str, filtered_bots: list, new_message: str, uploaded_images: Optional[str] = None) -> str:
+def post_periodically( post_times: Optional[List[str]] = None, post_interval: Optional[int] = default_values.interval,  new_message: str = "Issa Bot", uploaded_images: Optional[str] = None) -> str:
     """
     Posts a message to the specified GroupMe groups via the corresponding bots
     every specified number of hours.
@@ -45,17 +49,30 @@ def post_periodically(post_interval: str, filtered_bots: list, new_message: str,
     Returns:
         None
     """
-    print("Post Run")
-    scheduler.add_job(posting.send_message_to_groups, 'interval',
-                      hours=post_interval, args=[filtered_bots, new_message,uploaded_images])
-    
+    if post_times is not None:
+        for post_time in post_times:
+            print(f"Post scheduled for {post_time}")
+            scheduler.add_job(posting.send_message_to_groups, 'date', run_date=post_time,
+                              args=[filtered_bots, new_message, uploaded_images])
+ 
+        
+    if post_interval:
+        print("Post Run")
+        scheduler.add_job(posting.send_message_to_groups, 'interval',
+                        hours=post_interval, args=[filtered_bots, new_message,uploaded_images])
+        
     
 def post_message_to_groups(bots):
 
     for message in messages.message_duration_data:
+        
+        
        print(message)
+       
        if 'images' in message:
+           
         uploaded_images = []
+        
         for image in message['images']:
             uploaded_url = posting.upload_image_to_groupme(image)
             uploaded_images.append(uploaded_url)
@@ -64,24 +81,61 @@ def post_message_to_groups(bots):
 
         duration = message.get('duration')
         message_text = message.get('message')
-
+        times = message.get('times')
       
 
-        posting.send_message_to_groups(bots, message_text,uploaded_images)
-        t = threading.Thread(target=post_periodically,
-                            args=(duration, bots, message_text,uploaded_images))
+        # posting.send_message_to_groups(bots, message_text,uploaded_images)
+       else:
+        print('message posted' + message)
+        # posting.send_message_to_groups(bots, message_text)
+
+        
+        if message.duration:
+            t = threading.Thread(target=post_periodically,
+                        args=(),
+                        kwargs={
+                            'post_interval': duration,
+                            'filtered_bots': bots,
+                            'new_message': message_text,
+                            'uploaded_images': uploaded_images
+                        })  
+        if message.times:
+            t = threading.Thread(target=post_periodically,
+                                 args=(),
+                                 kwargs={
+                                     'post_times': times,
+                                     'filtered_bots': bots,
+                                     'new_message': message_text,
+                                     'uploaded_images': uploaded_images
+                                 })
         t.start()
     else:
-            duration = message.get('duration')
-            message_text = message.get('message')
-            print('Message Test:',message_text)
+        duration = message.get('duration')
+        message_text = message.get('message')
+        times = message.get('times')
+        
+        
 
-
-            posting.send_message_to_groups(bots, message_text)
+        
+        if message.duration:
             t = threading.Thread(target=post_periodically,
-                                args=(duration, bots, message_text))
-            t.start()
-            
+                        args=(),
+                        kwargs={
+                            'post_interval': duration,
+                            'filtered_bots': bots,
+                            'new_message': message_text,
+                            'uploaded_images': uploaded_images
+                        })  
+        if message.times:
+            t = threading.Thread(target=post_periodically,
+                                 args=(),
+                                 kwargs={
+                                     'post_times': times,
+                                     'filtered_bots': bots,
+                                     'new_message': message_text,
+                                     'uploaded_images': uploaded_images
+                                 })
+        t.start()
     
     scheduler.start()
     scheduler.print_jobs()
