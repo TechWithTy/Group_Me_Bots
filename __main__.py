@@ -69,7 +69,7 @@ def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = Non
  
         
     if post_interval:
-        print("Post Interval Run" + post_interval)
+        print("Post Interval Run" , post_interval)
         scheduler.add_job(posting.send_message_to_groups, 'interval',
                         hours=post_interval, args=[filtered_bots, new_message,uploaded_images])
         return
