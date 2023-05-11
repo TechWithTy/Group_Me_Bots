@@ -148,7 +148,7 @@ https://app.instawork.com/worker?ref_code=m9v4el1&utm_source=refer-share-via-oth
 Earn $350 extra in 30 days when you use this promo code:
 https://pastebin.com/gvbfz2d7
 
- Upwork: If you have a special skill, Upwork can help you find freelance work. From writing to graphic design, there are plenty of opportunities for you to make some money while showcasing your talents. (coming soon)
+ Upwork: If you have a special skill, Upwork can help you find freelance work. From writing to graphic design, there are plenty of opportunities for you to make some money while showcasing your talents. -coming soon-
 
 And the best part? If you sign up for any of these apps through our referral links, you'll earn some extra cash just for getting started! So what are you waiting for? Start earning money today! 
 """
