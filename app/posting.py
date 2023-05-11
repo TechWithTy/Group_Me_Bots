@@ -115,6 +115,7 @@ def send_message_to_groups(new_bots: list, message: str, files: list = None) -> 
         if response.status_code != 202:
             print(
                 f"Error sending message by bot '{bot_id}' to group '{group_id}'. Status code: {response.status_code}")
+            print("message:",message)
         else:
             print(
                 f"Bot: '{bot_id}' sent message to group '{group_id}'. Status code: {response.status_code}")
