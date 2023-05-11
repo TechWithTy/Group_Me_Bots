@@ -54,9 +54,10 @@ def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = Non
     Returns:
         None
     """
-    if post_times is not None:
+    if post_times:
 
         for post_time in post_times:
+            print("Post Time Run" + post_time )
             time_obj = datetime.datetime.strptime(post_time, "%H:%M").time()
             date_obj = datetime.date.today()  # get the current date
 
@@ -68,7 +69,7 @@ def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = Non
  
         
     if post_interval:
-        print("Post Run")
+        print("Post Interval Run" + post_time)
         scheduler.add_job(posting.send_message_to_groups, 'interval',
                         hours=post_interval, args=[filtered_bots, new_message,uploaded_images])
         return
