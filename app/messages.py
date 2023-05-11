@@ -154,7 +154,7 @@ And the best part? If you sign up for any of these apps through our referral lin
 """
 
 message_duration_data = [
-    {'times': ['12:45', '20:00'],  'message':looking_to_make_money, 'images': [
+    {'times': ['12:45', '20:00'],  'message':"test", 'images': [
         'https://res.cloudinary.com/djao481zq/image/upload/v1683772469/Misc/GM/Affiliate%20Links/smklxqxnwntskndpm0dv.jpg',]},
    {'times':['12:00','17:00'], 'message':prime_ebt, 'images': [
        'https://res.cloudinary.com/djao481zq/image/upload/v1683187215/Misc/GM/Amazon%20AFL/mqsea1cnyda3ap8zng3g.jpg',]},
