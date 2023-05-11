@@ -94,7 +94,7 @@ def post_message_to_groups(bots):
             posting.send_message_to_groups(bots, message_text)
 
         
-        if message.duration:
+        if duration:
             t = threading.Thread(target=post_periodically,
                         args=(),
                         kwargs={
@@ -103,7 +103,7 @@ def post_message_to_groups(bots):
                             'new_message': message_text,
                             'uploaded_images': uploaded_images
                         })  
-        if message.times:
+        if times:
             t = threading.Thread(target=post_periodically,
                                  args=(),
                                  kwargs={
@@ -121,7 +121,7 @@ def post_message_to_groups(bots):
         
 
         
-        if message.duration:
+        if duration:
             t = threading.Thread(target=post_periodically,
                         args=(),
                         kwargs={
@@ -130,7 +130,7 @@ def post_message_to_groups(bots):
                             'new_message': message_text,
                             'uploaded_images': uploaded_images
                         })  
-        if message.times:
+        if times:
             t = threading.Thread(target=post_periodically,
                                  args=(),
                                  kwargs={
