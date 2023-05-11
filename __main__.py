@@ -39,7 +39,7 @@ default_interval = 2
 default_times = ['8:37','12:15','5:55']
 
 
-def post_periodically(post_times: Optional[List[str]] = default_times, post_interval: Optional[int] = default_interval,  new_message: str = "Issa Bot", uploaded_images: Optional[str] = None) -> str:
+def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = default_times, post_interval: Optional[int] = default_interval,  new_message: str = "Issa Bot", uploaded_images: Optional[str] = None) -> str:
     """
     Posts a message to the specified GroupMe groups via the corresponding bots
     every specified number of hours.
