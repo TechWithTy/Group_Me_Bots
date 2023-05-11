@@ -143,6 +143,11 @@ looking_to_make_money = f"""
  Instawork: This app connects you with local businesses looking for temporary workers. From catering gigs to event set up, you can find a variety of job opportunities that fit your schedule.
 https://app.instawork.com/worker?ref_code=m9v4el1&utm_source=refer-share-via-other-apps
 
+ Instacart: Love shopping? Turn your passion into a paycheck with Instacart! This app allows you to become a personal shopper for people who need groceries delivered to their doorstep. 
+
+Earn $350 extra in 30 days when you use this promo code:
+https://pastebin.com/gvbfz2d7
+
  """
 
 message_duration_data = [
