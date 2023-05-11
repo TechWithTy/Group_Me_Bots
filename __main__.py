@@ -113,6 +113,9 @@ def post_message_to_groups(bots):
                             'new_message': message_text,
                             'uploaded_images': uploaded_images
                         })  
+            t.start()
+            scheduler.start()
+            scheduler.print_jobs()
         if times:
             t = threading.Thread(target=post_periodically,
                                  args=(),
@@ -122,7 +125,9 @@ def post_message_to_groups(bots):
                                      'new_message': message_text,
                                      'uploaded_images': uploaded_images
                                  })
-        t.start()
+            t.start()
+            scheduler.start()
+            scheduler.print_jobs()
     else:
         duration = message.get('duration')
         message_text = message.get('message')
@@ -139,7 +144,10 @@ def post_message_to_groups(bots):
                             'filtered_bots': bots,
                             'new_message': message_text,
                             'uploaded_images': uploaded_images
-                        })  
+                        })
+            t.start()
+            scheduler.start()
+            scheduler.print_jobs()
         if times:
             t = threading.Thread(target=post_periodically,
                                  args=(),
@@ -149,10 +157,11 @@ def post_message_to_groups(bots):
                                      'new_message': message_text,
                                      'uploaded_images': uploaded_images
                                  })
-        t.start()
+            t.start()
+            scheduler.start()
+            scheduler.print_jobs()
     
-    scheduler.start()
-    scheduler.print_jobs()
+
         # Post message periodically
     try:
         while True:
