@@ -110,6 +110,7 @@ def post_message_to_groups(bots):
             posting.send_message_to_groups(bots, message_text)
 
         if times:
+            print('TIMES FOUND')
             t = threading.Thread(target=post_periodically,
                                  args=(),
                                  kwargs={
