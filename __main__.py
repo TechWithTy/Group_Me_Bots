@@ -32,8 +32,8 @@ pb = pushbullet.Pushbullet(PUSHBULLET_KEY)
 filtered_bots = []
 default_values = {}
 
-default_values.get('interval',2)
-default_values.get('times', ['8:37','12:15','5:55'])
+default_values['interval'] = 2
+default_values['times'] = ['8:37','12:15','5:55']
 
 
 def post_periodically( post_times: Optional[List[str]] = None, post_interval: Optional[int] = default_values.interval,  new_message: str = "Issa Bot", uploaded_images: Optional[str] = None) -> str:
