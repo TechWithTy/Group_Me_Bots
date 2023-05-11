@@ -78,7 +78,11 @@ def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = Non
 def post_message_to_groups(bots):
 
     for message in messages.message_duration_data:
-        
+       duration = message.get('duration')
+       message_text = message.get('message')
+       times = message.get('times')
+       
+      
         
        print(message)
        
@@ -89,18 +93,19 @@ def post_message_to_groups(bots):
         for image in message['images']:
             uploaded_url = posting.upload_image_to_groupme(image)
             uploaded_images.append(uploaded_url)
-
-        # Choose a random image
-
-        duration = message.get('duration')
-        message_text = message.get('message')
-        times = message.get('times')
-      
-      
         if (PRODUCTION):
             posting.send_message_to_groups(bots, message_text,uploaded_images)
+       
+        # Choose a random image
+
+        
+      
+      
+             
        else:
-        print('message posted' + message_text)
+        print('Message Has No Images')
+        
+        
         if (PRODUCTION):
             posting.send_message_to_groups(bots, message_text)
 
