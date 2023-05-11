@@ -18,7 +18,7 @@ scheduler = BackgroundScheduler()
 load_dotenv()
 
 
-PRODUCTION = False
+PRODUCTION = True
 
 PUSHBULLET_KEY = os.environ.get('PUSH_BULLET')
 print(PUSHBULLET_KEY)
