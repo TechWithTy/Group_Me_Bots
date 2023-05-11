@@ -58,8 +58,11 @@ def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = def
 
         for post_time in post_times:
             time_obj = datetime.datetime.strptime(post_time, "%H:%M").time()
+            date_obj = datetime.date.today()  # get the current date
+
+            combined_time = datetime.combine(date_obj,time_obj)
             print(f"Post scheduled for {post_time}")
-            scheduler.add_job(posting.send_message_to_groups, 'date', run_date=time_obj,
+            scheduler.add_job(posting.send_message_to_groups, 'date', run_date=combined_time,
                               args=[filtered_bots, new_message, uploaded_images])
         return
  
