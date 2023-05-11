@@ -57,7 +57,7 @@ def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = Non
     if post_times:
 
         for post_time in post_times:
-            print("Post Time Run" + post_time )
+            print("Post Time Run" )
             time_obj = datetime.datetime.strptime(post_time, "%H:%M").time()
             date_obj = datetime.date.today()  # get the current date
 
