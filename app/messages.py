@@ -156,18 +156,18 @@ And the best part? If you sign up for any of these apps through our referral lin
 message_duration_data = [
     {'times': ['12:45', '20:00'],  'message':looking_to_make_money, 'images': [
         'https://res.cloudinary.com/djao481zq/image/upload/v1683772469/Misc/GM/Affiliate%20Links/smklxqxnwntskndpm0dv.jpg',]},
-   {'times':['12:00','17:00'], 'message':prime_ebt, 'images': [
-       'https://res.cloudinary.com/djao481zq/image/upload/v1683187215/Misc/GM/Amazon%20AFL/mqsea1cnyda3ap8zng3g.jpg',]},
+#    {'times':['12:00','17:00'], 'message':prime_ebt, 'images': [
+#        'https://res.cloudinary.com/djao481zq/image/upload/v1683187215/Misc/GM/Amazon%20AFL/mqsea1cnyda3ap8zng3g.jpg',]},
    
-    {'times': ['10:30', '14:00'], 'message': amazon_drop, 'images': [
-        'https://res.cloudinary.com/djao481zq/image/upload/v1683185967/Misc/GM/Amazon%20AFL/mmozad0hpo29hnn4o5o7.jpg',]},
-    {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
-     'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
+#     {'times': ['10:30', '14:00'], 'message': amazon_drop, 'images': [
+#         'https://res.cloudinary.com/djao481zq/image/upload/v1683185967/Misc/GM/Amazon%20AFL/mmozad0hpo29hnn4o5o7.jpg',]},
+#     {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
+#      'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
 
-    {'duration': 30, 'message': spray_bottle, 'images': [
-        'https://m.media-amazon.com/images/I/71zRZKZHdeL._AC_SX425_.jpg', 'https://m.media-amazon.com/images/I/71GLsqq8tiL._AC_SX425_.jpg']},
-    {'times': ['13:30', '18:30'], 'message': docs},
-    {'duration': 12, 'message': automated_posts},
+#     {'duration': 30, 'message': spray_bottle, 'images': [
+#         'https://m.media-amazon.com/images/I/71zRZKZHdeL._AC_SX425_.jpg', 'https://m.media-amazon.com/images/I/71GLsqq8tiL._AC_SX425_.jpg']},
+#     {'times': ['13:30', '18:30'], 'message': docs},
+#     {'duration': 12, 'message': automated_posts},
 
 ]
  
