@@ -11,6 +11,8 @@ import schedule
 import threading
 from apscheduler.schedulers.background import BackgroundScheduler
 import random
+import datetime
+
 from typing import Optional,List
 scheduler = BackgroundScheduler()
 load_dotenv()
@@ -53,7 +55,9 @@ def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = def
         None
     """
     if post_times is not None:
+
         for post_time in post_times:
+            time_obj = datetime.datetime.strptime(post_time, "%H:%M").time()
             print(f"Post scheduled for {post_time}")
             scheduler.add_job(posting.send_message_to_groups, 'date', run_date=post_time,
                               args=[filtered_bots, new_message, uploaded_images])
@@ -85,6 +89,7 @@ def post_message_to_groups(bots):
         duration = message.get('duration')
         message_text = message.get('message')
         times = message.get('times')
+      
       
         if (PRODUCTION):
             posting.send_message_to_groups(bots, message_text,uploaded_images)
