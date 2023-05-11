@@ -88,82 +88,75 @@ def post_message_to_groups(bots):
        
        if 'images' in message:
            
-        uploaded_images = []
+            uploaded_images = []
+            
+            for image in message['images']:
+                uploaded_url = posting.upload_image_to_groupme(image)
+                uploaded_images.append(uploaded_url)
+           
+            if (PRODUCTION):
+                posting.send_message_to_groups(bots, message_text,uploaded_images)
         
-        for image in message['images']:
-            uploaded_url = posting.upload_image_to_groupme(image)
-            uploaded_images.append(uploaded_url)
-        if (PRODUCTION):
-            posting.send_message_to_groups(bots, message_text,uploaded_images)
-       
-        # Choose a random image
+            # Choose a random image
+            if times:
+                print('TIMES FOUND')
+                t = threading.Thread(target=post_periodically,
+                                    args=(),
+                                    kwargs={
+                                        'post_times': times,
+                                        'filtered_bots': bots,
+                                        'new_message': message_text,
+                                        'uploaded_images': uploaded_images
+                                    })
+                t.start()
+
+            if duration:
+                t = threading.Thread(target=post_periodically,
+                                    args=(),
+                                    kwargs={
+                                        'post_interval': duration,
+                                        'filtered_bots': bots,
+                                        'new_message': message_text,
+                                        'uploaded_images': uploaded_images
+                                    })
+                t.start()
 
         
       
       
              
        else:
-        print('Message Has No Images')
-        
-        
-        if (PRODUCTION):
-            posting.send_message_to_groups(bots, message_text)
-
-        if times:
-            print('TIMES FOUND')
-            t = threading.Thread(target=post_periodically,
-                                 args=(),
-                                 kwargs={
-                                     'post_times': times,
-                                     'filtered_bots': bots,
-                                     'new_message': message_text,
-                                     'uploaded_images': uploaded_images
-                                 })
-            t.start()
-
-        if duration:
-            t = threading.Thread(target=post_periodically,
-                        args=(),
-                        kwargs={
-                            'post_interval': duration,
-                            'filtered_bots': bots,
-                            'new_message': message_text,
-                            'uploaded_images': uploaded_images
-                        })  
-            t.start()
-          
-        
+            print('Message Has No Images')
             
-    else:
-        duration = message.get('duration')
-        message_text = message.get('message')
-        times = message.get('times')
-        
-        
-
-        
-        if duration:
-            t = threading.Thread(target=post_periodically,
-                        args=(),
-                        kwargs={
-                            'post_interval': duration,
-                            'filtered_bots': bots,
-                            'new_message': message_text,
-                            'uploaded_images': uploaded_images
-                        })
-            t.start()
             
-        if times:
-            t = threading.Thread(target=post_periodically,
-                                 args=(),
-                                 kwargs={
-                                     'post_times': times,
-                                     'filtered_bots': bots,
-                                     'new_message': message_text,
-                                     'uploaded_images': uploaded_images
-                                 })
-            t.start()
-           
+            if (PRODUCTION):
+                posting.send_message_to_groups(bots, message_text)
+
+            
+            
+
+            
+            if duration:
+                t = threading.Thread(target=post_periodically,
+                            args=(),
+                            kwargs={
+                                'post_interval': duration,
+                                'filtered_bots': bots,
+                                'new_message': message_text,
+                               
+                            })
+                t.start()
+                
+            if times:
+                t = threading.Thread(target=post_periodically,
+                                    args=(),
+                                    kwargs={
+                                        'post_times': times,
+                                        'filtered_bots': bots,
+                                        'new_message': message_text,
+                                    })
+                t.start()
+            
     
     scheduler.start()
     scheduler.print_jobs()

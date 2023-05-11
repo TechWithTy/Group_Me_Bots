@@ -170,3 +170,4 @@ message_duration_data = [
     {'duration': 12, 'message': automated_posts},
 
 ]
+ 
