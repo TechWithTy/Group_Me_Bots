@@ -15,6 +15,9 @@ from typing import Optional,List
 scheduler = BackgroundScheduler()
 load_dotenv()
 
+
+PRODUCTION = False
+
 PUSHBULLET_KEY = os.environ.get('PUSH_BULLET')
 print(PUSHBULLET_KEY)
 
@@ -83,11 +86,12 @@ def post_message_to_groups(bots):
         message_text = message.get('message')
         times = message.get('times')
       
-
-        # posting.send_message_to_groups(bots, message_text,uploaded_images)
+        if (PRODUCTION):
+            posting.send_message_to_groups(bots, message_text,uploaded_images)
        else:
-        print('message posted' + message)
-        # posting.send_message_to_groups(bots, message_text)
+        print('message posted' + message_text)
+        if (PRODUCTION):
+            posting.send_message_to_groups(bots, message_text)
 
         
         if message.duration:
