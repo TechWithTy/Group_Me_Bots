@@ -138,19 +138,19 @@ Attention business owners! Get access to exclusive deals and discounts on busine
 """
 
 looking_to_make_money = f"""
- Hey college students! Are you looking for ways to earn some extra cash? We've got you covered! Check out these awesome apps that can help you make money while still keeping up with your studies:
+ 
+🎓Hey college students! Are you looking for ways to earn some extra cash? We've got you covered! Check out these awesome apps that can help you make money while still keeping up with your studies:
 
- Instawork: This app connects you with local businesses looking for temporary workers. From catering gigs to event set up, you can find a variety of job opportunities that fit your schedule.
+💼  Instawork: This app connects you with local businesses looking for temporary workers. From catering gigs to event set up, you can find a variety of job opportunities that fit your schedule.
 https://app.instawork.com/worker?ref_code=m9v4el1&utm_source=refer-share-via-other-apps
 
- Instacart: Love shopping? Turn your passion into a paycheck with Instacart! This app allows you to become a personal shopper for people who need groceries delivered to their doorstep. 
+ 🛒Instacart: Love shopping? Turn your passion into a paycheck with Instacart! This app allows you to become a personal shopper for people who need groceries delivered to their doorstep. 
 
 Earn $350 extra in 30 days when you use this promo code:
 https://pastebin.com/gvbfz2d7
 
- Upwork: If you have a special skill, Upwork can help you find freelance work. From writing to graphic design, there are plenty of opportunities for you to make some money while showcasing your talents. -coming soon-
 
-And the best part? If you sign up for any of these apps through our referral links, you'll earn some extra cash just for getting started! So what are you waiting for? Start earning money today! 
+
 """
 
 message_duration_data = [
