@@ -21,7 +21,7 @@ scheduler = BackgroundScheduler()
 load_dotenv()
 
 
-PRODUCTION = False
+PRODUCTION = True
 
 PUSHBULLET_KEY = os.environ.get('PUSH_BULLET')
 print(PUSHBULLET_KEY)
@@ -45,7 +45,7 @@ default_times = ['8:37','12:15','5:55']
 
 def schedule_posts(filtered_bots: list, post_times: Optional[List[str]] = None, post_interval: Optional[int] = None,  new_message: str = "Issa Bot", uploaded_images: Optional[str] = None):
     for post_time in post_times:
-        print("Post Time Run" + post_time)
+        print("Post Time Run" + " " + post_time)
         time_obj = datetime.datetime.strptime(post_time, "%H:%M").time()
 
         schedule.every().day.at(post_time).do(posting.send_message_to_groups, filtered_bots, new_message, uploaded_images)
