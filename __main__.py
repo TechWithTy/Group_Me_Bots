@@ -208,6 +208,7 @@ def __main__():
 
     # Filter the Duplicate bots to avoid multiple postings
     filtered_bots = bots.filter_bots(Bots)
+    pb.push_note("Group Me -", "Function Started Successfully", str(e))
     # print(filtered_bots)
     post_message_to_groups(filtered_bots)
     
@@ -222,8 +223,8 @@ def main_wrapper():
     failure_count = 0
     while failure_count < 3:
         try:
+            scheduler.remove_all_jobs()
             __main__()
-            pb.push_note("Group Me -", "Function Started Successfully", str(e))
 
             # reset failure count if successful
             failure_count = 0
