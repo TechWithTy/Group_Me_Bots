@@ -12,13 +12,16 @@ import threading
 from apscheduler.schedulers.background import BackgroundScheduler
 import random
 import datetime
+import schedule
+import time
+import datetime
 
 from typing import Optional,List
 scheduler = BackgroundScheduler()
 load_dotenv()
 
 
-PRODUCTION = True
+PRODUCTION = False
 
 PUSHBULLET_KEY = os.environ.get('PUSH_BULLET')
 print(PUSHBULLET_KEY)
@@ -40,7 +43,26 @@ default_values = {}
 default_interval = 2
 default_times = ['8:37','12:15','5:55']
 
+def schedule_posts(filtered_bots: list, post_times: Optional[List[str]] = None, post_interval: Optional[int] = None,  new_message: str = "Issa Bot", uploaded_images: Optional[str] = None):
+    for post_time in post_times:
+        print("Post Time Run" + post_time)
+        time_obj = datetime.datetime.strptime(post_time, "%H:%M").time()
 
+        schedule.every().day.at(post_time).do(posting.send_message_to_groups, filtered_bots, new_message, uploaded_images)
+        print(f"Post scheduled for {post_time}")
+    
+    if post_interval:
+        print("Post Interval Run" , post_interval)
+        scheduler.add_job(posting.send_message_to_groups, 'interval',
+                        hours=post_interval, args=[filtered_bots, new_message,uploaded_images])
+        return
+   
+        
+    if post_times:
+        schedule_posts(post_times, filtered_bots, new_message, uploaded_images)
+    
+       
+        
 def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = None, post_interval: Optional[int] = None,  new_message: str = "Issa Bot", uploaded_images: Optional[str] = None) -> str:
     """
     Posts a message to the specified GroupMe groups via the corresponding bots
@@ -63,7 +85,7 @@ def post_periodically(filtered_bots: list, post_times: Optional[List[str]] = Non
 
             combined_time = datetime.datetime.combine(date_obj, time_obj)
             print(f"Post scheduled for {post_time}")
-            scheduler.add_job(posting.send_message_to_groups, 'date', run_date=combined_time,
+            scheduler.add_job(posting.send_message_to_groups, 'cron', hour=combined_time.hour, minute=combined_time.minute,
                               args=[filtered_bots, new_message, uploaded_images])
         return
  
@@ -100,7 +122,7 @@ def post_message_to_groups(bots):
             # Choose a random image
             if times:
                 print('TIMES FOUND')
-                t = threading.Thread(target=post_periodically,
+                t = threading.Thread(target=schedule_posts,
                                     args=(),
                                     kwargs={
                                         'post_times': times,
@@ -111,7 +133,7 @@ def post_message_to_groups(bots):
                 t.start()
 
             if duration:
-                t = threading.Thread(target=post_periodically,
+                t = threading.Thread(target=schedule_posts,
                                     args=(),
                                     kwargs={
                                         'post_interval': duration,
@@ -137,7 +159,7 @@ def post_message_to_groups(bots):
 
             
             if duration:
-                t = threading.Thread(target=post_periodically,
+                t = threading.Thread(target=schedule_posts,
                             args=(),
                             kwargs={
                                 'post_interval': duration,
@@ -148,7 +170,7 @@ def post_message_to_groups(bots):
                 t.start()
                 
             if times:
-                t = threading.Thread(target=post_periodically,
+                t = threading.Thread(target=schedule_posts,
                                     args=(),
                                     kwargs={
                                         'post_times': times,
@@ -158,14 +180,16 @@ def post_message_to_groups(bots):
                 t.start()
             
     
+  
     scheduler.start()
     scheduler.print_jobs()
         # Post message periodically
     try:
         while True:
+            schedule.run_pending()
             pass
     except (KeyboardInterrupt, SystemExit):
-        scheduler.shutdown()
+        scheduler.shutdown()    
         
     
 def __main__():
