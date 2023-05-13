@@ -237,10 +237,9 @@ def main_wrapper():
             time.sleep(300)
 
 if __name__ == "__main__":
-    scheduler = BackgroundScheduler()
     # Remove all existing jobs before adding a new one
-    for job in scheduler.get_jobs():
-        scheduler.remove_job(job.id)
+    # for job in scheduler.get_jobs():
+    #     scheduler.remove_job(job.id)
     # Schedule main_wrapper to run every day at 6 AM
     scheduler.add_job(main_wrapper, 'cron', hour=6)
     scheduler.start()
