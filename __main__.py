@@ -236,13 +236,15 @@ def main_wrapper():
             # wait for 5 minutes before trying again
             time.sleep(300)
 
+def call_main_every_24h():
+    main_wrapper()
+
+    # Schedule the next call to main_wrapper() after 24 hours (24 hours * 60 minutes * 60 seconds)
+    threading.Timer(24 * 60 * 60, call_main_every_24h).start()
+
+
 if __name__ == "__main__":
-    # Remove all existing jobs before adding a new one
-    # for job in scheduler.get_jobs():
-    #     scheduler.remove_job(job.id)
-    # Schedule main_wrapper to run every day at 6 AM
-    scheduler.add_job(main_wrapper, 'cron', hour=6)
-    scheduler.start()
+    call_main_every_24h()
 
    
   
