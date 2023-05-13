@@ -122,7 +122,7 @@ def post_message_to_groups(bots):
             # Choose a random image
             if times:
                 print('TIMES FOUND')
-                t = threading.Thread(target=schedule_posts,
+                t = threading.Thread(target=post_periodically,
                                     args=(),
                                     kwargs={
                                         'post_times': times,
@@ -133,7 +133,7 @@ def post_message_to_groups(bots):
                 t.start()
 
             if duration:
-                t = threading.Thread(target=schedule_posts,
+                t = threading.Thread(target=post_periodically,
                                     args=(),
                                     kwargs={
                                         'post_interval': duration,
@@ -159,7 +159,7 @@ def post_message_to_groups(bots):
 
             
             if duration:
-                t = threading.Thread(target=schedule_posts,
+                t = threading.Thread(target=post_periodically,
                             args=(),
                             kwargs={
                                 'post_interval': duration,
@@ -170,7 +170,7 @@ def post_message_to_groups(bots):
                 t.start()
                 
             if times:
-                t = threading.Thread(target=schedule_posts,
+                t = threading.Thread(target=post_periodically,
                                     args=(),
                                     kwargs={
                                         'post_times': times,
