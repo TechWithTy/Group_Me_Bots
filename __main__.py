@@ -184,12 +184,14 @@ def post_message_to_groups(bots):
     scheduler.start()
     scheduler.print_jobs()
         # Post message periodically
-    try:
-        while True:
+    while True:
+        try:  
             schedule.run_pending()
             pass
-    except (KeyboardInterrupt, SystemExit):
-        scheduler.shutdown()    
+        except (KeyboardInterrupt, SystemExit):
+             scheduler.shutdown()
+             pb.push_note("Group Me -", "App Crashed", str(SystemExit))
+             break    
         
     
 def __main__():
@@ -214,27 +216,34 @@ def __main__():
 
 
 
-__main__()
-      
-        
 
-# failure_count = 0
-# if __name__ == "__main__" and failure_count < 4:
+def main_wrapper():
+    failure_count = 0
+    while failure_count < 3:
+        try:
+            __main__()
+            pb.push_note("Group Me -", "Function Started Successfully", str(e))
+
+            # reset failure count if successful
+            failure_count = 0
+        except Exception as e:
+            # increment failure count
+            failure_count += 1
+            # send pushbullet notification on third failure
+            if failure_count == 3:
+                pb.push_note("Group Me -", "Error in main function and function tests failing", str(e))
+                print(f"Error in main function: {e}")
+            # wait for 5 minutes before trying again
+            time.sleep(300)
+
+if __name__ == "__main__":
+    scheduler = BackgroundScheduler()
+    # Remove all existing jobs before adding a new one
+    for job in scheduler.get_jobs():
+        scheduler.remove_job(job.id)
+    # Schedule main_wrapper to run every day at 6 AM
+    scheduler.add_job(main_wrapper, 'cron', hour=6)
+    scheduler.start()
+
    
-#     try:
-#         __main__()
-#                 # reset failure count if successful
-#         failure_count = 0
-#     except Exception as e:
-#                 # increment failure count
-#                 failure_count += 1
-#                 # send pushbullet notification on third failure
-#                 if failure_count == 3 :
-#                     pb.push_note("Group Me -","Error in main function  and function tests failing", str(e))
-#                     print(f"Error in main function: {e}")
-#                     failure_count =+ 1
-                    
-#                 # wait for 5 minutes before trying again
-#                 time.sleep(300)
-#                 __main__()
-        
+  
