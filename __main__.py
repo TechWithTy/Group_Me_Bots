@@ -244,6 +244,7 @@ def call_main_every_24h():
 
 
 if __name__ == "__main__":
+    pb.push_note("Group Me -", "Function Started Successfully" )
     call_main_every_24h()
 
    
