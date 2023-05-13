@@ -20,7 +20,8 @@ if not ACCESS_TOKEN:
     TOKEN_OBJ = json.loads(keys.get_secret("ZB_PROMO"))
 
     ACCESS_TOKEN = TOKEN_OBJ.get('ZB_PROMO')
-    print("ACCESS_TOKEN", ACCESS_TOKEN)
+    if ACCESS_TOKEN:
+        print("Group Me Token Updated")
 # Load environment variables from .env file
 
 

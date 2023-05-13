@@ -20,7 +20,6 @@ from AWS import  keys
 # Replace these values with your own GroupMe access token and group IDs
 load_dotenv()
 ACCESS_TOKEN = os.environ.get('ZB_PROMO')
-# print(ACCESS_TOKEN, 'ACCESS_TOKEN')
 
 if not ACCESS_TOKEN:
     TOKEN_OBJ = json.load(keys.get_secret("ZB_PROMO"))

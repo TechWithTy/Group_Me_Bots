@@ -21,7 +21,7 @@ scheduler = BackgroundScheduler()
 load_dotenv()
 
 
-PRODUCTION = False
+PRODUCTION = True
 
 PUSHBULLET_KEY = os.environ.get('PUSH_BULLET')
 print(PUSHBULLET_KEY)
@@ -30,7 +30,8 @@ if not PUSHBULLET_KEY:
     TOKEN_OBJ = json.loads(keys.get_secret("PUSH_BULLET"))
   
     PUSHBULLET_KEY = TOKEN_OBJ.get('PUSH_BULLET')
-    print("PUSH_BULLET", PUSHBULLET_KEY)
+    if  PUSHBULLET_KEY:
+        print("PUSH BULLET Key Found")
     
 restart_days = 3
 
