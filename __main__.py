@@ -230,6 +230,7 @@ def main_wrapper():
             failure_count = 0
         except Exception as e:
             # increment failure count
+            pb.push_note("Group Me -", "Failer Once", str(e))
             failure_count += 1
             # send pushbullet notification on third failure
             if failure_count == 3:
