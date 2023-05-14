@@ -208,7 +208,7 @@ def __main__():
 
     # Filter the Duplicate bots to avoid multiple postings
     filtered_bots = bots.filter_bots(Bots)
-    pb.push_note("Group Me -", "Function Started Successfully", str(e))
+    pb.push_note("Group Me -", "Function Started Successfully",)
     # print(filtered_bots)
     post_message_to_groups(filtered_bots)
     
