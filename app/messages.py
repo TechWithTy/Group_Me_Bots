@@ -5,7 +5,10 @@ Gushers
 
 
 """
-
+phone_number = "(720) 686-2362"
+email = "bendoverama@proton.me"
+telegram = "flrsntzot"
+mmwebsite = "https://mlightm.my.canva.site/"
 test_text = f"""\
 
 
@@ -47,9 +50,9 @@ Able to call manager from hospital number and leave a message for an additional 
   4: I show you a preview, once you're satisfied you cashapp  the payment 
 📥 Text -(Window Shoppers Will Not Be Responded To)
 
-@Telegram - flrsntza   
-(720) 686-2362
-bendoverama@proton.me
+@Telegram - @Telegram - {telegram}
+{phone_number}
+{email}
 """
 
 
@@ -58,10 +61,10 @@ automated_posts = f"""
 10,000 + Members
 - Message Us For a Quote
 🧲 - Secure your time slot , reach twice the people at half the cost
-@Telegram - flrsntza   
-(720) 686-2362
-bendoverama@proton.me
-Check out our website for news https://mlightm.my.canva.site/"""
+@Telegram - {telegram}
+{phone_number}
+{email}
+Check out our website for news {mmwebsite}"""
 
 
 spray_bottle = f"""
@@ -140,10 +143,7 @@ Attention business owners! Get access to exclusive deals and discounts on busine
 looking_to_make_money = f"""
  
 🎓Hey college students! Are you looking for ways to earn some extra cash? We've got you covered! Check out these awesome apps that can help you make money while still keeping up with your studies:
-
-💼  Instawork: This app connects you with local businesses looking for temporary workers. From catering gigs to event set up, you can find a variety of job opportunities that fit your schedule.
-https://app.instawork.com/worker?ref_code=m9v4el1&utm_source=refer-share-via-other-apps
-
+ Amazon Flex- (Bot Coming Soon)
  🛒Instacart: Love shopping? Turn your passion into a paycheck with Instacart! This app allows you to become a personal shopper for people who need groceries delivered to their doorstep. 
 
 Earn $350 extra in 30 days when you use this promo code:
