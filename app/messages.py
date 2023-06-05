@@ -127,7 +127,7 @@ Plus, you'll get access to all the perks of Prime, like streaming movies, TV sho
 
 https://amzn.to/3nAss07
 
-Once you're signed up, you can even enjoy free shipping on groceries to your dorm. 🚚🏢 Visit the link below to learn more: 👉 amzn.to/3OOOE1Y
+Once you're signed up, you can even enjoy free shipping on groceries to your dorm. 🚚🏢 Visit the link below to learn more: 👉 https://amzn.to/3OOOE1Y
 
 Don't miss out on these incredible benefits—start saving today! 💰💯
 """
