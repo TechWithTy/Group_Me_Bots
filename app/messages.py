@@ -161,7 +161,9 @@ magic_butter_maker= f"""
 Imagine diving into a world where you can create not just the tastiest brownies or smoothies, but also sauces, candies, or even natural skin-care products. All enfused and at the touch of a button!
 
 Intoroducing the MagicalButter Machine! 😍🎩
+
 It's not just a product, but a revolution in your kitchen, designed especially for college students like you! With the rigors of assignments and exams, who has the time to be a culinary whiz or a skincare guru? This magical contraption does all the hard work for you.
+
 ⏰ No more slaving away for hours. At a touch of a button, and options of 1, 2, 4, 8 hour cycles, you can churn out anything from lip-smacking marinades for your barbecue party to soothing salves for your skincare regime.
 
 So, what are you waiting for? Time to make your recipes bolder and your life easier with the MagicalButter Machine. Get yours now! 🏃‍♀️🏃‍♂️🌬️
