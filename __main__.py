@@ -218,7 +218,6 @@ def __main__():
 
 
 
-
 def main_wrapper():
     failure_count = 0
     while failure_count < 3:
@@ -248,7 +247,7 @@ def call_main_every_24h():
 
 if __name__ == "__main__":
     pb.push_note("Group Me -", "Function Started Successfully" )
-    call_main_every_24h()
+    schedule.every(24).hours.do(main_wrapper)
 
    
   

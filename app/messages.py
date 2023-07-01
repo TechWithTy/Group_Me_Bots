@@ -25,26 +25,23 @@ https://mlightm.my.canva.site/
 """
 
 docs = f"""
-✅️`Documents` shown before payment is sent 🧾
+✅️`Prop Document -> Shown before you pay
 
-💵 Verifiable Pay Stubs
+💵 Verifiable Prop Pay Stubs - Veifiable Prop Bank Statements
 
-Able to call auditor from work number and leave a message for an additional fee
+🩺 Prop Doctors Note | Prop MEDICAL MMJ LICENSE |Prop Covid Verification
 
-📝
+🚗 Prop Tailored Temp Tags | Prop Verification of insurance
 
-Verifiable doctors notes
+🏡Prop  Court orders  | Prop Eviction Notices
 
-Able to call manager from hospital number and leave a message for an additional fee
++Actor Able to call auditor from number given
 
-✍️- Essays written, proofread and run through plagiarism checker
-
-📃- Resume Rewriting and Redesign
-
-
+Ask about Prop Certifications and completion of classes.
   
   How it works 🔢:
-  1: Text Me Your (Name) and the (company) or (doctors office) you want and your (budget).
+  1: Send me your group me name and the chat youre in.
+  2: Text Me Your (Name) and the (company) or (doctors office) you want and your (budget).
   2: Include all information like (dates) and( reason out) or (last pay check).
   3: I tell you a price once you give me the ok, i make the document
   4: I show you a preview, once you're satisfied you cashapp  the payment 
@@ -157,20 +154,80 @@ https://pastebin.com/gvbfz2d7
 
 """
 
+magic_butter_maker= f"""
+ 
+🎉🌿 Hey there, Budding Chefs and Herbal Enthusiasts! 🍪🍹
+
+Imagine diving into a world where you can create not just the tastiest brownies or smoothies, but also sauces, candies, or even natural skin-care products. All enfused and at the touch of a button!
+
+Intoroducing the MagicalButter Machine! 😍🎩
+
+It's not just a product, but a revolution in your kitchen, designed especially for college students like you! With the rigors of assignments and exams, who has the time to be a culinary whiz or a skincare guru? This magical contraption does all the hard work for you.
+
+⏰ No more slaving away for hours. At a touch of a button, and options of 1, 2, 4, 8 hour cycles, you can churn out anything from lip-smacking marinades for your barbecue party to soothing salves for your skincare regime.
+
+So, what are you waiting for? Unleash your creativity and transform your kitchen into a magic realm. Time to make your recipes bolder and your life easier with the MagicalButter Machine. Get yours now! 🏃‍♀️🏃‍♂️🌬️
+
+https://amzn.to/3JEj3MR
+
+
+
+"""
+
+electric_scooter = f"""
+🔥🛴 Scrrr, Pull up stunging, your college commute just got cooler, and greener! 🌿
+
+Are you tired of waiting for the bus? Late for class again because of traffic? Want to make a sustainable choice but not break a sweat? Well, the perfect solution has just zoomed into your life – Our Electric Scooter! 🚀
+
+Compact yet powerful, this scooter boasts a 450W electric brushless hub motor, reaching exhilarating speeds up to 19mph. Now, those early morning classes won't feel so far away. And the high-capacity battery offers a max travel range of up to 17.5 miles. Perfect for those spontaneous off-campus adventures! 🗺️
+
+Here's the best part: It's designed with your dynamic student life in mind. With a one-step folding system, this electric scooter folds effortlessly in just 3 seconds. So, you can carry it on public transportation, stash it in your dorm, or slide it into the trunk of your car. The world is your playground! 🌎
+
+Guess what else? For a limited time, this 4.4 star-rated, college student-approved electric scooter is ON SALE for just $300! 🏷️🎉
+
+Speed up your commute, shrink your carbon footprint, and enhance your college experience with our Electric Scooter. Don't just get to class, ARRIVE!
+
+https://amzn.to/44hOiFA
+
+"""
+
+free_young_thug = f"""🚀🎨 Show your support for youngthug with the HEMTIK Young Thug Album Cover Poster! 🔥🔊
+
+Are your dorm walls looking a bit plain? Want to showcase your love for the iconic Young Thug and his groundbreaking music? Look no further than our high-quality canvas wall art that's destined to transform your space into a hip-hop sanctuary! 🎵
+
+Our 16" x 16" poster features Young Thug's iconic album cover in an unframed, landscape-oriented design. Compact yet impactful, it's the perfect size to add some swagger to your dorm, office, or any corner of your home. 🖼️
+
+And guess what? Our stunning 5.0-star rated Young Thug poster is available for a fantastic price of just $18.89! PLUS, as a thank you to our Prime members, we're offering FREE returns. 🌟
+https://amzn.to/3r9r3iJ
+
+
+
+"""
+
 message_duration_data = [
-    {'times': ['12:45', '20:00'],  'message':looking_to_make_money, 'images': [
-        'https://res.cloudinary.com/djao481zq/image/upload/v1683772469/Misc/GM/Affiliate%20Links/smklxqxnwntskndpm0dv.jpg',]},
+    {'times': ['12:45', '20:00'],  'message':magic_butter_maker, 'images': [
+        'https://res.cloudinary.com/djao481zq/image/upload/v1688189143/Misc/GM/Amazon%20AFL/hc53ydxicp15tgzebkcn.jpg',]},
+
+
    {'times':['12:00','17:00'], 'message':prime_ebt, 'images': [
        'https://res.cloudinary.com/djao481zq/image/upload/v1683187215/Misc/GM/Amazon%20AFL/mqsea1cnyda3ap8zng3g.jpg',]},
+
    
-    {'times': ['10:30', '14:00'], 'message': amazon_drop, 'images': [
-        'https://res.cloudinary.com/djao481zq/image/upload/v1683185967/Misc/GM/Amazon%20AFL/mmozad0hpo29hnn4o5o7.jpg',]},
+    {'times': ['10:30', '14:00'], 'message': electric_scooter, 'images': [
+        'https://res.cloudinary.com/djao481zq/image/upload/v1688190168/Misc/GM/Amazon%20AFL/reghsqb6btqituldtbda.jpg',]},
+
+
     {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
      'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
 
-    {'duration': 30, 'message': spray_bottle, 'images': [
-        'https://m.media-amazon.com/images/I/71zRZKZHdeL._AC_SX425_.jpg', 'https://m.media-amazon.com/images/I/71GLsqq8tiL._AC_SX425_.jpg']},
-    {'times': ['13:30', '18:30'], 'message': docs},
+
+    {'duration': 30, 'message': free_young_thug, 'images': [
+        'https://res.cloudinary.com/djao481zq/image/upload/v1688190903/Misc/GM/Amazon%20AFL/rvqs8csrq3l0mrtwfrzg.jpg']},
+
+
+    {'times': ['13:30', '18:30'], 'message': docs, 'images': [
+        'https://res.cloudinary.com/djao481zq/image/upload/v1688190992/Misc/GM/Amazon%20AFL/bojtmryflvchmjdz5yu2.png']},
+        
     {'duration': 12, 'message': automated_posts},
 
 ]
