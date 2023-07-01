@@ -156,34 +156,36 @@ https://pastebin.com/gvbfz2d7
 
 magic_butter_maker= f"""
  
-🎉🌿 Hey there, Budding Chefs and Herbal Enthusiasts! 🍪🍹
+Hello Budding Chefs and Herbal Enthusiasts!
 
-Imagine diving into a world where you can create not just the tastiest brownies or smoothies, but also sauces, candies, or even natural skin-care products. All enfused and at the touch of a button!
+Imagine being able to easily create delicious brownies, smoothies, sauces, candies, and even natural skincare products. All of this becomes possible with the MagicalButter Machine!
 
-Intoroducing the MagicalButter Machine! 😍🎩
+More than just a product, it's a revolution in your kitchen. This innovative device is designed with the busy college student in mind. Let it do the hard work while you focus on assignments and exams.
 
-It's not just a product, but a revolution in your kitchen, designed especially for college students like you! With the rigors of assignments and exams, who has the time to be a culinary whiz or a skincare guru? This magical contraption does all the hard work for you.
+With options for 1, 2, 4, and 8-hour cycles, you no longer need to spend hours in the kitchen. Create everything from tantalizing marinades for your barbecue party to soothing skincare salves at the touch of a button.
 
-⏰ No more slaving away for hours. At a touch of a button, and options of 1, 2, 4, 8 hour cycles, you can churn out anything from lip-smacking marinades for your barbecue party to soothing salves for your skincare regime.
+Unleash your creativity and transform your kitchen into a magic realm. Make your recipes bolder and your life easier with the MagicalButter Machine. Get yours now!
 
-So, what are you waiting for? Unleash your creativity and transform your kitchen into a magic realm. Time to make your recipes bolder and your life easier with the MagicalButter Machine. Get yours now! 🏃‍♀️🏃‍♂️🌬️
+At a touch of a button, and options of 1, 2, 4, 8 hour cycles, you can churn out anything from lip-smacking marinades for your barbecue party to soothing salves for your skincare regime.
 
+So, what are you waiting for? Unleash your creativity and transform your kitchen into a magic realm. Time to make your recipes bolder and your life easier with the MagicalButter Machine. Get yours now! 
 https://amzn.to/3JEj3MR
-
 
 
 """
 
 electric_scooter = f"""
-🔥🛴 Scrrr, Pull up stunging, your college commute just got cooler, and greener! 🌿
+Scrrr, Pull up stunging, your college commute just got cooler, and greener! 
 
-Are you tired of waiting for the bus? Late for class again because of traffic? Want to make a sustainable choice but not break a sweat? Well, the perfect solution has just zoomed into your life – Our Electric Scooter! 🚀
 
-Compact yet powerful, this scooter boasts a 450W electric brushless hub motor, reaching exhilarating speeds up to 19mph. Now, those early morning classes won't feel so far away. And the high-capacity battery offers a max travel range of up to 17.5 miles. Perfect for those spontaneous off-campus adventures! 🗺️
+Upgrade your college commute with our Electric Scooter, a greener, cooler alternative to waiting for the bus or getting stuck in traffic. This compact, powerful scooter comes with a 450W electric brushless hub motor, capable of speeds up to 19mph and a travel range of 17.5 miles. Ideal for early morning classes or off-campus adventures!
 
-Here's the best part: It's designed with your dynamic student life in mind. With a one-step folding system, this electric scooter folds effortlessly in just 3 seconds. So, you can carry it on public transportation, stash it in your dorm, or slide it into the trunk of your car. The world is your playground! 🌎
+Designed with your student life in mind, our scooter features a one-step folding system for effortless portability. Carry it on public transportation, store it in your dorm, or put it in your car's trunk.
 
-Guess what else? For a limited time, this 4.4 star-rated, college student-approved electric scooter is ON SALE for just $300! 🏷️🎉
+For a limited time, get this 4.4 star-rated, student-approved electric scooter ON SALE for just $300. Enhance your college experience and lessen your environmental impact. Don't just get to class - ARRIVE!
+
+Check it out: https://amzn.to/44hOiFA
+
 
 Speed up your commute, shrink your carbon footprint, and enhance your college experience with our Electric Scooter. Don't just get to class, ARRIVE!
 
@@ -227,7 +229,7 @@ message_duration_data = [
 
     {'times': ['13:30', '18:30'], 'message': docs, 'images': [
         'https://res.cloudinary.com/djao481zq/image/upload/v1688190992/Misc/GM/Amazon%20AFL/bojtmryflvchmjdz5yu2.png']},
-        
+
     {'duration': 12, 'message': automated_posts},
 
 ]
