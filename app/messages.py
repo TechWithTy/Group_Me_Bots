@@ -39,12 +39,15 @@ docs = f"""
 
 Ask about Prop Certifications and completion of classes.
   
+  (If you do not tell me what group youre in and your name i will not respond)
+  
   How it works 🔢:
   1: Send me your group me name and the chat youre in.
   2: Text Me Your (Name) and the (company) or (doctors office) you want and your (budget).
   2: Include all information like (dates) and( reason out) or (last pay check).
   3: I tell you a price once you give me the ok, i make the document
   4: I show you a preview, once you're satisfied you cashapp  the payment 
+  (Due to people not responding after work is done some services require a 50% deposit [PayStubs])
 📥 Text -(Window Shoppers Will Not Be Responded To)
 
 @Telegram - @Telegram - {telegram}
@@ -200,24 +203,24 @@ https://amzn.to/3r9r3iJ
 """
 
 message_duration_data = [
-    {'times': ['12:45', '20:00'],  'message':magic_butter_maker, 'images': [
-        'https://res.cloudinary.com/djao481zq/image/upload/v1688189143/Misc/GM/Amazon%20AFL/hc53ydxicp15tgzebkcn.jpg',]},
+    # {'times': ['12:45', '20:00'],  'message':magic_butter_maker, 'images': [
+    #     'https://res.cloudinary.com/djao481zq/image/upload/v1688189143/Misc/GM/Amazon%20AFL/hc53ydxicp15tgzebkcn.jpg',]},
 
 
-   {'times':['12:00','17:00'], 'message':prime_ebt, 'images': [
-       'https://res.cloudinary.com/djao481zq/image/upload/v1683187215/Misc/GM/Amazon%20AFL/mqsea1cnyda3ap8zng3g.jpg',]},
+#    {'times':['12:00','17:00'], 'message':prime_ebt, 'images': [
+#        'https://res.cloudinary.com/djao481zq/image/upload/v1683187215/Misc/GM/Amazon%20AFL/mqsea1cnyda3ap8zng3g.jpg',]},
 
    
-    {'times': ['10:30', '14:00'], 'message': electric_scooter, 'images': [
-        'https://res.cloudinary.com/djao481zq/image/upload/v1688190168/Misc/GM/Amazon%20AFL/reghsqb6btqituldtbda.jpg',]},
+#     {'times': ['10:30', '14:00'], 'message': electric_scooter, 'images': [
+#         'https://res.cloudinary.com/djao481zq/image/upload/v1688190168/Misc/GM/Amazon%20AFL/reghsqb6btqituldtbda.jpg',]},
 
 
-    {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
-     'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
+#     {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
+#      'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
 
 
-    {'duration': 30, 'message': free_young_thug, 'images': [
-        'https://res.cloudinary.com/djao481zq/image/upload/v1688190903/Misc/GM/Amazon%20AFL/rvqs8csrq3l0mrtwfrzg.jpg']},
+#     {'duration': 30, 'message': free_young_thug, 'images': [
+#         'https://res.cloudinary.com/djao481zq/image/upload/v1688190903/Misc/GM/Amazon%20AFL/rvqs8csrq3l0mrtwfrzg.jpg']},
 
 
     {'times': ['13:30', '18:30'], 'message': docs, 'images': [
