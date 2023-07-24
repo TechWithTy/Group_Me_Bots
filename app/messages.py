@@ -34,10 +34,6 @@ docs = f"""
 🚗 Prop Tailored Temp Tags | Prop Verification of insurance
 
 🏡Prop  Court orders  | Prop Eviction Notices
-
-+Actor Able to call auditor from number given
-
-Ask about Prop Certifications and completion of classes.
   
   (If you do not tell me what group youre in and your name i will not respond)
   
