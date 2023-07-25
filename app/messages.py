@@ -12,7 +12,13 @@ mmwebsite = "https://mlightm.my.canva.site/"
 test_text = f"""\
 
 
+
 """
+
+affiliate_links = {"snap_ebt": "https://amzn.to/3QcucsD","amazon_fresh": "https://amzn.to/3KdvdN2","amazon_business_account": "https://amzn.to/3O6Cmjq","prime_student": "https://amzn.to/451aDrq"}
+affiliate_product_links = {"spray_bottle": "https://amzn.to/3rEXKop","butter_maker": "https://amzn.to/44DGkan","e_scooter": "https://amzn.to/3Kf0VcL","prime_student": "https://amzn.to/451aDrq"}
+
+
 mlightm = f"""\
 ``The chat is moving to telegram``` - Why? More features,privacy and less bots. 
 -🤖Sneaker bots and New Releases
@@ -77,7 +83,7 @@ spray_bottle = f"""
 🌍 Ready to embrace a zero-footprint life and level up your natural hair routine? 🌿💆‍♀️ Click the link below to buy the ZIBARBER Salon Style Hair Spray Misting Bottle now on Amazon with 2-day free shipping and free returns! 
 
 🛍️ Don't wait, get yours today and start taking care of your hair the sustainable way! 🙌
-https://amzn.to/42s4QK9
+{affiliate_product_links['spray_bottle']}
 """
 
 amazon_drop = f"""
@@ -98,18 +104,10 @@ prime_student = f"""
 
 🎁 From fast and free delivery to exclusive discounts on everyday favorites, ad-free music, and unlimited photo storage - there's something for everyone! Plus, as a student, you'll get special discounts on textbook and etextbook rentals. Don't miss out, sign up now and start saving! 🤑👨‍🎓👩‍🎓
 
-Get your free 6-month trial of Amazon Prime Student here: https://amzn.to/412WbwG
+Get your free 6-month trial of Amazon Prime Student here:{affiliate_links['prime_student']}
 """
 
-prime_business = f"""
-Attention business owners! Get access to exclusive deals and discounts on business supplies with Amazon Business. 
 
-🤑💼 Enjoy fast and free delivery on eligible items, and take advantage of special pricing on millions of products. 
-
-💰💻 Sign up now to streamline your purchasing process and save time and money for your business.
-
-📈💸 Follow the link to learn more and start saving with Amazon Business today! 👉🏽🛍️
-"""
 
 prime_ebt = f"""
 Did you know that you can register your EBT card with Amazon and enjoy exclusive benefits? 🤑 With your registered EBT card, you'll get access to:
@@ -121,10 +119,9 @@ Discounted Amazon Prime membership,
 
 Plus, you'll get access to all the perks of Prime, like streaming movies, TV shows, and ad-free music. Follow the link to register your EBT card with Amazon and start saving today! 🙌 
 
-https://amzn.to/3nAss07
 
-Once you're signed up, you can even enjoy free shipping on groceries to your dorm. 🚚🏢 Visit the link below to learn more: 👉 https://amzn.to/3OOOE1Y
 
+Once you're signed up, you can even enjoy free shipping on groceries to your dorm. 🚚🏢 Visit the link below to learn more: 👉{affiliate_links['snap_ebt']}
 Don't miss out on these incredible benefits—start saving today! 💰💯
 """
 
@@ -138,20 +135,10 @@ Attention business owners! Get access to exclusive deals and discounts on busine
 💰💻 Sign up now to streamline your purchasing process and save time and money for your business.
 
 📈💸 Follow the link to learn more and start saving with Amazon Business today! 👉🏽🛍️
+{affiliate_links['amazon_business_account']}
 """
 
-looking_to_make_money = f"""
- 
-🎓Hey college students! Are you looking for ways to earn some extra cash? We've got you covered! Check out these awesome apps that can help you make money while still keeping up with your studies:
- Amazon Flex- (Bot Coming Soon)
- 🛒Instacart: Love shopping? Turn your passion into a paycheck with Instacart! This app allows you to become a personal shopper for people who need groceries delivered to their doorstep. 
 
-Earn $350 extra in 30 days when you use this promo code:
-https://pastebin.com/gvbfz2d7
-
-
-
-"""
 
 magic_butter_maker= f"""
  
@@ -166,7 +153,7 @@ It's not just a product, but a revolution in your kitchen, designed especially f
 ⏰ No more slaving away for hours. At a touch of a button, and options of 1, 2, 4, 8 hour cycles, you can churn out anything from lip-smacking marinades for your barbecue party to soothing salves for your skincare regime.
 
 So, what are you waiting for? Time to make your recipes bolder and your life easier with the MagicalButter Machine. Get yours now! 🏃‍♀️🏃‍♂️🌬️
-https://amzn.to/3JEj3MR
+{affiliate_product_links['butter_maker']}
 
 
 """
@@ -182,45 +169,49 @@ Guess what else? For a limited time, this 4.4 star-rated, college student-approv
 
 Don't just get to class, ARRIVE!
 
-https://amzn.to/44hOiFA
+{affiliate_product_links['e_scooter']}
 """
 
-free_young_thug = f"""🚀🎨 Show your support for youngthug with the HEMTIK Young Thug Album Cover Poster! 🔥🔊
+bot_followers_likes = f"""
+🚀 Attention Business Owners! 🚀 Skyrocket Your Success with Unbeatable Deals!
 
-Are your dorm walls looking a bit plain? Want to showcase your love for the iconic Young Thug and his groundbreaking music? Look no further than our high-quality canvas wall art that's destined to transform your space into a hip-hop sanctuary! 🎵
+🔥 Boost your social media presence with 1000 real followers on Instagram or Facebook, all for just $30! 🔥
 
-Our 16" x 16" poster features Young Thug's iconic album cover in an unframed, landscape-oriented design. Compact yet impactful, it's the perfect size to add some swagger to your dorm, office, or any corner of your home. 🖼️
+🎵 Take your music to the top of the charts with 5000 streams and authentic reviews starting at $100!
 
-And guess what? Our stunning 5.0-star rated Young Thug poster is available for a fantastic price of just $18.89! PLUS, as a thank you to our Prime members, we're offering FREE returns. 🌟
-https://amzn.to/3r9r3iJ
+📈🤖 Watch your engagement soar with 2000 Instagram or Facebook likes at unbeatable prices for $20!
 
+💯💼 (Blue Check) Elevate your brand with authentic and verified profiles that showcase your credibility☑!
 
+💰 Don't wait! Seize these amazing deals now to supercharge your business or personal brand!
 
+👉🏽 Click the link and transform your brand today! 👈🏽
+@Telegram - {telegram}
+{phone_number}
+{email}
 """
 
 message_duration_data = [
-    # {'times': ['12:45', '20:00'],  'message':magic_butter_maker, 'images': [
-    #     'https://res.cloudinary.com/djao481zq/image/upload/v1688189143/Misc/GM/Amazon%20AFL/hc53ydxicp15tgzebkcn.jpg',]},
+    {'times': ['12:45', '20:00'],  'message':magic_butter_maker, 'images': [
+        'https://res.cloudinary.com/djao481zq/image/upload/v1688189143/Misc/GM/Amazon%20AFL/hc53ydxicp15tgzebkcn.jpg',]},
 
 
-#    {'times':['12:00','17:00'], 'message':prime_ebt, 'images': [
-#        'https://res.cloudinary.com/djao481zq/image/upload/v1683187215/Misc/GM/Amazon%20AFL/mqsea1cnyda3ap8zng3g.jpg',]},
+   {'times':['12:00','17:00'], 'message':prime_ebt, 'images': [
+       'https://res.cloudinary.com/djao481zq/image/upload/v1683187215/Misc/GM/Amazon%20AFL/mqsea1cnyda3ap8zng3g.jpg',]},
 
    
-#     {'times': ['10:30', '14:00'], 'message': electric_scooter, 'images': [
-#         'https://res.cloudinary.com/djao481zq/image/upload/v1688190168/Misc/GM/Amazon%20AFL/reghsqb6btqituldtbda.jpg',]},
+    {'times': ['10:30', '14:00'], 'message': electric_scooter, 'images': [
+        'https://res.cloudinary.com/djao481zq/image/upload/v1688190168/Misc/GM/Amazon%20AFL/reghsqb6btqituldtbda.jpg',]},
 
 
-#     {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
-#      'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
+    {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
+     'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
 
 
-#     {'duration': 30, 'message': free_young_thug, 'images': [
-#         'https://res.cloudinary.com/djao481zq/image/upload/v1688190903/Misc/GM/Amazon%20AFL/rvqs8csrq3l0mrtwfrzg.jpg']},
+   {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
+     'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
 
-
-    {'times': ['13:30', '18:30'], 'message': docs, 'images': [
-        'https://res.cloudinary.com/djao481zq/image/upload/v1688190992/Misc/GM/Amazon%20AFL/bojtmryflvchmjdz5yu2.png']},
+    {'times': ['13:30', '18:30'], 'message': bot_followers_likes, },
 
     {'duration': 12, 'message': automated_posts},
 
