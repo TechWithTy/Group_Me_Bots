@@ -204,9 +204,7 @@ message_duration_data = [
         'https://res.cloudinary.com/djao481zq/image/upload/v1688190168/Misc/GM/Amazon%20AFL/reghsqb6btqituldtbda.jpg',]},
 
 
-    {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
-     'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
-
+   
 
    {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
      'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
