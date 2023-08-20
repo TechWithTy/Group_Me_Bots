@@ -14,7 +14,7 @@ test_text = f"""\
 
 
 """
-
+glitched_gala ="IG-Glitched_Gala : https://linktr.ee/glitchedgala"
 affiliate_links = {"snap_ebt": "https://amzn.to/3QcucsD","amazon_fresh": "https://amzn.to/3KdvdN2","amazon_business_account": "https://amzn.to/3O6Cmjq","prime_student": "https://amzn.to/451aDrq"}
 affiliate_product_links = {"spray_bottle": "https://amzn.to/3rEXKop","butter_maker": "https://amzn.to/44DGkan","e_scooter": "https://amzn.to/3Kf0VcL","prime_student": "https://amzn.to/451aDrq"}
 
@@ -158,18 +158,20 @@ So, what are you waiting for? Time to make your recipes bolder and your life eas
 
 """
 
-electric_scooter = f"""
-🔥🛴 Scrrr, Pull up stunging, your college commute just got cooler, and greener!
+glitched_gala_post = f"""
+🎉 Attention Event Promoters! 🎉 Elevate Your Next Gig with Glitched_Galas!
 
-Compact yet powerful, this scooter boasts a 450W electric brushless hub motor, reaching exhilarating speeds up to 19mph. Now, those early morning classes won't feel so far away. And the high-capacity battery offers a max travel range of up to 17.5 miles. Perfect for those spontaneous off-campus adventures! 🗺️
+🎟️ Graphic Design: Need a show-stopping poster or ticket design? We've got you covered! Make every event a sell-out with our standout visuals, starting at just $50!
 
-Here's the best part: It's designed with your dynamic student life in mind. With a one-step folding system, this electric scooter folds effortlessly in just 3 seconds. So, you can carry it on public transportation, stash it in your dorm, or slide it into the trunk of your car. The world is your playground! 🌎
+🎯 Digital Marketing: Boost your event's online visibility! From targeted ads to influencer collaborations, let's make your event the talk of the town starting at $100!
 
-Guess what else? For a limited time, this 4.4 star-rated, college student-approved electric scooter is ON SALE for just $300! 🏷️🎉
+📢🌐 Get the word out and create the buzz your event deserves with our specialized promotion strategies tailored for the entertainment world!
 
-Don't just get to class, ARRIVE!
+🥇🎶 From launch parties to concerts, trust glitched_galas to make every event legendary!
 
-{affiliate_product_links['e_scooter']}
+💡 Stay ahead of the competition, and let us amplify your next big night!
+
+{glitched_gala}
 """
 
 bot_followers_likes = f"""
@@ -181,10 +183,12 @@ bot_followers_likes = f"""
 
 📈🤖 Watch your engagement soar with 2000 Instagram or Facebook likes at unbeatable prices for $20!
 
-💯💼 (Blue Check) Elevate your brand with authentic and verified profiles that showcase your credibility☑!
 
 💰 Don't wait! Seize these amazing deals now to supercharge your business or personal brand!
 
+🌐 Landing Pages: Quickly build impressive landing pages for your presales and captivate your audience, starting from $50!
+
+💯💼 Verified Profiles: Elevate your brand with authentic and verified profiles showcasing your credibility☑️!
 👉🏽 Click the link and transform your brand today! 👈🏽
 @Telegram - {telegram}
 {phone_number}
@@ -200,8 +204,8 @@ message_duration_data = [
        'https://res.cloudinary.com/djao481zq/image/upload/v1683187215/Misc/GM/Amazon%20AFL/mqsea1cnyda3ap8zng3g.jpg',]},
 
    
-    {'times': ['10:30', '14:00'], 'message': electric_scooter, 'images': [
-        'https://res.cloudinary.com/djao481zq/image/upload/v1688190168/Misc/GM/Amazon%20AFL/reghsqb6btqituldtbda.jpg',]},
+    {'times': ['10:30', '14:00'], 'message': glitched_gala_post, 'images': [
+        'https://cms-assets.tutsplus.com/cdn-cgi/image/width=360/uploads/users/2777/posts/30216/image-upload/Fashion_Event_Flyer_Mini.jpg',]},
 
 
    
