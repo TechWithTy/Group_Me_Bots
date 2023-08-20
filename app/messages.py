@@ -205,7 +205,7 @@ message_duration_data = [
 
    
     {'times': ['10:30', '14:00'], 'message': glitched_gala_post, 'images': [
-        'https://cms-assets.tutsplus.com/cdn-cgi/image/width=360/uploads/users/2777/posts/30216/image-upload/Fashion_Event_Flyer_Mini.jpg',]},
+        'https://res.cloudinary.com/djao481zq/image/upload/f_auto,q_auto/v1/Misc/GM/Affiliate%20Links/mt63yorpetzooooxgwre',]},
 
 
    

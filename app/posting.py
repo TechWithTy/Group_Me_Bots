@@ -57,7 +57,7 @@ def upload_image_to_groupme(image_url):
 
     # Set up the headers and data for the GroupMe API request
     headers = {
-        "X-Access-Token": "sfWtsmhMR1II4z7WKxPqtXXV7ny10lM1SDnn0QbV",
+        "X-Access-Token": "YOUR_ACCESS_TOKEN",
         "Content-Type": "image/jpeg"
     }
     data = image_data
@@ -66,9 +66,22 @@ def upload_image_to_groupme(image_url):
     response = requests.post(
         "https://image.groupme.com/pictures", headers=headers, data=data)
 
-    # Return the URL of the uploaded image
-    return response.json().get('payload').get('url')
+    # Check if the response is JSON serializable
+    try:
+        json_data = response.json()
+    except ValueError:
+        print("Error: Response is not JSON serializable.")
+        return None
 
+    # Extract the image URL from the JSON data
+    if json_data and 'payload' in json_data:
+        payload = json_data.get('payload')
+        if payload and 'url' in payload:
+            return payload.get('url')
+        
+    # If anything goes wrong, print an error message and return None
+    print("Error: Unable to extract image URL from the response.")
+    return None
 
 def send_message_to_groups(new_bots: list, message: str, files: list = None) -> str:
     """
