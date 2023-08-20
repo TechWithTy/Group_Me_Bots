@@ -72,7 +72,7 @@ def upload_image_to_groupme(image_url):
         if payload:
             return payload.get('url')
     
-    # If the above checks fail or we didn't get a valid URL, return None or handle it appropriately
+    # If the above checks fail or we didn't get a vaalid URL, return None or handle it appropriately
     return None
 
 def send_message_to_groups(new_bots: list, message: str, files: list = None) -> str:
