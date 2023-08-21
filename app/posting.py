@@ -67,13 +67,25 @@ def upload_image_to_groupme(image_url):
         "https://image.groupme.com/pictures", headers=headers, data=data)
 
     # Check if the response is valid and contains JSON data
-    if response.status_code == 200 and response.json():
-        payload = response.json().get('payload')
-        if payload:
-            return payload.get('url')
+    response = requests.post("https://image.groupme.com/pictures", headers=headers, data=data)
+
+    if response.status_code != 200:
+        print(f"Failed to upload image. Status code: {response.status_code}, Response text: {response.text}")
+        return None
+
+    # Check if 'payload' and 'url' exist in the response before accessing them.
+    payload = response.json().get('payload')
+    if not payload:
+        print("No 'payload' in the response")
+        return None
+    url = payload.get('url')
+    if not url:
+        print("No 'url' in the 'payload'")
+        return None
+    return url
     
     # If the above checks fail or we didn't get a vaalid URL, return None or handle it appropriately
-    return None
+    
 
 def send_message_to_groups(new_bots: list, message: str, files: list = None) -> str:
     """

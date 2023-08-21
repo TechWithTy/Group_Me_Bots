@@ -205,7 +205,7 @@ message_duration_data = [
 
    
     {'times': ['10:30', '14:00'], 'message': glitched_gala_post, 'images': [
-        "https://res.cloudinary.com/djao481zq/image/upload/v1692559452/Misc/GM/GMPOSTS/mt63yorpetzooooxgwre.jpg",]},
+        "https://res.cloudinary.com/djao481zq/image/upload/v1692635470/Fashion_flyer-removebg-preview_r93arv.png",]},
 
 
    
