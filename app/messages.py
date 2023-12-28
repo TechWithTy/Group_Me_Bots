@@ -194,36 +194,31 @@ bot_followers_likes = f"""
 {email}
 """
 
-ras_mycology_marketing = f""" 🚀 Grow a Pound of Mushrooms Guaranteed or Your Money Back! 🍄
+ras_mycology_marketing = f""" 🚀 Grow A Pound Of Mushrooms! Or Your Money back 🍄
 
-Dive into mushroom growing! 🌊 Learn, grow, and maybe even make some cash. 💸
+Get into mushroom growing! 🌊 Learn, hustle, and maybe earn some dough. 💸
 
-🌱 Our Program:
+🌱 Our Vibe:
 
-Perfect for all levels, from beginners to pros.
-We guide you through every step. 🤝
-💥 Program Highlights:
+For everyone: newbies to old hands.
+We walk you through it all, step by step. 🤝
+💥 Program Dope Stuff:
 
-Tiers for all skills.
+Levels for every skill.
+All-in-one kit: spores, tools, plus a mentor.
+Aim: Grow a pound of shrooms!
+📆 What's Up:
 
-Complete kit: spores, gear, mentorship. everything you need to get started.
+Custom learning levels.
+Weekly mentorship for the pros.
+Join the pro mushroom squad.
+🔍 Keeping it 100:
 
-Goal: Harvest a pound of mushrooms!
+Totally legal with spore syringes. We roll with Denver's Prop 122. Spores are cool in MOST states.
+🎉 Only 10 spots! Get in on this mycology vibe. Slide into our program here:➡️ https://form.jotform.com/233614903427051?howDid=GroupMe⬅️🏃‍♂️💨
 
-📆 Schedule:
-
-Tailored tiers for learning.
-Weekly mentorship for advanced tiers.
-Access to a pro mushroom community.
-
-🔍 Legal & Safe:
-
-100% compliant with laws on spore syringes. We operate under Denvers Prop 122 , And spores are legal in MOST states.
-
-🎉 Limited Spots! Only 10 available! Join our mycology journey. Apply:➡️ https://form.jotform.com/233614903427051?howDid=GroupMe ⬅️🏃‍♂️💨
-
-Follow on IG: @rasmycologynvape. Support on Patreon: RastaRootsMushroomSupply
-https://ballotpedia.org/Colorado_Proposition_122,_Decriminalization_and_Regulated_Access_Program_for_Certain_Psychedelic_Plants_and_Fungi_Initiative_(2022)
+Hit us up on IG: @rasmycologynvape. Show love on Patreon: RastaRootsMushroomSupply
+Check the legal deetails: https://ballotpedia.org/Colorado_Proposition_122,_Decriminalization_and_Regulated_Access_Program_for_Certain_Psychedelic_Plants_and_Fungi_Initiative_(2022)
 """
 
 message_duration_data = [
