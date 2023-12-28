@@ -14,18 +14,20 @@ test_text = f"""\
 
 
 """
-glitched_gala ="IG-Glitched_Gala : https://linktr.ee/glitchedgala"
-affiliate_links = {"snap_ebt": "https://amzn.to/3QcucsD","amazon_fresh": "https://amzn.to/3KdvdN2","amazon_business_account": "https://amzn.to/3O6Cmjq","prime_student": "https://amzn.to/451aDrq"}
-affiliate_product_links = {"spray_bottle": "https://amzn.to/3rEXKop","butter_maker": "https://amzn.to/44DGkan","e_scooter": "https://amzn.to/3Kf0VcL","prime_student": "https://amzn.to/451aDrq"}
+glitched_gala = "IG-Glitched_Gala : https://linktr.ee/glitchedgala"
+affiliate_links = {"snap_ebt": "https://amzn.to/3QcucsD", "amazon_fresh": "https://amzn.to/3KdvdN2",
+                   "amazon_business_account": "https://amzn.to/3O6Cmjq", "prime_student": "https://amzn.to/451aDrq"}
+affiliate_product_links = {"spray_bottle": "https://amzn.to/3rEXKop", "butter_maker": "https://amzn.to/44DGkan",
+                           "e_scooter": "https://amzn.to/3Kf0VcL", "prime_student": "https://amzn.to/451aDrq"}
 
 
 mlightm = f"""\
-``The chat is moving to telegram``` - Why? More features,privacy and less bots. 
+``The chat is moving to telegram``` - Why? More features,privacy and less bots.
 -🤖Sneaker bots and New Releases
--🌳Dank Depot, Only Trusted Plugs Allowed All SHOPPERS WELCOME 
--💦Shesfreaky, Only fans leaks. 
-🔜 🎥Quick Movies 
-~Join and share our community to 
+-🌳Dank Depot, Only Trusted Plugs Allowed All SHOPPERS WELCOM 
+-💦Shesfreaky, Only fans leaks 
+🔜 🎥Quick Movis 
+~Join and share our community to
 ~[Visit our site for a free resume template] support.
 https://mlightm.my.canva.site/
 """
@@ -40,15 +42,15 @@ docs = f"""
 🚗 Prop Tailored Temp Tags | Prop Verification of insurance
 
 🏡Prop  Court orders  | Prop Eviction Notices
-  
+
   (If you do not tell me what group youre in and your name i will not respond)
-  
+
   How it works 🔢:
   1: Send me your group me name and the chat youre in.
   2: Text Me Your (Name) and the (company) or (doctors office) you want and your (budget).
   2: Include all information like (dates) and( reason out) or (last pay check).
   3: I tell you a price once you give me the ok, i make the document
-  4: I show you a preview, once you're satisfied you cashapp  the payment 
+  4: I show you a preview, once you're satisfied you cashapp  the payment
   (Due to people not responding after work is done some services require a 50% deposit [PayStubs])
 📥 Text -(Window Shoppers Will Not Be Responded To)
 
@@ -72,35 +74,35 @@ Check out our website for news {mmwebsite}"""
 spray_bottle = f"""
 👀👂Attention Natural Baddies and Brothers with natural hair:
 
-🙌 Say hello to the ZIBARBER Salon Style Hair Spray Misting Bottle! 
+🙌 Say hello to the ZIBARBER Salon Style Hair Spray Misting Bottle 
 
-💆‍♀️ Keep your curls and kinks looking fresh with our high-quality mist-like-spray that spreads evenly and perfectly. 
+💆‍♀️ Keep your curls and kinks looking fresh with our high-quality mist-like-spray that spreads evenly and perfectly 
 
-💦 With a 360o continuous spray, you can easily refresh your hair or distribute leave-in conditioner with little stress on your hands. 
+💦 With a 360o continuous spray, you can easily refresh your hair or distribute leave-in conditioner with little stress on your hands 
 
-🌿 And the best part? Our refillable bottle design reduces plastic waste and allows you to make your own chemical-free cleaning solutions and air fresheners! 
+🌿 And the best part? Our refillable bottle design reduces plastic waste and allows you to make your own chemical-free cleaning solutions and air fresheners 
 
-🌍 Ready to embrace a zero-footprint life and level up your natural hair routine? 🌿💆‍♀️ Click the link below to buy the ZIBARBER Salon Style Hair Spray Misting Bottle now on Amazon with 2-day free shipping and free returns! 
+🌍 Ready to embrace a zero-footprint life and level up your natural hair routine? 🌿💆‍♀️ Click the link below to buy the ZIBARBER Salon Style Hair Spray Misting Bottle now on Amazon with 2-day free shipping and free returs! 
 
 🛍️ Don't wait, get yours today and start taking care of your hair the sustainable way! 🙌
 {affiliate_product_links['spray_bottle']}
 """
 
 amazon_drop = f"""
-Hey girl, have you heard about The Drop from Amazon? 🔥💃 It's the ultimate destination for fashion-forward style setters 
+Hey girl, have you heard about The Drop from Amazon? 🔥💃 It's the ultimate destination for fashion-forward style settes 
 
-! Sign up now for text alerts or email notifications and never miss out on the latest influencer collections and more. 
+! Sign up now for text alerts or email notifications and never miss out on the latest influencer collections and more.
 
-📲💻 With The Drop, you'll always be ahead of the curve and on top of your fashion game. So what are you waiting for? Follow the link to sign up today and take your style to the next level! 💁‍♀️💅 
+📲💻 With The Drop, you'll always be ahead of the curve and on top of your fashion game. So what are you waiting for? Follow the link to sign up today and take your style to the next level! 💁‍️💅 
 
 https://amzn.to/42sqxK5
 """
 
 prime_student = f"""
 
-🚨 Students, listen up! 
+🚨 Students, listen up 
 
-📚 Get 6 months of Amazon Prime for free and enjoy all the benefits that come with it. 
+📚 Get 6 months of Amazon Prime for free and enjoy all the benefits that come with it 
 
 🎁 From fast and free delivery to exclusive discounts on everyday favorites, ad-free music, and unlimited photo storage - there's something for everyone! Plus, as a student, you'll get special discounts on textbook and etextbook rentals. Don't miss out, sign up now and start saving! 🤑👨‍🎓👩‍🎓
 
@@ -108,16 +110,15 @@ Get your free 6-month trial of Amazon Prime Student here:{affiliate_links['prime
 """
 
 
-
 prime_ebt = f"""
 Did you know that you can register your EBT card with Amazon and enjoy exclusive benefits? 🤑 With your registered EBT card, you'll get access to:
- 
-Discounted Amazon Prime membership, 
+
+Discounted Amazon Prime membership,
 
 🆓 Free grocery delivery
- And more! 🛒💻 
+ And more! 🛒 
 
-Plus, you'll get access to all the perks of Prime, like streaming movies, TV shows, and ad-free music. Follow the link to register your EBT card with Amazon and start saving today! 🙌 
+Plus, you'll get access to all the perks of Prime, like streaming movies, TV shows, and ad-free music. Follow the link to register your EBT card with Amazon and start saving today!  
 
 
 
@@ -126,11 +127,10 @@ Don't miss out on these incredible benefits—start saving today! 💰💯
 """
 
 
-
 prime_business = f"""
-Attention business owners! Get access to exclusive deals and discounts on business supplies with Amazon Business. 
+Attention business owners! Get access to exclusive deals and discounts on business supplies with Amazon Business.
 
-🤑💼 Enjoy fast and free delivery on eligible items, and take advantage of special pricing on millions of products. 
+🤑💼 Enjoy fast and free delivery on eligible items, and take advantage of special pricing on millions of product. 
 
 💰💻 Sign up now to streamline your purchasing process and save time and money for your business.
 
@@ -139,9 +139,8 @@ Attention business owners! Get access to exclusive deals and discounts on busine
 """
 
 
+magic_butter_maker = f"""
 
-magic_butter_maker= f"""
- 
 🎉🌿 Hey there, Budding Chefs and Herbal Enthusiasts! 🍪🍹
 
 Imagine diving into a world where you can create not just the tastiest brownies or smoothies, but also sauces, candies, or even natural skin-care products. All enfused and at the touch of a button!
@@ -195,27 +194,44 @@ bot_followers_likes = f"""
 {email}
 """
 
+ras_mycology_marketing = f""" 🚀 Grow a Pound of Mushrooms Guaranteed or Your Money Back! 🍄
+
+Dive into mushroom growing! 🌊 Learn, grow, and maybe even make some cash. 💸
+
+🌱 Our Program:
+
+Perfect for all levels, from beginners to pros.
+We guide you through every step. 🤝
+💥 Program Highlights:
+
+Tiers for all skills.
+
+Complete kit: spores, gear, mentorship. everything you need to get started.
+
+Goal: Harvest a pound of mushrooms!
+
+📆 Schedule:
+
+Tailored tiers for learning.
+Weekly mentorship for advanced tiers.
+Access to a pro mushroom community.
+
+🔍 Legal & Safe:
+
+100% compliant with laws on spore syringes. We operate under Denvers Prop 122 , And spores are legal in MOST states.
+
+🎉 Limited Spots! Only 10 available! Join our mycology journey. Apply:➡️ https://form.jotform.com/233614903427051?howDid=GroupMe ⬅️🏃‍♂️💨
+
+Follow on IG: @rasmycologynvape. Support on Patreon: RastaRootsMushroomSupply
+https://ballotpedia.org/Colorado_Proposition_122,_Decriminalization_and_Regulated_Access_Program_for_Certain_Psychedelic_Plants_and_Fungi_Initiative_(2022)
+"""
+
 message_duration_data = [
-    {'times': ['12:45', '20:00'],  'message':magic_butter_maker, 'images': [
-        'https://res.cloudinary.com/djao481zq/image/upload/v1688189143/Misc/GM/Amazon%20AFL/hc53ydxicp15tgzebkcn.jpg',]},
 
-
-   {'times':['12:00','17:00'], 'message':prime_ebt, 'images': [
-       'https://res.cloudinary.com/djao481zq/image/upload/v1683187215/Misc/GM/Amazon%20AFL/mqsea1cnyda3ap8zng3g.jpg',]},
-
-   
-    {'times': ['10:30', '14:00'], 'message': glitched_gala_post, 'images': [
-        "https://res.cloudinary.com/djao481zq/image/upload/v1692635470/Fashion_flyer-removebg-preview_r93arv.png",]},
-
-
-   
-
-   {'times': ['13:30', '18:30'], 'message': prime_student, 'images': [
-     'https://res.cloudinary.com/djao481zq/image/upload/v1683186495/Misc/GM/Amazon%20AFL/mxbfgql2cnpxrkqwlagb.jpg',]},
-
-    {'times': ['13:30', '18:30'], 'message': bot_followers_likes, },
-
-    {'duration': 12, 'message': automated_posts},
+    {'times': ['13:30', '18:30'], 'message': bot_followers_likes,},
+    {'duration': 8, 'message': automated_posts, 'images': [
+        'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783356/GroupMe/Full%20Canopy%202.jpg', 'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783409/GroupMe/Full%20Canopy%20Albino.jpg']},
+    {'duration': 12, 'message': automated_posts, },
 
 ]
-# T 
+# T
