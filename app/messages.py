@@ -229,7 +229,7 @@ https://ballotpedia.org/Colorado_Proposition_122,_Decriminalization_and_Regulate
 message_duration_data = [
 
     {'times': ['13:30', '18:30'], 'message': bot_followers_likes,},
-    {'duration': 8, 'message': automated_posts, 'images': [
+    {'duration': 8, 'message': ras_mycology_marketing, 'images': [
         'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783356/GroupMe/Full%20Canopy%202.jpg', 'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783409/GroupMe/Full%20Canopy%20Albino.jpg']},
     {'duration': 12, 'message': automated_posts, },
 
