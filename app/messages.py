@@ -9,6 +9,7 @@ phone_number = "(720) 686-2362"
 email = "bendoverama@proton.me"
 telegram = "flrsntzot"
 mmwebsite = "https://mlightm.my.canva.site/"
+ras_gm_telegram = "https://t.me/+K5A8Gn1wAQRhODVh"
 test_text = f"""\
 
 
@@ -194,6 +195,18 @@ bot_followers_likes = f"""
 {email}
 """
 
+
+ras_mycology_short  = f""" 🚀 Grow A Pound Of Mushrooms! Or Your Money back 🍄
+Our course comes with all supplies you need incluiding spores.
+We also have 3 Tiers availabel for different skill levels
+
+Whats stopping you from learning a new skill that you can use the rest of your life?
+Join Now offers like this dont come around often!
+🍄
+{ras_gm_telegram}
+⬇️
+ https://form.jotform.com/233614903427051?howDid=GroupMe
+"""
 ras_mycology_marketing = f""" 🚀 Grow A Pound Of Mushrooms! Or Your Money back 🍄
 
 Get into mushroom growing! 🌊 Learn, hustle, and maybe earn some dough. 💸
@@ -224,9 +237,12 @@ Check the legal deetails: https://ballotpedia.org/Colorado_Proposition_122,_Decr
 message_duration_data = [
 
     {'times': ['13:30', '18:30'], 'message': bot_followers_likes,},
-    {'duration': 3, 'message': ras_mycology_marketing, 'images': [
+    {'duration': 4, 'message': ras_mycology_marketing, 'images': [
         'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783356/GroupMe/Full%20Canopy%202.jpg', 'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783409/GroupMe/Full%20Canopy%20Albino.jpg']},
     {'duration': 12, 'message': automated_posts, },
+    {'duration': 2, 'message': ras_mycology_short, 'images': [
+         'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783409/GroupMe/Full%20Canopy%20Albino.jpg']},
+
 
 ]
 # T
