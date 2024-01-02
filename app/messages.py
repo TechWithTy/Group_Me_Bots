@@ -206,6 +206,8 @@ Join Now offers like this dont come around often!
 {ras_gm_telegram}
 ⬇️
  https://form.jotform.com/233614903427051?howDid=GroupMe
+
+ Payments completely secure through paypal.
 """
 ras_mycology_marketing = f""" 🚀 Grow A Pound Of Mushrooms! Or Your Money back 🍄
 
@@ -237,10 +239,10 @@ Check the legal deetails: https://ballotpedia.org/Colorado_Proposition_122,_Decr
 message_duration_data = [
 
     {'times': ['13:30', '18:30'], 'message': bot_followers_likes,},
-    {'duration': 4, 'message': ras_mycology_marketing, 'images': [
+    {'duration': 18, 'message': ras_mycology_marketing, 'images': [
         'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783356/GroupMe/Full%20Canopy%202.jpg', 'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783409/GroupMe/Full%20Canopy%20Albino.jpg']},
     {'duration': 12, 'message': automated_posts, },
-    {'duration': 2, 'message': ras_mycology_short, 'images': [
+    {'duration': 4, 'message': ras_mycology_short, 'images': [
          'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783409/GroupMe/Full%20Canopy%20Albino.jpg']},
 
 
