@@ -213,6 +213,22 @@ Join us on telegram for info - {ras_gm_telegram}
 🍄 Hurry, these high-demand options won't last!
 """
 
+group_link_aggregator = """
+🎉 Attention Group Members! 📣
+
+Exciting News! 💰
+
+If you submit groups with 300 members or more, you'll receive $10 as a token of appreciation! 🤑
+
+$5 Extra bonus to private groups with entry messages
+
+Help us grow our community and earn your reward today! 💪
+
+Ready to submit your groups? Click here: https://form.jotform.com/240356526937059
+
+Thank you for your support! 🙌
+"""
+
 
 ras_mycology_marketing = f"""🍄 Elevate Your Wellness with Premium Medicinal Mushrooms! 🌿
 
@@ -238,7 +254,8 @@ Don't wait; these premium options are in high demand, and we don't want you to m
 
 message_duration_data = [
 
-    {'times': ['13:30', '18:30'], 'message': bot_followers_likes, },
+    {'times': ['13:30', '18:30'], 'message':
+     group_link_aggregator, },
     {'duration': 8, 'message': ras_mycology_short, 'images': [
         'https://res.cloudinary.com/dnuwfvw5n/image/upload/v1707091217/Chocolate_otxdm2.png']},
     {'duration': 18, 'message': ras_mycology_marketing, 'images': [
