@@ -197,31 +197,26 @@ bot_followers_likes = f"""
 """
 
 
-ras_mycology_short = f""" Don't Miss Out! 🚨 Available for pickup or delivery 🚚
-We have a variety of premium medicinal options ready to transform your day:
+ras_mycology_short = f"""
+🚨 Don't Miss Out! 🚚
 
-🍫 DayTrip Premium Organic Cacao bars | Double Infusion | Slow Release (6g)
-   Indulge in the finest double-infused, slow-release cacao bars made from premium organic cacao beans. Experience luxury in every bite. Order now to elevate your mood and energy!
+Indulge in premium medicinal options:
+🍫 DayTrip Premium Organic Cacao bars | Double Infusion | Slow Release (6g) (100mg)
+🍬 Gummies - Convenient relief!
+🍋 Lemonade - Refreshing wellness!
 
-🍬 Gummies
-   Craving a sweet and convenient dose of relief? Enjoy our delectable gummies, bursting with flavor and made from high-quality ingredients. Grab yours before they're gone!
+Order now for on-time delivery. Inquire about our affiliate program while slots last!
 
-🍋 Lemonade 🍋
-   Beat the heat and boost your wellness with our refreshing lemonade, crafted with care for a delightful and revitalizing experience. Quench your thirst today!
+Visit our website: {ras_day_trip}
+Join us on telegram for info - {ras_gm_telegram}
 
-Worried about delays? Act now and ensure you receive your order on time. Visit our telegram for more information and to place an order.
-
-And here's an exciting opportunity for you: while slots are available, don't forget to inquire about our affiliate program. Partner with us and earn rewards for spreading the word about our premium products!
-Visit our website here - {ras_day_trip}
-To get password you must pass verification on -{ras_gm_telegram}
-🍄
-Don't wait; these premium options are in high demand, and we don't want you to miss out!
+🍄 Hurry, these high-demand options won't last!
 """
 
 
 ras_mycology_marketing = f"""🍄 Elevate Your Wellness with Premium Medicinal Mushrooms! 🌿
 
-🔮 Jedi Mind Fuck | 🌊 Tidal Wave | ⚫ Black Caps | Enigma (3x)
+🔮 Jedi Mind Fuck | 🌊 Tidal Wave | ⚫ Black Caps |🧠 Enigma (3x)
 
 ✨ Experience the magic of nature's healing with our medicinal mushroom strains:
 
