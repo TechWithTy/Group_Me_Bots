@@ -5,11 +5,12 @@ Gushers
 
 
 """
-phone_number = "(720) 686-2362"
+phone_number = "(720) 440-7101"
 email = "bendoverama@proton.me"
 telegram = "flrsntzot"
 mmwebsite = "https://mlightm.my.canva.site/"
 ras_gm_telegram = "https://t.me/+K5A8Gn1wAQRhODVh"
+ras_day_trip = "https://mycelium.cyou/daytrip"
 test_text = f"""\
 
 
@@ -25,9 +26,9 @@ affiliate_product_links = {"spray_bottle": "https://amzn.to/3rEXKop", "butter_ma
 mlightm = f"""\
 ``The chat is moving to telegram``` - Why? More features,privacy and less bots.
 -🤖Sneaker bots and New Releases
--🌳Dank Depot, Only Trusted Plugs Allowed All SHOPPERS WELCOM 
--💦Shesfreaky, Only fans leaks 
-🔜 🎥Quick Movis 
+-🌳Dank Depot, Only Trusted Plugs Allowed All SHOPPERS WEL 
+-💦Shesfreaky, Only fans le 
+🔜 🎥Quick Ms 
 ~Join and share our community to
 ~[Visit our site for a free resume template] support.
 https://mlightm.my.canva.site/
@@ -75,35 +76,35 @@ Check out our website for news {mmwebsite}"""
 spray_bottle = f"""
 👀👂Attention Natural Baddies and Brothers with natural hair:
 
-🙌 Say hello to the ZIBARBER Salon Style Hair Spray Misting Bottle 
+🙌 Say hello to the ZIBARBER Salon Style Hair Spray Misting Bot 
 
-💆‍♀️ Keep your curls and kinks looking fresh with our high-quality mist-like-spray that spreads evenly and perfectly 
+💆‍♀️ Keep your curls and kinks looking fresh with our high-quality mist-like-spray that spreads evenly and perfec 
 
-💦 With a 360o continuous spray, you can easily refresh your hair or distribute leave-in conditioner with little stress on your hands 
+💦 With a 360o continuous spray, you can easily refresh your hair or distribute leave-in conditioner with little stress on your ha 
 
-🌿 And the best part? Our refillable bottle design reduces plastic waste and allows you to make your own chemical-free cleaning solutions and air fresheners 
+🌿 And the best part? Our refillable bottle design reduces plastic waste and allows you to make your own chemical-free cleaning solutions and air freshen 
 
-🌍 Ready to embrace a zero-footprint life and level up your natural hair routine? 🌿💆‍♀️ Click the link below to buy the ZIBARBER Salon Style Hair Spray Misting Bottle now on Amazon with 2-day free shipping and free returs! 
+🌍 Ready to embrace a zero-footprint life and level up your natural hair routine? 🌿💆‍♀️ Click the link below to buy the ZIBARBER Salon Style Hair Spray Misting Bottle now on Amazon with 2-day free shipping and free res! 
 
 🛍️ Don't wait, get yours today and start taking care of your hair the sustainable way! 🙌
 {affiliate_product_links['spray_bottle']}
 """
 
 amazon_drop = f"""
-Hey girl, have you heard about The Drop from Amazon? 🔥💃 It's the ultimate destination for fashion-forward style settes 
+Hey girl, have you heard about The Drop from Amazon? 🔥💃 It's the ultimate destination for fashion-forward style ses 
 
 ! Sign up now for text alerts or email notifications and never miss out on the latest influencer collections and more.
 
-📲💻 With The Drop, you'll always be ahead of the curve and on top of your fashion game. So what are you waiting for? Follow the link to sign up today and take your style to the next level! 💁‍️💅 
+📲💻 With The Drop, you'll always be ahead of the curve and on top of your fashion game. So what are you waiting for? Follow the link to sign up today and take your style to the next level! 💅 
 
 https://amzn.to/42sqxK5
 """
 
 prime_student = f"""
 
-🚨 Students, listen up 
+🚨 Students, liste 
 
-📚 Get 6 months of Amazon Prime for free and enjoy all the benefits that come with it 
+📚 Get 6 months of Amazon Prime for free and enjoy all the benefits that come wit 
 
 🎁 From fast and free delivery to exclusive discounts on everyday favorites, ad-free music, and unlimited photo storage - there's something for everyone! Plus, as a student, you'll get special discounts on textbook and etextbook rentals. Don't miss out, sign up now and start saving! 🤑👨‍🎓👩‍🎓
 
@@ -117,9 +118,9 @@ Did you know that you can register your EBT card with Amazon and enjoy exclusive
 Discounted Amazon Prime membership,
 
 🆓 Free grocery delivery
- And more! 🛒 
+ And more!
 
-Plus, you'll get access to all the perks of Prime, like streaming movies, TV shows, and ad-free music. Follow the link to register your EBT card with Amazon and start saving today!  
+Plus, you'll get access to all the perks of Prime, like streaming movies, TV shows, and ad-free music. Follow the link to register your EBT card with Amazon and start saving today!
 
 
 
@@ -131,7 +132,7 @@ Don't miss out on these incredible benefits—start saving today! 💰💯
 prime_business = f"""
 Attention business owners! Get access to exclusive deals and discounts on business supplies with Amazon Business.
 
-🤑💼 Enjoy fast and free delivery on eligible items, and take advantage of special pricing on millions of product. 
+🤑💼 Enjoy fast and free delivery on eligible items, and take advantage of special pricing on millions of prod. 
 
 💰💻 Sign up now to streamline your purchasing process and save time and money for your business.
 
@@ -196,55 +197,57 @@ bot_followers_likes = f"""
 """
 
 
-ras_mycology_short  = f""" 🚀 Grow A Pound Of Mushrooms! Or Your Money back 🍄
-Our course comes with all supplies you need incluiding spores.
-We also have 3 Tiers availabel for different skill levels
+ras_mycology_short = f""" Don't Miss Out! 🚨 Available for pickup or delivery 🚚
+We have a variety of premium medicinal options ready to transform your day:
 
-Whats stopping you from learning a new skill that you can use the rest of your life?
-Join Now offers like this dont come around often!
+🍫 DayTrip Premium Organic Cacao bars | Double Infusion | Slow Release (6g)
+   Indulge in the finest double-infused, slow-release cacao bars made from premium organic cacao beans. Experience luxury in every bite. Order now to elevate your mood and energy!
+
+🍬 Gummies
+   Craving a sweet and convenient dose of relief? Enjoy our delectable gummies, bursting with flavor and made from high-quality ingredients. Grab yours before they're gone!
+
+🍋 Lemonade 🍋
+   Beat the heat and boost your wellness with our refreshing lemonade, crafted with care for a delightful and revitalizing experience. Quench your thirst today!
+
+Worried about delays? Act now and ensure you receive your order on time. Visit our telegram for more information and to place an order.
+
+And here's an exciting opportunity for you: while slots are available, don't forget to inquire about our affiliate program. Partner with us and earn rewards for spreading the word about our premium products!
+Visit our website here - {ras_day_trip}
+To get password you must pass verification on -{ras_gm_telegram}
 🍄
-{ras_gm_telegram}
-⬇️
- https://form.jotform.com/233614903427051?howDid=GroupMe
-
- Payments completely secure through paypal.
+Don't wait; these premium options are in high demand, and we don't want you to miss out!
 """
-ras_mycology_marketing = f""" 🚀 Grow A Pound Of Mushrooms! Or Your Money back 🍄
 
-Get into mushroom growing! 🌊 Learn, hustle, and maybe earn some dough. 💸
 
-🌱 Our Vibe:
+ras_mycology_marketing = f"""🍄 Elevate Your Wellness with Premium Medicinal Mushrooms! 🌿
 
-For everyone: newbies to old hands.
-We walk you through it all, step by step. 🤝
-💥 Program Dope Stuff:
+🔮 Jedi Mind Fuck | 🌊 Tidal Wave | ⚫ Black Caps | Enigma (3x)
 
-Levels for every skill.
-All-in-one kit: spores, tools, plus a mentor.
-Aim: Grow a pound of shrooms!
-📆 What's Up:
+✨ Experience the magic of nature's healing with our medicinal mushroom strains:
 
-Custom learning levels.
-Weekly mentorship for the pros.
-Join the pro mushroom squad.
-🔍 Keeping it 100:
+🟤Brown Caps: $75 for 28gs | 16z for  $800
+🏝️Exotics: $125 per dose | 16z $1200
+💪🏾Super Strength Enigma: $150z While supplies last
 
-Totally legal with spore syringes. We roll with Denver's Prop 122. Spores are cool in MOST states.
-🎉 Only 10 spots! Get in on this mycology vibe. Slide into our program here:➡️ https://form.jotform.com/233614903427051?howDid=GroupMe⬅️🏃‍♂️💨
+Find tranquility, or boost your vitality – choose your path to well-being!
 
-Hit us up on IG: @rasmycologynvape. Show love on Patreon: RastaRootsMushroomSupply
-Check the legal deetails: https://ballotpedia.org/Colorado_Proposition_122,_Decriminalization_and_Regulated_Access_Program_for_Certain_Psychedelic_Plants_and_Fungi_Initiative_(2022)
+Order now and discover the power of nature at its finest. Join our telegram group for more info!
+
+
+
+Visit our website here - {ras_day_trip}
+To get password you must pass verification on -{ras_gm_telegram}
+🍄
+Don't wait; these premium options are in high demand, and we don't want you to miss out!
 """
 
 message_duration_data = [
 
-    {'times': ['13:30', '18:30'], 'message': bot_followers_likes,},
+    {'times': ['13:30', '18:30'], 'message': bot_followers_likes, },
+    {'duration': 8, 'message': ras_mycology_short, 'images': [
+        'https://res.cloudinary.com/dnuwfvw5n/image/upload/v1707091217/Chocolate_otxdm2.png']},
     {'duration': 18, 'message': ras_mycology_marketing, 'images': [
         'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783356/GroupMe/Full%20Canopy%202.jpg', 'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783409/GroupMe/Full%20Canopy%20Albino.jpg']},
-    {'duration': 12, 'message': automated_posts, },
-    {'duration': 4, 'message': ras_mycology_short, 'images': [
-         'https://res.cloudinary.com/dpyduipbs/image/upload/v1703783409/GroupMe/Full%20Canopy%20Albino.jpg']},
 
 
 ]
-# T
