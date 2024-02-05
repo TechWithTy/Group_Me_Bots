@@ -218,7 +218,7 @@ group_link_aggregator = """
 
 Exciting News! 💰
 
-If you submit groups with 300 members or more, you'll receive $10 as a token of appreciation! 🤑
+If you submit group me group links with 300 members or more, you'll receive $10 as a token of appreciation! 🤑
 
 $5 Extra bonus to private groups with entry messages
 
