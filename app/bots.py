@@ -1,12 +1,10 @@
 import time
 import requests
-import __main__
 from dotenv import load_dotenv
 import os
 import json
-from AWS import  keys
+from AWS import keys
 # Load environment variables from .env file
-load_dotenv()
 ACCESS_TOKEN = os.environ.get('ZB_PROMO')
 # print(ACCESS_TOKEN, 'ACCESS_TOKEN')
 

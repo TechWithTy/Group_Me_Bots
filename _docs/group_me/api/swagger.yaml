@@ -1,0 +1,947 @@
+openapi: "3.0.3"
+info:
+  title: "GroupMe API v3 (Extended)"
+  version: "v3"
+  description: |
+    Official + community-documented endpoints for GroupMe v3.
+servers:
+  - url: "https://api.groupme.com/v3"
+    description: "GroupMe v3 API endpoint"
+
+components:
+  schemas:
+    Meta:
+      type: object
+      properties:
+        code:
+          type: integer
+        errors:
+          type: array
+          items:
+            type: string
+      required:
+        - code
+
+    Envelope:
+      type: object
+      properties:
+        meta:
+          $ref: "#/components/schemas/Meta"
+        response:
+          nullable: true
+          oneOf:
+            - type: object
+            - type: array
+              items: { type: object }
+      required:
+        - meta
+
+    # Attachments
+    Attachment:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: "#/components/schemas/ImageAttachment"
+        - $ref: "#/components/schemas/LocationAttachment"
+        - $ref: "#/components/schemas/SplitAttachment"
+        - $ref: "#/components/schemas/EmojiAttachment"
+
+    ImageAttachment:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [image]
+        url:
+          type: string
+      required:
+        - type
+        - url
+
+    LocationAttachment:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [location]
+        lat:
+          type: string
+        lng:
+          type: string
+        name:
+          type: string
+      required:
+        - type
+        - lat
+        - lng
+        - name
+
+    SplitAttachment:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [split]
+        token:
+          type: string
+      required:
+        - type
+        - token
+
+    EmojiAttachment:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [emoji]
+        placeholder:
+          type: string
+        charmap:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+            minItems: 2
+            maxItems: 2
+      required:
+        - type
+        - placeholder
+        - charmap
+
+    # Messages & responses
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        source_guid:
+          type: string
+        created_at:
+          type: integer
+        user_id:
+          type: string
+        group_id:
+          type: string
+        name:
+          type: string
+        avatar_url:
+          type: string
+        text:
+          type: string
+        system:
+          type: boolean
+        favorited_by:
+          type: array
+          items:
+            type: string
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Attachment"
+
+    MessagesResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+
+    Member:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        nickname:
+          type: string
+        muted:
+          type: boolean
+        image_url:
+          type: string
+        autokicked:
+          type: boolean
+        app_installed:
+          type: boolean
+        guid:
+          type: string
+
+    GroupMessagesSummary:
+      type: object
+      properties:
+        count:
+          type: integer
+        last_message_id:
+          type: string
+        last_message_created_at:
+          type: integer
+        preview:
+          type: object
+          properties:
+            nickname:
+              type: string
+            text:
+              type: string
+            image_url:
+              type: string
+            attachments:
+              type: array
+              items:
+                $ref: "#/components/schemas/Attachment"
+
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        image_url:
+          type: string
+        creator_user_id:
+          type: string
+        created_at:
+          type: integer
+        updated_at:
+          type: integer
+        members:
+          type: array
+          items:
+            $ref: "#/components/schemas/Member"
+        share_url:
+          type: string
+        messages:
+          $ref: "#/components/schemas/GroupMessagesSummary"
+
+    ChatLastMessage:
+      type: object
+      properties:
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Attachment"
+        avatar_url:
+          type: string
+        conversation_id:
+          type: string
+        created_at:
+          type: integer
+        favorited_by:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        name:
+          type: string
+        recipient_id:
+          type: string
+        sender_id:
+          type: string
+        sender_type:
+          type: string
+        source_guid:
+          type: string
+        text:
+          type: string
+        user_id:
+          type: string
+
+    Chat:
+      type: object
+      properties:
+        created_at:
+          type: integer
+        updated_at:
+          type: integer
+        last_message:
+          $ref: "#/components/schemas/ChatLastMessage"
+        messages_count:
+          type: integer
+        other_user:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            avatar_url:
+              type: string
+
+    Bot:
+      type: object
+      properties:
+        bot_id:
+          type: string
+        group_id:
+          type: string
+        name:
+          type: string
+        avatar_url:
+          type: string
+        callback_url:
+          type: string
+        dm_notification:
+          type: boolean
+        active:
+          type: boolean
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        phone_number:
+          type: string
+        image_url:
+          type: string
+        name:
+          type: string
+        created_at:
+          type: integer
+        updated_at:
+          type: integer
+        email:
+          type: string
+        sms:
+          type: boolean
+
+    Block:
+      type: object
+      properties:
+        user_id:
+          type: string
+        blocked_user_id:
+          type: string
+        created_at:
+          type: integer
+
+    BlocksResponse:
+      type: object
+      properties:
+        blocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Block"
+
+    BlockBetweenResponse:
+      type: object
+      properties:
+        between:
+          type: boolean
+
+    MembershipUpdateReq:
+      type: object
+      properties:
+        membership:
+          type: object
+          properties:
+            nickname:
+              type: string
+          required:
+            - nickname
+      required:
+        - membership
+
+    BotCreateReq:
+      type: object
+      properties:
+        bot:
+          type: object
+          properties:
+            name:
+              type: string
+            group_id:
+              type: string
+            avatar_url:
+              type: string
+            callback_url:
+              type: string
+            dm_notification:
+              type: boolean
+            active:
+              type: boolean
+          required:
+            - name
+            - group_id
+            - active
+      required:
+        - bot
+
+    BotPostReq:
+      type: object
+      properties:
+        bot_id:
+          type: string
+        text:
+          type: string
+        picture_url:
+          type: string
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Attachment"
+      required:
+        - bot_id
+        - text
+
+    UserUpdateReq:
+      type: object
+      properties:
+        avatar_url:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        zip_code:
+          type: string
+
+    MemberAddRequest:
+      type: object
+      properties:
+        members:
+          type: array
+          items:
+            type: object
+            properties:
+              nickname:
+                type: string
+              email:
+                type: string
+              guid:
+                type: string
+            required:
+              - nickname
+              - email
+              - guid
+      required:
+        - members
+
+    PollCreateReq:
+      type: object
+      properties:
+        subject:
+          type: string
+        options:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+            required:
+              - title
+        expiration:
+          type: integer
+        type:
+          type: string
+          enum: [single, multi]
+        visibility:
+          type: string
+          enum: [public, anonymous]
+      required:
+        - subject
+        - options
+        - expiration
+        - type
+        - visibility
+
+    PollData:
+      type: object
+      properties:
+        id:
+          type: string
+        subject:
+          type: string
+        owner_id:
+          type: string
+        conversation_id:
+          type: string
+        created_at:
+          type: integer
+        expiration:
+          type: integer
+        status:
+          type: string
+        options:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+        last_modified:
+          type: integer
+        type:
+          type: string
+        visibility:
+          type: string
+
+    PollCreateResponse:
+      type: object
+      properties:
+        poll:
+          type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/PollData"
+        message:
+          $ref: "#/components/schemas/Message"
+
+paths:
+
+  /groups:
+    get:
+      summary: List active groups
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+        - name: omit
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of Group objects in envelope
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /groups/former:
+    get:
+      summary: List former (left) groups
+      responses:
+        "200":
+          description: List of Group
+          content:
+            application/json:
+              schema:
+                $ref: "#/#/components/schemas/Envelope"
+
+  /groups/{group_id}:
+    get:
+      summary: Get a group’s details
+      parameters:
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Single Group object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /groups/{group_id}/members/add:
+    post:
+      summary: Add members to a group (invite / bulk add)
+      parameters:
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberAddRequest"
+      responses:
+        "202":
+          description: Accepted, returns a results_id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+                  response:
+                    type: object
+                    properties:
+                      results_id:
+                        type: string
+
+  /groups/{group_id}/members/results/{results_id}:
+    get:
+      summary: Fetch results of a members/add call
+      parameters:
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: results_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns list of added members (new users)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+        "503":
+          description: Results not ready
+        "404":
+          description: Results expired or not found
+
+  /groups/{group_id}/members/{membership_id}/remove:
+    post:
+      summary: Remove a member (or self remove)
+      parameters:
+        - name: group_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: membership_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Member removed (no body or minimal)
+
+  /groups/{group_id}/memberships/update:
+    post:
+      summary: Update membership (nickname)
+      parameters:
+        - name: group_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MembershipUpdateReq"
+      responses:
+        "200":
+          description: Updated membership object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /groups/{group_id}/messages:
+    get:
+      summary: List messages in group
+      parameters:
+        - name: group_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: before_id
+          in: query
+          schema: { type: string }
+        - name: since_id
+          in: query
+          schema: { type: string }
+        - name: after_id
+          in: query
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            maximum: 100
+      responses:
+        "200":
+          description: Messages list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+        "304":
+          description: No new messages (Not Modified)
+
+    post:
+      summary: Post a message to a group
+      parameters:
+        - name: group_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: object
+                  properties:
+                    source_guid:
+                      type: string
+                    text:
+                      type: string
+                    attachments:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/Attachment"
+                  required:
+                    - source_guid
+      responses:
+        "201":
+          description: Message created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /chats:
+    get:
+      summary: List direct message chats
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer }
+        - name: per_page
+          in: query
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Chats list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /messages/{conversation_id}/{message_id}/like:
+    post:
+      summary: Like a message
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: message_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Message liked (no body or minimal)
+
+  /messages/{conversation_id}/{message_id}/unlike:
+    post:
+      summary: Unlike a message
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: message_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Message unliked
+
+  /bots:
+    get:
+      summary: List bots
+      responses:
+        "200":
+          description: List of bots
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+    post:
+      summary: Create a bot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BotCreateReq"
+      responses:
+        "201":
+          description: Bot created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /bots/post:
+    post:
+      summary: Post message via bot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BotPostReq"
+      responses:
+        "201":
+          description: Bot-posted message result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /bots/destroy:
+    post:
+      summary: Destroy a bot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bot_id:
+                  type: string
+              required:
+                - bot_id
+      responses:
+        "200":
+          description: Bot destroyed (no or minimal body)
+
+  /users/me:
+    get:
+      summary: Get current user (“me”)
+      responses:
+        "200":
+          description: Current user object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /users/update:
+    post:
+      summary: Update current user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateReq"
+      responses:
+        "200":
+          description: Updated user object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /blocks:
+    get:
+      summary: List blocks (users you have blocked)
+      parameters:
+        - name: user
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: List of block entries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+    post:
+      summary: Create a block (block a user)
+      parameters:
+        - name: user
+          in: query
+          required: true
+          schema: { type: string }
+        - name: otherUser
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "201":
+          description: Block created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+    delete:
+      summary: Remove a block (unblock)
+      parameters:
+        - name: user
+          in: query
+          required: true
+          schema: { type: string }
+        - name: otherUser
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Block removed (no or minimal)
+
+  /blocks/between:
+    get:
+      summary: Check if user A has blocked user B
+      parameters:
+        - name: user
+          in: query
+          required: true
+          schema: { type: string }
+        - name: otherUser
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Whether block exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /poll/{group_id}:
+    post:
+      summary: Create a poll in a group
+      parameters:
+        - name: group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PollCreateReq"
+      responses:
+        "201":
+          description: Poll created (with message & poll data)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PollCreateResponse"
