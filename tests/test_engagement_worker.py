@@ -6,7 +6,8 @@ and engagement-based promotion strategies.
 """
 import asyncio
 import pytest
-from unittest.mock import AsyncMock, MagicMock
+from datetime import datetime
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from workers.engagement_worker import EngagementWorker, EngagementProfile, AdaptiveFrequencyRule
 

@@ -5,6 +5,7 @@ This module tests conversion tracking, funnel analysis, and optimization strateg
 """
 import asyncio
 import pytest
+from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock
 
 from workers.conversion_worker import ConversionWorker, ConversionFunnel, UserJourney
