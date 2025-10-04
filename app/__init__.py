@@ -1,6 +1,6 @@
 from .client import GroupMeClient
 from .groups import GroupsAPI
-from .messages_api import MessagesAPI
+from .messages import MessagesAPI
 from .bots_api import BotsAPI
 from .users import UsersAPI
 from .blocks import BlocksAPI
