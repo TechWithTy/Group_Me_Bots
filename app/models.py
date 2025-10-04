@@ -203,3 +203,23 @@ class PollData(BaseModel):
 class PollCreateResponse(BaseModel):
     poll: Dict[str, PollData]
     message: Message
+
+# Tenant model for multi-tenancy
+class Tenant(BaseModel):
+    """Represents a tenant in the multi-tenant SaaS system."""
+    id: str
+    name: str
+    api_key: str
+    is_active: bool = True
+
+    # Subscription details
+    subscription_id: Optional[str] = None
+    current_plan_id: Optional[str] = None
+
+    # Limits and quotas
+    max_groups: int = 10
+    max_users_per_group: int = 100
+    ai_credits_per_month: int = 1000
+
+    created_at: Optional[int] = None
+    updated_at: Optional[int] = None
