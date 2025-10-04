@@ -1,16 +1,10 @@
-import time
-import requests
-import __main__
-from dotenv import load_dotenv
 import os
 import json
-import schedule
-from AWS import keys
-from apscheduler.schedulers.background import BackgroundScheduler
 import requests
-import logging
+from dotenv import load_dotenv
 
-scheduler = BackgroundScheduler()
+from AWS import keys
+
 load_dotenv()
 
 ACCESS_TOKEN = os.environ.get('ZB_PROMO')
@@ -65,9 +59,6 @@ def upload_image_to_groupme(image_url):
     # Make the API request to upload the image
     response = requests.post(
         "https://image.groupme.com/pictures", headers=headers, data=data)
-
-    # Check if the response is valid and contains JSON data
-    response = requests.post("https://image.groupme.com/pictures", headers=headers, data=data)
 
     if response.status_code != 200:
         print(f"Failed to upload image. Status code: {response.status_code}, Response text: {response.text}")
