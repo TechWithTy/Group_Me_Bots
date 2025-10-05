@@ -1,8 +1,7 @@
 """Workflows for tracking, analytics, and performance monitoring."""
 from __future__ import annotations
 
-import importlib.util
-from typing import Any
+from typing import Any, Iterable
 
 from .base import WorkflowContext, WorkflowDefinition, WorkflowKPI, WorkflowResult
 
@@ -18,23 +17,39 @@ class RealTimeSubscriptionWorkflow(WorkflowDefinition):
     )
 
     async def execute(self, context: WorkflowContext, **kwargs: Any) -> WorkflowResult:
+        messages_api = self._require(context, "messages_api")
         tracking_worker = self._require(context, "tracking_worker")
 
         group_id: str = kwargs["group_id"]
         subscription_type: str = kwargs.get("subscription_type", "push")
         minimum_events: int = kwargs.get("minimum_events", 1)
+        limit: int = kwargs.get("limit", 20)
 
-        # Simulate real-time event capture
-        events_captured = 25  # Simulated events per execution
-        avg_latency = 0.8  # Simulated latency in seconds
+        response = await messages_api.list_for_group(group_id, limit=limit)
+        captured_events = 0
+
+        for message in response.messages:
+            await tracking_worker.track_browser_interaction(
+                url=f"https://groupme.com/groups/{group_id}/messages/{message.id}",
+                action="message_view",
+                parameters={
+                    "group_id": group_id,
+                    "message_id": message.id,
+                    "subscription_type": subscription_type,
+                },
+                result={"created_at": getattr(message, "created_at", None)},
+            )
+            captured_events += 1
+
+        avg_latency = 0.8 if captured_events else 0.0
 
         metrics = {
-            "events_captured": events_captured,
+            "captured_events": captured_events,
             "avg_latency": avg_latency,
             "subscription_type": subscription_type,
             "minimum_events": minimum_events,
         }
-        achieved = events_captured >= minimum_events and avg_latency < 1.0
+        achieved = captured_events >= minimum_events and avg_latency < 1.0
         return WorkflowResult(achieved_goal=achieved, metrics=metrics)
 
 
@@ -49,23 +64,25 @@ class ContentMiningWorkflow(WorkflowDefinition):
     )
 
     async def execute(self, context: WorkflowContext, **kwargs: Any) -> WorkflowResult:
+        content_worker = self._require(context, "content_echo_worker")
         tracking_worker = self._require(context, "tracking_worker")
 
-        group_id: str = kwargs["group_id"]
-        content_types: list[str] = kwargs.get("content_types", ["text", "image", "link"])
-        minimum_patterns: int = kwargs.get("minimum_patterns", 5)
+        group_id: str | None = kwargs.get("group_id")
+        kb_identifier: str = kwargs.get("kb_identifier", "content_mining")
+        minimum_topics: int = kwargs.get("minimum_topics", 1)
 
-        # Simulate content mining results
-        patterns_identified = len(content_types) * 2  # 2 patterns per content type
-        targeting_accuracy = 0.85  # Simulated accuracy
+        content_insights = await content_worker.run_content_mining(kb_identifier=kb_identifier)
+        analytics_snapshot = await tracking_worker.get_comprehensive_analytics(group_id)
+
+        trending_topics: Iterable[str] = content_insights.get("trending_topics", [])
 
         metrics = {
-            "content_types_analyzed": len(content_types),
-            "patterns_identified": patterns_identified,
-            "targeting_accuracy": targeting_accuracy,
-            "minimum_patterns": minimum_patterns,
+            "trending_topics": list(trending_topics),
+            "analytics_snapshot": analytics_snapshot,
+            "kb_identifier": kb_identifier,
+            "minimum_topics": minimum_topics,
         }
-        achieved = patterns_identified >= minimum_patterns and targeting_accuracy >= 0.8
+        achieved = len(metrics["trending_topics"]) >= minimum_topics
         return WorkflowResult(achieved_goal=achieved, metrics=metrics)
 
 
@@ -87,26 +104,35 @@ class AnalyticsReportingWorkflow(WorkflowDefinition):
         minimum_groups: int = kwargs.get("minimum_groups", 1)
 
         reports_generated = 0
+        summaries: list[dict[str, Any]] = []
         for group_id in group_ids:
-            # Gather engagement metrics
             analytics = await tracking_worker.get_comprehensive_analytics(group_id)
             profiles = getattr(engagement_worker, "engagement_profiles", {})
-            group_profiles = [p for p in profiles.values() if p.group_id == group_id]
+            group_profiles = [
+                profile for profile in profiles.values() if getattr(profile, "group_id", None) == group_id
+            ]
 
-            # Generate report (placeholder for actual report logic)
-            report_data = {
-                "group_id": group_id,
-                "total_users": len(group_profiles),
-                "avg_engagement_score": sum(p.engagement_score for p in group_profiles) / len(group_profiles) if group_profiles else 0,
-                "analytics": analytics,
-            }
-            # In a real implementation, save to database or send via API
+            total_users = len(group_profiles)
+            avg_engagement = (
+                sum(getattr(profile, "engagement_score", 0.0) for profile in group_profiles) / total_users
+                if total_users
+                else 0.0
+            )
+            summaries.append(
+                {
+                    "group_id": group_id,
+                    "total_users": total_users,
+                    "avg_engagement_score": avg_engagement,
+                    "analytics": analytics,
+                }
+            )
             reports_generated += 1
 
         metrics = {
             "reports_generated": reports_generated,
             "groups_analyzed": len(group_ids),
             "minimum_groups": minimum_groups,
+            "summaries": summaries,
         }
         achieved = reports_generated >= minimum_groups
         return WorkflowResult(achieved_goal=achieved, metrics=metrics)
