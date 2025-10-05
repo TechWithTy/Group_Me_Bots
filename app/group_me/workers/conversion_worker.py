@@ -338,22 +338,13 @@ class ConversionWorker(BaseWorker):
 
     async def get_conversion_analytics(self) -> Dict[str, Any]:
         """Get comprehensive conversion analytics."""
-        if not self.conversion_events:
-            return {"total_events": 0, "message": "No conversion data available"}
 
-        # Aggregate conversion metrics
         total_events = len(self.conversion_events)
-
-        # Event type distribution
-        event_types = Counter(event["event_type"] for event in self.conversion_events)
-
-        # Conversion funnel analysis
+        event_types = Counter(event["event_type"] for event in self.conversion_events) if total_events else Counter()
         funnel_analysis = await self._analyze_conversion_funnels()
 
-        # Journey completion rates
         completed_journeys = len([
-            j for j in self.user_journeys.values()
-            if j.conversion_completed
+            journey for journey in self.user_journeys.values() if journey.conversion_completed
         ])
         total_journeys = len(self.user_journeys)
 
@@ -361,13 +352,13 @@ class ConversionWorker(BaseWorker):
             "total_conversion_events": total_events,
             "event_type_distribution": dict(event_types),
             "funnel_analysis": funnel_analysis,
-            "journey_completion_rate": completed_journeys / total_journeys if total_journeys > 0 else 0,
+            "journey_completion_rate": completed_journeys / total_journeys if total_journeys else 0.0,
             "total_revenue_tracked": sum(
                 event.get("data", {}).get("value", 0)
                 for event in self.conversion_events
                 if event.get("event_type") == "purchase_completed"
             ),
-            "ab_test_results": self.test_results
+            "ab_test_results": self.test_results,
         }
 
     async def _analyze_conversion_funnels(self) -> Dict[str, Any]:
@@ -412,12 +403,12 @@ class ConversionWorker(BaseWorker):
         test_id = str(uuid.uuid4())
 
         self.ab_tests[test_id] = {
-            "test_name": test_config["name"],
-            "test_type": test_config["type"],
-            "variants": test_config["variants"],
-            "target_metric": test_config["target_metric"],
-            "start_date": datetime.utcnow(),
-            "status": "active"
+            "test_name": test_config.get("name", f"Test {test_id}"),
+            "test_type": test_config.get("type", "conversion"),
+            "variants": test_config.get("variants", []),
+            "target_metric": test_config.get("target_metric", "conversion_rate"),
+            "start_date": test_config.get("start_date", datetime.utcnow()),
+            "status": "active",
         }
 
         logger.info(f"Set up A/B test: {test_config['name']} (ID: {test_id})")
@@ -539,14 +530,13 @@ class ConversionWorker(BaseWorker):
         """Start the conversion worker."""
         logger.info("Starting ConversionWorker")
 
+        self.is_running = True
         await self.initialize()
 
         # Start conversion analysis
         asyncio.create_task(self._run_conversion_analysis())
 
-        # Keep worker alive
-        while self.is_running:
-            await asyncio.sleep(10)
+        await self._sleep(0)
 
     async def _run_conversion_analysis(self) -> None:
         """Run periodic conversion analysis and optimization."""
@@ -563,11 +553,11 @@ class ConversionWorker(BaseWorker):
                     if event["timestamp"] > cutoff_time
                 ]
 
-                await asyncio.sleep(3600)  # Run every hour
+                await self._sleep(3600)  # Run every hour
 
             except Exception as e:
                 logger.error(f"Error in conversion analysis: {e}")
-                await asyncio.sleep(3600)
+                await self._sleep(3600)
 
     async def stop_worker(self) -> None:
         """Stop the conversion worker."""

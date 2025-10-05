@@ -413,11 +413,20 @@ class EngagementWorker(BaseWorker):
 
         # Aggregate metrics
         total_users = len(self.engagement_profiles)
-        active_users = len([p for p in self.engagement_profiles.values() if p.activity_level in ["high", "very_high"]])
+
+        def _level(profile: EngagementProfile) -> str:
+            calculated = self._determine_activity_level(profile.engagement_score)
+            if profile.activity_level != calculated:
+                profile.activity_level = calculated
+            return calculated
+
+        active_users = len([
+            profile for profile in self.engagement_profiles.values() if _level(profile) in {"high", "very_high"}
+        ])
         soft_opted_in_users = len([p for p in self.engagement_profiles.values() if p.soft_opted_in])
 
         # Engagement distribution
-        activity_levels = Counter(p.activity_level for p in self.engagement_profiles.values())
+        activity_levels = Counter(_level(p) for p in self.engagement_profiles.values())
 
         # Group-level metrics
         group_metrics = {}
@@ -426,7 +435,7 @@ class EngagementWorker(BaseWorker):
             group_metrics[group_id] = {
                 "total_users": len(group_profiles),
                 "avg_engagement_score": sum(p.engagement_score for p in group_profiles) / len(group_profiles),
-                "active_users": len([p for p in group_profiles if p.activity_level in ["high", "very_high"]]),
+                "active_users": len([p for p in group_profiles if _level(p) in {"high", "very_high"}]),
                 "burst_mode": self.burst_mode_active.get(group_id, False)
             }
 
@@ -510,14 +519,13 @@ class EngagementWorker(BaseWorker):
         """Start the engagement worker."""
         logger.info("Starting EngagementWorker")
 
+        self.is_running = True
         await self.initialize()
 
         # Start engagement tracking
         asyncio.create_task(self._run_engagement_tracking())
 
-        # Keep worker alive
-        while self.is_running:
-            await asyncio.sleep(10)
+        await self._sleep(0)
 
     async def _run_engagement_tracking(self) -> None:
         """Run periodic engagement analysis and updates."""
@@ -529,11 +537,11 @@ class EngagementWorker(BaseWorker):
                 # Check for campaign triggers
                 await self._check_campaign_triggers()
 
-                await asyncio.sleep(300)  # Run every 5 minutes
+                await self._sleep(300)  # Run every 5 minutes
 
             except Exception as e:
                 logger.error(f"Error in engagement tracking: {e}")
-                await asyncio.sleep(300)
+                await self._sleep(300)
 
     async def _update_all_engagement_metrics(self) -> None:
         """Update engagement metrics for all tracked users."""

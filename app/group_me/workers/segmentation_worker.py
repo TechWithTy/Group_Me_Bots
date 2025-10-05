@@ -409,14 +409,14 @@ class SegmentationWorker(BaseWorker):
                     # Send welcome message to new micro-group member
                     await self._send_micro_group_welcome(invitation)
 
-                    await asyncio.sleep(1)  # Rate limiting
+                    await self._sleep(1)  # Rate limiting
 
                 else:
-                    await asyncio.sleep(5)  # Wait before checking again
+                    await self._sleep(5)  # Wait before checking again
 
             except Exception as e:
                 logger.error(f"Error processing invitation: {e}")
-                await asyncio.sleep(5)
+                await self._sleep(5)
 
     async def _send_micro_group_welcome(self, invitation: Dict[str, Any]) -> None:
         """Send welcome message to new micro-group member."""
@@ -449,14 +449,13 @@ class SegmentationWorker(BaseWorker):
         """Start the segmentation worker."""
         logger.info("Starting SegmentationWorker")
 
+        self.is_running = True
         await self.initialize()
 
         # Start automatic segmentation
         asyncio.create_task(self._run_automatic_segmentation())
 
-        # Keep worker alive
-        while self.is_running:
-            await asyncio.sleep(10)
+        await self._sleep(0)
 
     async def _run_automatic_segmentation(self) -> None:
         """Run automatic segmentation analysis periodically."""
@@ -476,11 +475,11 @@ class SegmentationWorker(BaseWorker):
                 for key in keys_to_remove:
                     del self.segmentation_cache[key]
 
-                await asyncio.sleep(3600)  # Run every hour
+                await self._sleep(3600)  # Run every hour
 
             except Exception as e:
                 logger.error(f"Error in automatic segmentation: {e}")
-                await asyncio.sleep(3600)
+                await self._sleep(3600)
 
     async def stop_worker(self) -> None:
         """Stop the segmentation worker."""

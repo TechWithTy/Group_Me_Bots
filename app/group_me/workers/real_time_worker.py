@@ -146,7 +146,7 @@ class RealTimeWorker(BaseWorker):
 
             except Exception as e:
                 logger.error(f"Error in event listener for {subscription.group_id}: {e}")
-                await asyncio.sleep(5)  # Back off before retrying
+                await self._sleep(5)  # Back off before retrying
 
     async def _long_poll_for_events(self, subscription: PushSubscription) -> List[Dict]:
         """Perform long-polling for events on a subscription."""
@@ -321,7 +321,7 @@ class RealTimeWorker(BaseWorker):
 
     async def run_heartbeat(self) -> None:
         """Run periodic heartbeat to maintain subscriptions."""
-        while True:
+        while self.is_running:
             try:
                 # Check subscription health
                 for subscription in self.subscriptions.values():
@@ -330,15 +330,17 @@ class RealTimeWorker(BaseWorker):
                         if time_since_activity > timedelta(minutes=5):
                             logger.warning(f"Subscription {subscription.group_id} may be stale")
 
-                await asyncio.sleep(self.heartbeat_interval)
+                await self._sleep(self.heartbeat_interval)
 
             except Exception as e:
                 logger.error(f"Heartbeat error: {e}")
-                await asyncio.sleep(self.heartbeat_interval)
+                await self._sleep(self.heartbeat_interval)
 
     async def start_worker(self) -> None:
         """Start the real-time worker."""
         logger.info("Starting RealTimeWorker")
+
+        self.is_running = True
 
         # Initialize subscriptions
         await self.initialize()
@@ -346,19 +348,18 @@ class RealTimeWorker(BaseWorker):
         # Start heartbeat task
         asyncio.create_task(self.run_heartbeat())
 
-        # Keep worker alive
-        while self.is_running:
-            await asyncio.sleep(10)
+        await self._sleep(0)
 
     async def stop_worker(self) -> None:
         """Stop the real-time worker and clean up subscriptions."""
         logger.info("Stopping RealTimeWorker")
+
+        self.is_running = False
 
         # Mark all subscriptions as inactive
         for subscription in self.subscriptions.values():
             subscription.is_active = False
 
         self.subscriptions.clear()
-        self.is_running = False
 
         logger.info("RealTimeWorker stopped")

@@ -7,6 +7,7 @@ from .blocks import BlocksAPI
 from .polls import PollsAPI
 from . import models
 
+
 class GroupMe:
     def __init__(self, token: str):
         self.client = GroupMeClient(token)
@@ -17,5 +18,5 @@ class GroupMe:
         self.blocks = BlocksAPI(self.client)
         self.polls = PollsAPI(self.client)
 
-    async def close(self):
+    async def close(self) -> None:
         await self.client.close()
