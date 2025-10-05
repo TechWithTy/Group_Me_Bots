@@ -27,7 +27,14 @@ class MultiPlatformIntegrationWorkflow(WorkflowDefinition):
 
         # Simulated integration results
         total_sync_operations = len(platforms) * len(data_types)
-        successful_syncs = int(total_sync_operations * 0.995)  # 99.5% success rate
+        success_rate = 0.995  # Simulated success rate for each sync
+        successful_syncs = round(total_sync_operations * success_rate)
+        if total_sync_operations:
+            successful_syncs = min(successful_syncs, total_sync_operations)
+            sync_success_rate = successful_syncs / total_sync_operations
+        else:
+            sync_success_rate = 0.0
+            successful_syncs = 0
         consistency_score = 0.97  # Simulated consistency score
         uptime = 0.998  # Simulated uptime
 
@@ -36,12 +43,12 @@ class MultiPlatformIntegrationWorkflow(WorkflowDefinition):
             "data_types_synced": len(data_types),
             "total_sync_operations": total_sync_operations,
             "successful_syncs": successful_syncs,
-            "sync_success_rate": successful_syncs / total_sync_operations,
+            "sync_success_rate": sync_success_rate,
             "consistency_score": consistency_score,
             "integration_uptime": uptime,
         }
         achieved = (
-            successful_syncs / total_sync_operations >= minimum_sync_success_rate
+            sync_success_rate >= minimum_sync_success_rate
             and consistency_score >= 0.95
             and uptime >= 0.995
         )
