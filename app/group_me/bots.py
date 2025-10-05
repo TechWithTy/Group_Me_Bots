@@ -1,5 +1,6 @@
 import time
 import requests
+from requests import RequestException
 from dotenv import load_dotenv
 import os
 import json
@@ -35,8 +36,11 @@ def add_bots_to_groups():
     
     # Get a list of all the groups you're in
     groups_url = f'https://api.groupme.com/v3/groups?token={ACCESS_TOKEN}'
-    response = requests.get(groups_url)
-    # print(response)
+    try:
+        response = requests.get(groups_url)
+    except RequestException:
+        return []
+
     groups = response.json()['response']
 
     Bots = []  # Initialize an empty array to store bot objects
@@ -45,8 +49,11 @@ def add_bots_to_groups():
     for i,group in enumerate(groups):
         group_id = group['id']
         payload['bot']['group_id'] = group_id
-        response = requests.post(
-            bot_url, headers=headers, data=json.dumps(payload))
+        try:
+            response = requests.post(
+                bot_url, headers=headers, data=json.dumps(payload))
+        except RequestException:
+            continue
         if response.status_code == 201:
             bot_id = response.json()['response']['bot']['bot_id']
             print(
@@ -75,7 +82,10 @@ def get_bots() -> list:
     headers = {'Content-Type': 'application/json'}
 
     # Send a request to the endpoint
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=headers)
+    except RequestException:
+        return []
 
     # Parse the JSON response and add bot data to the Bots array
     Bots = []

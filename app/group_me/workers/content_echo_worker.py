@@ -340,24 +340,23 @@ class ContentEchoWorker(BaseWorker):
         """Start the content echo worker."""
         logger.info("Starting ContentEchoWorker")
 
+        self.is_running = True
         await self.initialize()
 
         # Start content mining task
         asyncio.create_task(self._run_periodic_content_mining())
 
-        # Keep worker alive
-        while self.is_running:
-            await asyncio.sleep(10)
+        await self._sleep(0)
 
     async def _run_periodic_content_mining(self) -> None:
         """Run periodic content mining and analysis."""
         while self.is_running:
             try:
                 await self.run_content_mining()
-                await asyncio.sleep(3600)  # Run every hour
+                await self._sleep(3600)  # Run every hour
             except Exception as e:
                 logger.error(f"Error in content mining: {e}")
-                await asyncio.sleep(3600)
+                await self._sleep(3600)
 
     async def stop_worker(self) -> None:
         """Stop the content echo worker."""

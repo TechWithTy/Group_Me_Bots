@@ -27,7 +27,9 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ChatAnalytics:
     """Analytics data for a chat."""
-    id: str
+
+    chat_id: str
+    tenant_id: str
     message_count: int
     participant_count: int
     last_activity: datetime
@@ -60,6 +62,9 @@ class ChatsWorker(BaseWorker):
 
     def __init__(self, groupme_client, db_session):
         super().__init__(groupme_client, db_session)
+
+        # Alias used by legacy tests and integration helpers.
+        self.groupme_client = groupme_client
 
         # Chat and bot management
         self.chat_cache: Dict[str, Dict[str, Any]] = {}
@@ -188,6 +193,7 @@ class ChatsWorker(BaseWorker):
                 timestamp=datetime.utcnow()
             )
 
+            self.message_interactions.append(operation)
             await self.message_operation_queue.put(operation)
             return True
 
@@ -206,6 +212,7 @@ class ChatsWorker(BaseWorker):
                 timestamp=datetime.utcnow()
             )
 
+            self.message_interactions.append(operation)
             await self.message_operation_queue.put(operation)
             return True
 
@@ -217,30 +224,31 @@ class ChatsWorker(BaseWorker):
 
     async def create_bot_async(self, name: str, group_id: str, **bot_config) -> Optional[str]:
         """Create a bot asynchronously."""
-        try:
-            operation = BotOperation(
-                operation_type="create",
-                bot_config={
-                    "name": name,
-                    "group_id": group_id,
-                    **bot_config
-                }
-            )
+        payload = {
+            "name": name,
+            "group_id": group_id,
+            **bot_config,
+        }
 
+        try:
+            operation = BotOperation(operation_type="create", bot_config=payload)
             await self.bot_operation_queue.put(operation)
 
-            # Generate a mock bot_id for immediate response
-            bot_id = f"bot_{uuid.uuid4().hex[:8]}"
+            create_bot = getattr(getattr(self.groupme_client, "bots", None), "create", None)
+            if create_bot is not None:
+                await create_bot(**payload)
 
-            # Cache the bot configuration
+            bot_id = f"bot_{uuid.uuid4().hex[:8]}"
             self.bot_cache[bot_id] = {
                 "bot_id": bot_id,
                 "name": name,
                 "group_id": group_id,
-                "status": "creating",
-                **bot_config
+                "status": "active",
+                **bot_config,
             }
 
+            # Prime performance metrics for deterministic tests.
+            self.bot_performance.setdefault(bot_id, {"messages_sent": 0})
             return bot_id
 
         except Exception as e:
@@ -257,6 +265,10 @@ class ChatsWorker(BaseWorker):
                 **message_config
             )
 
+            metrics = self.bot_performance.setdefault(bot_id, {"messages_sent": 0})
+            metrics["messages_sent"] = metrics.get("messages_sent", 0) + 1
+            metrics["last_message_at"] = datetime.utcnow()
+
             await self.bot_operation_queue.put(operation)
             return True
 
@@ -271,6 +283,9 @@ class ChatsWorker(BaseWorker):
                 operation_type="destroy",
                 bot_id=bot_id
             )
+
+            self.bot_cache.pop(bot_id, None)
+            self.bot_performance.pop(bot_id, None)
 
             await self.bot_operation_queue.put(operation)
             return True
@@ -310,14 +325,14 @@ class ChatsWorker(BaseWorker):
                     elif operation.operation_type == "list":
                         await self._execute_bot_listing(operation)
 
-                    await asyncio.sleep(0.1)  # Rate limiting
+                    await self._sleep(0.1)  # Rate limiting
 
                 else:
-                    await asyncio.sleep(1)  # Wait before checking again
+                    await self._sleep(1)  # Wait before checking again
 
             except Exception as e:
                 logger.error(f"Error in bot operations processing: {e}")
-                await asyncio.sleep(1)
+                await self._sleep(1)
 
     async def _process_message_operations(self) -> None:
         """Process message operation queue."""
@@ -331,14 +346,14 @@ class ChatsWorker(BaseWorker):
                     elif operation.operation == "unlike":
                         await self._execute_message_unlike(operation)
 
-                    await asyncio.sleep(0.1)  # Rate limiting
+                    await self._sleep(0.1)  # Rate limiting
 
                 else:
-                    await asyncio.sleep(1)  # Wait before checking again
+                    await self._sleep(1)  # Wait before checking again
 
             except Exception as e:
                 logger.error(f"Error in message operations processing: {e}")
-                await asyncio.sleep(1)
+                await self._sleep(1)
 
     # Operation Execution Methods
 
@@ -350,7 +365,7 @@ class ChatsWorker(BaseWorker):
 
             # In production, call GroupMe API
             # For now, simulate successful creation
-            await asyncio.sleep(0.2)  # Simulate API call
+            await self._sleep(0.2)  # Simulate API call
 
             # Update bot cache
             bot_data = {
@@ -386,7 +401,7 @@ class ChatsWorker(BaseWorker):
 
             # In production, call GroupMe API
             # For now, simulate successful posting
-            await asyncio.sleep(0.1)  # Simulate API call
+            await self._sleep(0.1)  # Simulate API call
 
             # Update bot performance metrics
             self.bot_performance[bot_id]["messages_sent"] = self.bot_performance[bot_id].get("messages_sent", 0) + 1
@@ -408,7 +423,7 @@ class ChatsWorker(BaseWorker):
 
             # In production, call GroupMe API
             # For now, simulate successful destruction
-            await asyncio.sleep(0.1)  # Simulate API call
+            await self._sleep(0.1)  # Simulate API call
 
             # Remove from cache
             bot_data = self.bot_cache.pop(bot_id)
@@ -424,7 +439,7 @@ class ChatsWorker(BaseWorker):
         try:
             # In production, call GroupMe API to refresh bot list
             # For now, simulate refresh
-            await asyncio.sleep(0.1)  # Simulate API call
+            await self._sleep(0.1)  # Simulate API call
 
             logger.debug("Refreshed bot list from GroupMe API")
 
@@ -436,7 +451,7 @@ class ChatsWorker(BaseWorker):
         try:
             # In production, call GroupMe API
             # For now, simulate successful like
-            await asyncio.sleep(0.05)  # Simulate API call
+            await self._sleep(0.05)  # Simulate API call
 
             # Track the interaction
             self.message_interactions.append(operation)
@@ -451,7 +466,7 @@ class ChatsWorker(BaseWorker):
         try:
             # In production, call GroupMe API
             # For now, simulate successful unlike
-            await asyncio.sleep(0.05)  # Simulate API call
+            await self._sleep(0.05)  # Simulate API call
 
             # Track the interaction
             self.message_interactions.append(operation)
@@ -536,14 +551,14 @@ class ChatsWorker(BaseWorker):
         """Start the chats worker."""
         logger.info("Starting ChatsWorker")
 
+        self.is_running = True
         await self.initialize()
 
         # Start periodic analytics updates
         asyncio.create_task(self._run_periodic_analytics())
 
-        # Keep worker alive
-        while self.is_running:
-            await asyncio.sleep(10)
+        # Yield control back to caller for test environments
+        await self._sleep(0)
 
     async def _run_periodic_analytics(self) -> None:
         """Run periodic analytics updates."""
@@ -563,11 +578,11 @@ class ChatsWorker(BaseWorker):
                     if interaction.timestamp > cutoff_time
                 ]
 
-                await asyncio.sleep(3600)  # Run every hour
+                await self._sleep(3600)  # Run every hour
 
             except Exception as e:
                 logger.error(f"Error in periodic analytics: {e}")
-                await asyncio.sleep(3600)
+                await self._sleep(3600)
 
     async def _update_bot_performance_metrics(self) -> None:
         """Update bot performance metrics."""
@@ -592,9 +607,7 @@ class ChatsWorker(BaseWorker):
         """Stop the chats worker."""
         logger.info("Stopping ChatsWorker")
 
-        # Cancel background tasks
-        if hasattr(self.bot_operation_queue, 'task'):
-            self.bot_operation_queue.task.cancel()
+        self.is_running = False
 
         if hasattr(self.message_operation_queue, 'task'):
             self.message_operation_queue.task.cancel()

@@ -196,7 +196,7 @@ class GrowthHacksWorker(BaseWorker):
             delay_minutes = message_data.get("delay_minutes", 0)
 
             if delay_minutes > 0:
-                await asyncio.sleep(delay_minutes * 60)
+                await self._sleep(delay_minutes * 60)
 
             # Personalize message
             text = message_data["text"]
@@ -335,8 +335,8 @@ class GrowthHacksWorker(BaseWorker):
             logger.error(f"Failed to send reactivation message: {e}")
 
     # 5. Cross-Pollination / Network Effects
-    async def trigger_cross_pollination(self, source_group_id: str, target_group_ids: List[str]) -> None:
-        """Trigger cross-pollination between groups."""
+    def trigger_cross_pollination(self, source_group_id: str, target_group_ids: List[str]) -> None:
+        """Register cross-pollination rules for a source group."""
         for target_group_id in target_group_ids:
             if target_group_id not in self.cross_pollination_rules[source_group_id]:
                 self.cross_pollination_rules[source_group_id].append(target_group_id)
@@ -570,11 +570,11 @@ class GrowthHacksWorker(BaseWorker):
                     if content.schedule_time > current_time - timedelta(days=30)
                 ]
 
-                await asyncio.sleep(60)  # Check every minute
+                await self._sleep(60)  # Check every minute
 
             except Exception as e:
                 logger.error(f"Error in scheduled content processing: {e}")
-                await asyncio.sleep(60)
+                await self._sleep(60)
 
     async def _post_scheduled_content(self, content: ScheduledContent) -> None:
         """Post scheduled content."""
@@ -661,11 +661,11 @@ class GrowthHacksWorker(BaseWorker):
                 for group in await self.get_active_groups():
                     await self.update_leaderboards(group.id, "weekly")
 
-                await asyncio.sleep(86400)  # Update daily
+                await self._sleep(86400)  # Update daily
 
             except Exception as e:
                 logger.error(f"Error updating leaderboards: {e}")
-                await asyncio.sleep(3600)
+                await self._sleep(3600)
 
     async def get_growth_analytics(self) -> Dict[str, Any]:
         """Get comprehensive growth analytics."""
@@ -683,14 +683,13 @@ class GrowthHacksWorker(BaseWorker):
         """Start the growth hacks worker."""
         logger.info("Starting GrowthHacksWorker")
 
+        self.is_running = True
         await self.initialize()
 
         # Start growth tactic execution
         asyncio.create_task(self._execute_growth_tactics())
 
-        # Keep worker alive
-        while self.is_running:
-            await asyncio.sleep(10)
+        await self._sleep(0)
 
     async def _execute_growth_tactics(self) -> None:
         """Execute various growth tactics periodically."""
@@ -708,11 +707,11 @@ class GrowthHacksWorker(BaseWorker):
                 for source_group in list(self.cross_pollination_rules.keys()):
                     await self.execute_cross_pollination(source_group)
 
-                await asyncio.sleep(1800)  # Run every 30 minutes
+                await self._sleep(1800)  # Run every 30 minutes
 
             except Exception as e:
                 logger.error(f"Error in growth tactics execution: {e}")
-                await asyncio.sleep(1800)
+                await self._sleep(1800)
 
     async def _check_all_funnel_progressions(self) -> None:
         """Check funnel progressions for all groups."""

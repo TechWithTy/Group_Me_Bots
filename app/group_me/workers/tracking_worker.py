@@ -67,6 +67,36 @@ class TrackingWorker(BaseWorker):
         # Performance monitoring
         self.performance_metrics: Dict[str, Dict[str, Any]] = defaultdict(dict)
 
+    def _record_performance_metric(
+        self,
+        category: str,
+        key: str,
+        *,
+        duration_ms: Optional[int] = None,
+        tokens_used: Optional[int] = None,
+        status: Optional[InteractionStatus] = None,
+    ) -> None:
+        """Store aggregated performance metrics for analytics inspection."""
+
+        category_metrics = self.performance_metrics.setdefault(category, {})
+        entry = category_metrics.setdefault(
+            key,
+            {
+                "count": 0,
+                "total_duration_ms": 0,
+                "total_tokens": 0,
+                "statuses": Counter(),
+            },
+        )
+
+        entry["count"] += 1
+        if duration_ms is not None:
+            entry["total_duration_ms"] += duration_ms
+        if tokens_used is not None:
+            entry["total_tokens"] += tokens_used
+        if status is not None:
+            entry["statuses"][status.value] += 1
+
     async def initialize(self) -> None:
         """Initialize the tracking worker."""
         logger.info("Initializing TrackingWorker")
@@ -128,6 +158,10 @@ class TrackingWorker(BaseWorker):
         """Track a knowledge base call."""
         call_id = uuid4()
 
+        status = kwargs.pop("status", None)
+        if status is None:
+            status = InteractionStatus.COMPLETED if response is not None else InteractionStatus.PENDING
+
         call = KnowledgeBaseCall(
             id=call_id,
             tenant_id=self.tenant_id,
@@ -137,6 +171,7 @@ class TrackingWorker(BaseWorker):
             query=query,
             context=context,
             response=response,
+            status=status,
             **kwargs
         )
 
@@ -144,6 +179,14 @@ class TrackingWorker(BaseWorker):
 
         # Update analytics
         await self._update_knowledge_base_analytics(call)
+
+        self._record_performance_metric(
+            "knowledge_base",
+            kb_identifier,
+            duration_ms=call.response_time_ms,
+            tokens_used=call.tokens_used,
+            status=call.status,
+        )
 
         logger.info(f"Tracked KB call {call_id} for {kb_type.value}")
         return call_id
@@ -157,7 +200,7 @@ class TrackingWorker(BaseWorker):
 
         try:
             # Simulate knowledge base query
-            await asyncio.sleep(0.1)  # Simulate processing time
+            await self._sleep(0.1)  # Simulate processing time
 
             response_text = f"Response to: {request.query}"
             response_time_ms = int((time.time() - start_time) * 1000)
@@ -208,14 +251,25 @@ class TrackingWorker(BaseWorker):
         """Track an MCP server call."""
         call_id = uuid4()
 
+        status = kwargs.pop("status", None)
+        if status is None:
+            status = InteractionStatus.COMPLETED if response is not None else InteractionStatus.PENDING
+
+        server_type = kwargs.pop("server_type", None)
+        if server_type is None:
+            config = self.mcp_configs.get(server_name)
+            server_type = config.server_type if config else MCPServerType.CUSTOM_TOOL
+
         call = MCPCall(
             id=call_id,
             tenant_id=self.tenant_id,
             session_id=getattr(self, 'session_id', 'default'),
             server_name=server_name,
+            server_type=server_type,
             tool_name=tool_name,
             tool_parameters=parameters,
             tool_response=response,
+            status=status,
             **kwargs
         )
 
@@ -223,6 +277,13 @@ class TrackingWorker(BaseWorker):
 
         # Update analytics
         await self._update_mcp_analytics(call)
+
+        self._record_performance_metric(
+            "mcp",
+            f"{server_name}:{tool_name}",
+            duration_ms=call.execution_time_ms,
+            status=call.status,
+        )
 
         logger.info(f"Tracked MCP call {call_id} for {server_name}.{tool_name}")
         return call_id
@@ -236,7 +297,7 @@ class TrackingWorker(BaseWorker):
 
         try:
             # Simulate MCP tool execution
-            await asyncio.sleep(0.05)  # Simulate processing time
+            await self._sleep(0.05)  # Simulate processing time
 
             # Mock response based on tool name
             if request.tool_name == "read_file":
@@ -292,6 +353,10 @@ class TrackingWorker(BaseWorker):
         """Track a browser interaction."""
         interaction_id = uuid4()
 
+        status = kwargs.pop("status", None)
+        if status is None:
+            status = InteractionStatus.COMPLETED if result is not None else InteractionStatus.PENDING
+
         interaction = BrowserInteraction(
             id=interaction_id,
             tenant_id=self.tenant_id,
@@ -301,6 +366,7 @@ class TrackingWorker(BaseWorker):
             action_parameters=parameters,
             result=result,
             browser_type=self.browser_config.browser_type if self.browser_config else "chromium",
+            status=status,
             **kwargs
         )
 
@@ -308,6 +374,13 @@ class TrackingWorker(BaseWorker):
 
         # Update analytics
         await self._update_browser_analytics(interaction)
+
+        self._record_performance_metric(
+            "browser",
+            action.value,
+            duration_ms=interaction.load_time_ms,
+            status=interaction.status,
+        )
 
         logger.info(f"Tracked browser interaction {interaction_id} for {action.value} on {url}")
         return interaction_id
@@ -321,7 +394,7 @@ class TrackingWorker(BaseWorker):
 
         try:
             # Simulate browser action
-            await asyncio.sleep(0.2)  # Simulate browser processing
+            await self._sleep(0.2)  # Simulate browser processing
 
             load_time_ms = int((time.time() - start_time) * 1000)
 
@@ -618,11 +691,11 @@ class TrackingWorker(BaseWorker):
                 self.mcp_calls = [c for c in self.mcp_calls if c.timestamp >= cutoff_time]
                 self.browser_interactions = [i for i in self.browser_interactions if i.timestamp >= cutoff_time]
 
-                await asyncio.sleep(3600)  # Process every hour
+                await self._sleep(3600)  # Process every hour
 
             except Exception as e:
                 logger.error(f"Error in analytics processing: {e}")
-                await asyncio.sleep(3600)
+                await self._sleep(3600)
 
     async def _refresh_knowledge_base_analytics(self) -> None:
         """Refresh knowledge base analytics cache."""
@@ -706,11 +779,10 @@ class TrackingWorker(BaseWorker):
         """Start the tracking worker."""
         logger.info("Starting TrackingWorker")
 
+        self.is_running = True
         await self.initialize()
 
-        # Keep worker alive
-        while self.is_running:
-            await asyncio.sleep(10)
+        await self._sleep(0)
 
     async def stop_worker(self) -> None:
         """Stop the tracking worker."""
