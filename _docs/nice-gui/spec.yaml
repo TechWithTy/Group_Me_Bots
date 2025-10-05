@@ -1,0 +1,686 @@
+openapi: 3.1.0
+info:
+  title: NiceGUI Full Control API
+  website: browse=https://nicegui.io/documentation
+  description: |
+    A complete OpenAPI specification for a backend that allows for the dynamic creation, 
+    control, and interaction with all NiceGUI components via a RESTful HTTP API.
+
+    Key Features:
+    - **All Components as Resources**: Every `ui` element is a manageable resource.
+    - **Nesting and Layout**: Create complex layouts by assigning a `parent_id` when creating components.
+    - **Event Handling**: Register webhook URLs for user-driven events like clicks, changes, and inputs.
+    - **State Management**: Endpoints to control global application state like dark mode and page titles.
+    - **Dynamic Actions**: Trigger actions like notifications and JavaScript execution on the client.
+  version: 1.1.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Development Server
+paths:
+  /components:
+    get:
+      summary: List All Components
+      description: Retrieves a list of all UI components, optionally filtered by type or parent.
+      operationId: listComponents
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+          description: Filter components by their type (e.g., 'button', 'table').
+        - name: parent_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter components by their direct parent's ID.
+      responses:
+        '200':
+          description: A list of components.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+    post:
+      summary: Create a New Component
+      description: Creates a new UI component. The component's schema is determined by the `type` property.
+      operationId: createComponent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComponentCreate'
+      responses:
+        '201':
+          description: The component was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Component'
+        '400':
+          description: Invalid request body or parent ID not found.
+
+  /components/{id}:
+    get:
+      summary: Get Component by ID
+      operationId: getComponentById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The requested component.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Component'
+        '404':
+          description: Component not found.
+    patch:
+      summary: Update a Component
+      description: Updates the properties or event handlers of an existing component.
+      operationId: updateComponent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                properties:
+                  type: object
+                  additionalProperties: true
+                  description: Component-specific properties to update.
+                event_handlers:
+                  $ref: '#/components/schemas/EventHandlers'
+      responses:
+        '200':
+          description: The updated component.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Component'
+        '404':
+          description: Component not found.
+    delete:
+      summary: Delete a Component
+      description: Deletes a component and all its nested children.
+      operationId: deleteComponent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Component deleted successfully.
+        '404':
+          description: Component not found.
+
+  /actions/notify:
+    post:
+      summary: Show a Notification
+      description: Triggers a notification on the client. Corresponds to `ui.notify`.
+      operationId: showNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                type:
+                  type: string
+                  enum: [positive, negative, warning, info]
+                position:
+                  type: string
+                  enum: [top-left, top-right, bottom-left, bottom-right, top, bottom, left, right, center]
+      responses:
+        '202':
+          description: Notification request accepted.
+
+  /actions/run_javascript:
+    post:
+      summary: Run JavaScript
+      description: Executes a JavaScript snippet on the client. Corresponds to `ui.run_javascript`.
+      operationId: runJavascript
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code:
+                  type: string
+                  description: The JavaScript code to execute.
+      responses:
+        '202':
+          description: JavaScript execution request accepted.
+
+  /app/state:
+    get:
+      summary: Get App State
+      description: Retrieves the current global state of the application.
+      operationId: getAppState
+      responses:
+        '200':
+          description: Current application state.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dark_mode:
+                    type: boolean
+                    nullable: true
+                  page_title:
+                    type: string
+    patch:
+      summary: Update App State
+      description: Updates global state properties like dark mode or page title.
+      operationId: updateAppState
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dark_mode:
+                  type: boolean
+                  description: Enable or disable dark mode.
+                page_title:
+                  type: string
+                  description: Set the page title.
+      responses:
+        '200':
+          description: App state updated successfully.
+
+components:
+  schemas:
+    # BASE SCHEMAS
+    ComponentCreate:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          description: The type of component to create. This determines the available properties.
+        parent_id:
+          type: string
+          format: uuid
+          description: The ID of the parent component for nesting. If null, creates a root component.
+          nullable: true
+        properties:
+          type: object
+          description: A key-value map of properties specific to the component type.
+          additionalProperties: true
+        event_handlers:
+          $ref: '#/components/schemas/EventHandlers'
+      # Discriminator helps tools understand which schema to use based on the 'type' field
+      discriminator:
+        propertyName: type
+        mapping:
+          # A-Z mapping of all component types
+          aggrid: '#/components/schemas/AgGrid'
+          audio: '#/components/schemas/Audio'
+          avatar: '#/components/schemas/Avatar'
+          badge: '#/components/schemas/Badge'
+          button: '#/components/schemas/Button'
+          card: '#/components/schemas/Card'
+          carousel: '#/components/schemas/Carousel'
+          checkbox: '#/components/schemas/Checkbox'
+          chip: '#/components/schemas/Chip'
+          circular_progress: '#/components/schemas/CircularProgress'
+          code: '#/components/schemas/Code'
+          color_input: '#/components/schemas/ColorInput'
+          column: '#/components/schemas/Column'
+          date: '#/components/schemas/Date'
+          dialog: '#/components/schemas/Dialog'
+          echart: '#/components/schemas/EChart'
+          editor: '#/components/schemas/Editor'
+          expansion: '#/components/schemas/Expansion'
+          grid: '#/components/schemas/Grid'
+          header: '#/components/schemas/Header'
+          html: '#/components/schemas/Html'
+          icon: '#/components/schemas/Icon'
+          image: '#/components/schemas/Image'
+          input: '#/components/schemas/Input'
+          joystick: '#/components/schemas/Joystick'
+          json_editor: '#/components/schemas/JsonEditor'
+          knob: '#/components/schemas/Knob'
+          label: '#/components/schemas/Label'
+          leaflet: '#/components/schemas/Leaflet'
+          linear_progress: '#/components/schemas/LinearProgress'
+          link: '#/components/schemas/Link'
+          list: '#/components/schemas/List'
+          log: '#/components/schemas/Log'
+          markdown: '#/components/schemas/Markdown'
+          menu: '#/components/schemas/Menu'
+          mermaid: '#/components/schemas/Mermaid'
+          number: '#/components/schemas/Number'
+          pagination: '#/components/schemas/Pagination'
+          plotly: '#/components/schemas/Plotly'
+          radio: '#/components/schemas/Radio'
+          range: '#/components/schemas/Range'
+          rating: '#/components/schemas/Rating'
+          row: '#/components/schemas/Row'
+          scene: '#/components/schemas/Scene'
+          select: '#/components/schemas/Select'
+          separator: '#/components/schemas/Separator'
+          slider: '#/components/schemas/Slider'
+          spinner: '#/components/schemas/Spinner'
+          splitter: '#/components/schemas/Splitter'
+          stepper: '#/components/schemas/Stepper'
+          switch: '#/components/schemas/Switch'
+          table: '#/components/schemas/Table'
+          tabs: '#/components/schemas/Tabs'
+          textarea: '#/components/schemas/Textarea'
+          time: '#/components/schemas/Time'
+          toggle: '#/components/schemas/Toggle'
+          tooltip: '#/components/schemas/Tooltip'
+          tree: '#/components/schemas/Tree'
+          upload: '#/components/schemas/Upload'
+          video: '#/components/schemas/Video'
+
+    Component:
+      type: object
+      required: [id, type]
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        properties:
+          type: object
+          additionalProperties: true
+        event_handlers:
+          $ref: '#/components/schemas/EventHandlers'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Component'
+
+    EventHandlers:
+      type: object
+      description: |
+        Defines webhook URLs for component events. The key is the event name (e.g., `on_click`, `on_change`) 
+        and the value is the URL to be called.
+      additionalProperties:
+        type: string
+        format: uri
+      example:
+        on_click: "https://example.com/hooks/button-clicked"
+        on_change: "https://example.com/hooks/input-changed"
+
+    # COMPONENT-SPECIFIC SCHEMAS (A-Z)
+    AgGrid:
+      type: object
+      properties:
+        options:
+          type: object
+          description: AG Grid options object.
+    Audio:
+      type: object
+      properties:
+        src:
+          type: string
+          format: uri
+    Avatar:
+      type: object
+      properties:
+        icon:
+          type: string
+        color:
+          type: string
+    Badge:
+      type: object
+      properties:
+        text:
+          type: string
+        color:
+          type: string
+    Button:
+      type: object
+      properties:
+        text:
+          type: string
+        color:
+          type: string
+    Card:
+      type: object
+      description: A container component. Other components can be nested inside by setting their parent_id.
+    Carousel:
+      type: object
+      description: A container for carousel slides.
+    Checkbox:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          type: boolean
+    Chip:
+      type: object
+      properties:
+        text:
+          type: string
+        color:
+          type: string
+    CircularProgress:
+      type: object
+      properties:
+        value:
+          type: number
+        min:
+          type: number
+        max:
+          type: number
+    Code:
+      type: object
+      properties:
+        content:
+          type: string
+    ColorInput:
+      type: object
+      properties:
+        value:
+          type: string
+    Column:
+      type: object
+      description: A vertical layout container.
+    Date:
+      type: object
+      properties:
+        value:
+          type: string
+          format: date
+    Dialog:
+      type: object
+      description: A dialog container. Can be controlled via `value` property.
+      properties:
+        value:
+          type: boolean
+    EChart:
+      type: object
+      properties:
+        options:
+          type: object
+    Editor:
+      type: object
+      properties:
+        value:
+          type: string
+          description: HTML content of the editor.
+    Expansion:
+      type: object
+      properties:
+        title:
+          type: string
+    Grid:
+      type: object
+      description: A grid layout container.
+    Header:
+      type: object
+      description: A header container, usually a root element.
+    Html:
+      type: object
+      properties:
+        content:
+          type: string
+    Icon:
+      type: object
+      properties:
+        name:
+          type: string
+    Image:
+      type: object
+      properties:
+        src:
+          type: string
+          format: uri
+    Input:
+      type: object
+      properties:
+        label:
+          type: string
+        placeholder:
+          type: string
+        value:
+          type: string
+    Joystick:
+      type: object
+      description: Joystick component. Events `on_move`, `on_start`, `on_end` can be registered.
+    JsonEditor:
+      type: object
+      properties:
+        json:
+          type: object
+    Knob:
+      type: object
+      properties:
+        value:
+          type: number
+    Label:
+      type: object
+      properties:
+        text:
+          type: string
+    Leaflet:
+      type: object
+      properties:
+        center:
+          type: array
+          items:
+            type: number
+        zoom:
+          type: integer
+    LinearProgress:
+      type: object
+      properties:
+        value:
+          type: number
+    Link:
+      type: object
+      properties:
+        text:
+          type: string
+        target:
+          type: string
+          format: uri
+    List:
+      type: object
+      description: A container for list items.
+    Log:
+      type: object
+      description: A log display area. Can be updated via PATCH.
+    Markdown:
+      type: object
+      properties:
+        content:
+          type: string
+    Menu:
+      type: object
+      description: A container for menu items.
+    Mermaid:
+      type: object
+      properties:
+        content:
+          type: string
+    Number:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          type: number
+    Pagination:
+      type: object
+      properties:
+        min:
+          type: integer
+        max:
+          type: integer
+        value:
+          type: integer
+    Plotly:
+      type: object
+      properties:
+        figure:
+          type: object
+    Radio:
+      type: object
+      properties:
+        options:
+          type: array
+          items:
+            type: string
+        value:
+          type: string
+    Range:
+      type: object
+      properties:
+        min:
+          type: number
+        max:
+          type: number
+        value:
+          type: object
+          properties:
+            from:
+              type: number
+            to:
+              type: number
+    Rating:
+      type: object
+      properties:
+        max:
+          type: integer
+        value:
+          type: integer
+    Row:
+      type: object
+      description: A horizontal layout container.
+    Scene:
+      type: object
+      description: A 3D scene container.
+    Select:
+      type: object
+      properties:
+        options:
+          type: array
+          items:
+            type: string
+        label:
+          type: string
+        value:
+          type: string
+    Separator:
+      type: object
+      description: A visual separator.
+    Slider:
+      type: object
+      properties:
+        min:
+          type: number
+        max:
+          type: number
+        step:
+          type: number
+        value:
+          type: number
+    Spinner:
+      type: object
+      properties:
+        type:
+          type: string
+    Splitter:
+      type: object
+      description: A container with a draggable splitter.
+    Stepper:
+      type: object
+      description: A container for steps.
+    Switch:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          type: boolean
+    Table:
+      type: object
+      properties:
+        columns:
+          type: array
+          items:
+            type: object
+        rows:
+          type: array
+          items:
+            type: object
+    Tabs:
+      type: object
+      description: A container for individual tabs and tab panels.
+    Textarea:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          type: string
+    Time:
+      type: object
+      properties:
+        value:
+          type: string
+    Toggle:
+      type: object
+      properties:
+        options:
+          type: array
+          items:
+            type: string
+        value:
+          type: string
+    Tooltip:
+      type: object
+      properties:
+        text:
+          type: string
+    Tree:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            type: object
+    Upload:
+      type: object
+      description: File upload component. Register `on_upload` event handler.
+    Video:
+      type: object
+      properties:
+        src:
+          type: string
+          format: uri
