@@ -7,9 +7,10 @@ and optimization strategies for bot-facilitated transactions and signups.
 from __future__ import annotations
 
 import asyncio
-import logging
 import json
-from typing import Dict, List, Optional, Set, Tuple
+import logging
+import uuid
+from typing import Any, Dict, List, Optional, Set, Tuple
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from collections import defaultdict, Counter

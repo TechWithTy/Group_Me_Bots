@@ -4,6 +4,7 @@ Tests for the ContentEchoWorker.
 This module tests content echoing, cross-group sharing, and engagement-based content promotion.
 """
 import asyncio
+import datetime
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
