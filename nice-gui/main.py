@@ -1,5 +1,17 @@
+"""Entry point for the modular operations dashboard."""
+
+from __future__ import annotations
+
+from pathlib import Path
+import sys
+
 from nicegui import ui
 
-ui.label('Hello NiceGUI!')
+CURRENT_DIR = Path(__file__).resolve().parent
+if str(CURRENT_DIR) not in sys.path:
+    sys.path.insert(0, str(CURRENT_DIR))
 
-ui.run()
+from app import build
+
+
+ui.run(build)
