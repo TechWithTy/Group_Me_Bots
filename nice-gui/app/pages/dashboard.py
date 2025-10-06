@@ -5,6 +5,7 @@ from __future__ import annotations
 from nicegui import ui
 
 from ..components.activity import render_activity_log
+from ..components.auth import render_authentication
 from ..components.bots import render_bot_management
 from ..components.credits import render_credit_summary
 from ..components.profile import render_profile_card
@@ -47,6 +48,7 @@ def render_dashboard() -> None:
                 bot_view = render_bot_management(state, refresh_summary)
                 render_activity_log(state)
             with ui.column().classes("gap-4"):
+                render_authentication(state)
                 render_profile_card(state)
                 render_settings_panel(state)
                 render_credit_summary(state)
