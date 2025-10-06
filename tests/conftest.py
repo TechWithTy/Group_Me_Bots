@@ -5,7 +5,8 @@ import builtins
 import os
 import sys
 from pathlib import Path
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -24,8 +25,6 @@ if module is not None and not hasattr(module, "Response"):  # pragma: no cover -
 try:  # pragma: no cover - import guard for optional dependency
     import httpx  # noqa: F401
 except ModuleNotFoundError:  # pragma: no cover - fallback stub
-    from types import ModuleType
-
     httpx_stub = ModuleType("httpx")
 
     class AsyncClient:  # type: ignore[too-few-public-methods]
@@ -43,6 +42,67 @@ except ModuleNotFoundError:  # pragma: no cover - fallback stub
 
     httpx_stub.AsyncClient = AsyncClient  # type: ignore[attr-defined]
     sys.modules.setdefault("httpx", httpx_stub)
+
+os.environ.setdefault("DISCORD_BOT_TOKEN", "test-token")
+
+if "discord" not in sys.modules:
+    discord_stub = ModuleType("discord")
+
+    class _DummyChannelType(SimpleNamespace):
+        news = "news"
+
+    class _DummyIntents:
+        @staticmethod
+        def all() -> str:
+            return "all"
+
+    class _DummyTree(SimpleNamespace):
+        def __init__(self) -> None:
+            super().__init__(
+                command=lambda **_: (lambda func: func),
+                remove_command=lambda *_: None,
+                clear=lambda: None,
+                sync=AsyncMock(),
+            )
+
+    class _DummyBot:
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            self.user = SimpleNamespace(
+                id=0,
+                name="stub",
+                discriminator="0000",
+                bot=True,
+            )
+            self.guilds = []
+            self.private_channels = []
+            self.tree = _DummyTree()
+
+        async def wait_until_ready(self) -> None:
+            return None
+
+        def is_ready(self) -> bool:
+            return True
+
+        async def start(self, *_: Any, **__: Any) -> None:
+            return None
+
+        def event(self, func):
+            return func
+
+    commands_module = ModuleType("discord.ext.commands")
+    commands_module.Bot = _DummyBot  # type: ignore[attr-defined]
+
+    discord_stub.Intents = _DummyIntents
+    discord_stub.ChannelType = _DummyChannelType
+    discord_stub.NotFound = Exception
+    discord_stub.LoginFailure = Exception
+    discord_stub.Object = lambda *, id: SimpleNamespace(id=id)
+    ext_module = ModuleType("discord.ext")
+    ext_module.commands = commands_module  # type: ignore[attr-defined]
+
+    sys.modules.setdefault("discord", discord_stub)
+    sys.modules.setdefault("discord.ext", ext_module)
+    sys.modules.setdefault("discord.ext.commands", commands_module)
 
 from app.posting import send_message_to_groups
 
