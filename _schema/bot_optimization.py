@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, List, Tuple
 from collections import Counter, defaultdict
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from dataclasses import dataclass
 
 # Import models from analytics module
@@ -37,8 +37,7 @@ class OptimizationRecommendation(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     implemented_at: Optional[datetime] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ABTestResult(BaseModel):
     """Stores results of A/B tests for monetization strategies."""
@@ -69,8 +68,7 @@ class ABTestResult(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     completed_at: Optional[datetime] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 @dataclass
 class MonetizationInsights:
