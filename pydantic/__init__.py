@@ -29,6 +29,13 @@ if not _real_loaded:
         """Exception raised when data cannot be coerced into the target model."""
 
 
+    class ConfigDict(dict):
+        """Lightweight stand-in mirroring Pydantic's ``ConfigDict``."""
+
+        def __init__(self, **kwargs: Any) -> None:
+            super().__init__(**kwargs)
+
+
     class _Undefined:
         pass
 
@@ -44,19 +51,22 @@ if not _real_loaded:
             default: Any = _UNDEFINED,
             *,
             default_factory: Optional[Callable[[], Any]] = None,
+            **metadata: Any,
         ) -> None:
             self.default = default
             self.default_factory = default_factory
+            self.metadata = metadata
 
 
     def Field(
         default: Any = _UNDEFINED,
         *,
         default_factory: Optional[Callable[[], Any]] = None,
+        **metadata: Any,
     ) -> FieldInfo:
         """Capture default metadata for lazy instantiation."""
 
-        return FieldInfo(default=default, default_factory=default_factory)
+        return FieldInfo(default=default, default_factory=default_factory, **metadata)
 
 
     def validator(*_fields: str, **_kwargs: Any) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
@@ -118,3 +128,7 @@ if not _real_loaded:
         def __repr__(self) -> str:  # pragma: no cover - debugging helper
             fields = ", ".join(f"{k}={v!r}" for k, v in self.dict().items())
             return f"{self.__class__.__name__}({fields})"
+
+    class EmailStr(str):
+        """Minimal stand-in for ``pydantic.EmailStr``."""
+
