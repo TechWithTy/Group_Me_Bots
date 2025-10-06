@@ -14,6 +14,27 @@ from app.telegram.api.telegram_api import TelegramBotAPI, Message
 class ScheduledMessagingWorkflow:
     """Workflow for sending scheduled messages."""
 
+    title = "Telegram Scheduled Messaging"
+    description = "Plan, queue, and dispatch reminders or broadcasts at precise intervals via Telegram."
+    goal = "Deliver scheduled and recurring Telegram messages at the requested time without manual intervention."
+    kpis = [
+        {
+            "name": "scheduled_messages_sent",
+            "target": ">=1/run",
+            "description": "Count of queued messages that were successfully delivered during a run.",
+        },
+        {
+            "name": "on_time_delivery_rate",
+            "target": ">=95%",
+            "description": "Share of scheduled messages delivered within the expected time window.",
+        },
+        {
+            "name": "pending_queue_depth",
+            "target": "<=3",
+            "description": "Number of overdue scheduled messages awaiting dispatch.",
+        },
+    ]
+
     def __init__(self, bot: TelegramBotAPI):
         self.bot = bot
         self.scheduled_messages: List[Dict[str, Any]] = []

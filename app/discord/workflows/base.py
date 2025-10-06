@@ -39,6 +39,8 @@ class WorkflowDefinition:
     """Base class for all orchestrated workflows."""
 
     name: str
+    title: str
+    description: str
     goal: str
     kpis: Sequence[WorkflowKPI]
 

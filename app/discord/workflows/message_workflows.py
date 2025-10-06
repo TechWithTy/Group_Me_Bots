@@ -17,6 +17,8 @@ __all__ = [
 class MessageStitchingWorkflow(WorkflowDefinition):
     """Stitch and echo high-engagement content across Discord channels."""
 
+    title = "Discord Message Stitching"
+    description = "Stitch related Discord messages and rebroadcast highlights across communities."
     name = "discord_message_stitching_content_echo"
     goal = "Amplify cross-channel engagement by echoing at least 5 high-signal messages per run."
     kpis = (
@@ -75,6 +77,8 @@ class MessageStitchingWorkflow(WorkflowDefinition):
 class SecurityModerationWorkflow(WorkflowDefinition):
     """Monitors for spam, inappropriate content, or policy violations in Discord channels."""
 
+    title = "Discord Security Moderation"
+    description = "Detect and escalate potential policy violations within Discord channels."
     name = "discord_security_moderation_monitoring"
     goal = "Detect and flag 95% of inappropriate content within 5 minutes."
     kpis = (
@@ -125,6 +129,8 @@ class SecurityModerationWorkflow(WorkflowDefinition):
 class ContentEchoWorkflow(WorkflowDefinition):
     """Echo and share engaging content across Discord channels."""
 
+    title = "Discord Content Echo"
+    description = "Amplify standout Discord conversations by echoing them to target communities."
     name = "discord_content_echo"
     goal = "Share high-engagement content across channels to boost overall activity."
     kpis = (

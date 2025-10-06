@@ -58,6 +58,19 @@ class IntegrationWorkflows:
                 stats[name] = workflow.get_stitch_stats()
         return stats
 
+    def get_workflow_metadata(self) -> Dict[str, Dict[str, Any]]:
+        """Expose descriptive metadata for each registered workflow."""
+
+        metadata: Dict[str, Dict[str, Any]] = {}
+        for name, workflow in self.workflows.items():
+            metadata[name] = {
+                'title': getattr(workflow, 'title', ''),
+                'description': getattr(workflow, 'description', ''),
+                'goal': getattr(workflow, 'goal', ''),
+                'kpis': getattr(workflow, 'kpis', []),
+            }
+        return metadata
+
     def enable_workflow(self, workflow_name: str) -> bool:
         """Enable a specific workflow."""
         if workflow_name in self.workflows:

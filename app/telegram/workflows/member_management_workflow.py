@@ -6,12 +6,33 @@ like ban, unban, promote, etc.
 """
 
 import time
-from typing import Dict, Any, List
+from typing import Any, Dict, List, Optional
 from app.telegram.api.telegram_api import TelegramBotAPI, Update, Message
 
 
 class MemberManagementWorkflow:
     """Workflow for managing chat members."""
+
+    title = "Telegram Member Management"
+    description = "Automate moderation actions such as ban, unban, promote, and demote within Telegram chats."
+    goal = "Ensure administrative actions are executed reliably while notifying operators of outcomes."
+    kpis = [
+        {
+            "name": "admin_actions_processed",
+            "target": ">=5/day",
+            "description": "Number of moderation commands successfully executed each day.",
+        },
+        {
+            "name": "action_success_rate",
+            "target": ">=95%",
+            "description": "Share of administrative commands that complete without errors.",
+        },
+        {
+            "name": "response_latency",
+            "target": "<5s",
+            "description": "Average time to acknowledge a moderation command in chat.",
+        },
+    ]
 
     def __init__(self, bot: TelegramBotAPI):
         self.bot = bot

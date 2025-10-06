@@ -14,6 +14,27 @@ from app.telegram.api.telegram_api import TelegramBotAPI, Update, Message
 class AdaptiveFrequencyWorkflow:
     """Workflow for adapting message frequency based on chat activity."""
 
+    title = "Telegram Adaptive Frequency"
+    description = "Continuously tune outbound messaging cadence in response to chat activity levels."
+    goal = "Maintain the optimal engagement cadence by adapting send intervals to observed message volume."
+    kpis = [
+        {
+            "name": "interval_adjustments",
+            "target": ">=1/run",
+            "description": "Number of cadence adjustments applied during a workflow execution.",
+        },
+        {
+            "name": "messages_tracked",
+            "target": ">=20",
+            "description": "Count of incoming messages evaluated for frequency decisions.",
+        },
+        {
+            "name": "overactivity_alert_rate",
+            "target": "<=10%",
+            "description": "Percentage of runs where activity exceeds configured thresholds without adjustment.",
+        },
+    ]
+
     def __init__(self, bot: TelegramBotAPI, base_interval: int = 60, max_interval: int = 300, min_interval: int = 10):
         self.bot = bot
         self.base_interval = base_interval  # Base time between messages (seconds)

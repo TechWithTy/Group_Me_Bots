@@ -15,6 +15,8 @@ __all__ = [
 class CommerceIntentWorkflow(WorkflowDefinition):
     """Detect commerce intents for downstream monetization workflows in Discord."""
 
+    title = "Discord Commerce Intent"
+    description = "Identify purchase-ready conversations to activate monetization playbooks."
     name = "discord_commerce_intent_detection"
     goal = "Maintain commerce intent precision above 0.8 with efficient processing."
     kpis = (

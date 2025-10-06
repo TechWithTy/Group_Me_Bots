@@ -13,6 +13,27 @@ from app.telegram.api.telegram_api import TelegramBotAPI, Update, Message
 class MessageHandlingWorkflow:
     """Workflow for processing and responding to messages."""
 
+    title = "Telegram Message Handling"
+    description = "Route inbound Telegram messages to the right command handlers with contextual replies."
+    goal = "Respond to recognized commands and keywords with actionable guidance within seconds."
+    kpis = [
+        {
+            "name": "commands_handled",
+            "target": ">=90%",
+            "description": "Percentage of recognized commands receiving an automated response.",
+        },
+        {
+            "name": "average_response_latency",
+            "target": "<3s",
+            "description": "Average time taken to send a response after receiving a message.",
+        },
+        {
+            "name": "fallback_rate",
+            "target": "<10%",
+            "description": "Share of messages that route to the default handler due to no match.",
+        },
+    ]
+
     def __init__(self, bot: TelegramBotAPI):
         self.bot = bot
         self.handlers = {

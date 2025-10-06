@@ -18,6 +18,8 @@ from .base import WorkflowDefinition, WorkflowContext, WorkflowKPI, WorkflowResu
 class MessageStitchingWorkflow(WorkflowDefinition):
     """Workflow for stitching messages together based on patterns."""
 
+    title = "Discord Message Stitching Engine"
+    description = "Aggregate related Discord messages and deliver stitched summaries back to the channel."
     name = "discord_message_stitching"
     goal = "Stitch related messages in Discord channels to improve conversation flow."
     kpis = (

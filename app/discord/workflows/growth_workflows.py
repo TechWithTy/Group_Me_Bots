@@ -16,6 +16,8 @@ __all__ = [
 class GhostInvitationWorkflow(WorkflowDefinition):
     """Generate dynamic share links for stealth invitations in Discord."""
 
+    title = "Discord Ghost Invitations"
+    description = "Create campaign-ready invite links for targeted community growth."
     name = "discord_ghost_invitation_share_links"
     goal = "Generate at least 3 valid invite links for growth campaigns."
     kpis = (
@@ -76,6 +78,8 @@ class GhostInvitationWorkflow(WorkflowDefinition):
 class ServerGrowthWorkflow(WorkflowDefinition):
     """Monitor and optimize server growth metrics."""
 
+    title = "Discord Server Growth"
+    description = "Track membership momentum and retention signals across the Discord server."
     name = "discord_server_growth_monitoring"
     goal = "Achieve consistent server growth with positive member retention."
     kpis = (

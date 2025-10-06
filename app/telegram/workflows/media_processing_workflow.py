@@ -12,6 +12,27 @@ from app.telegram.api.telegram_api import TelegramBotAPI, Update, Message
 class MediaProcessingWorkflow:
     """Workflow for processing media messages."""
 
+    title = "Telegram Media Processing"
+    description = "Detect, acknowledge, and optionally echo media shared with the Telegram bot."
+    goal = "Classify inbound media assets and provide timely confirmations or follow-up actions."
+    kpis = [
+        {
+            "name": "media_messages_processed",
+            "target": ">=10/run",
+            "description": "Number of media messages analyzed during a workflow execution.",
+        },
+        {
+            "name": "acknowledgement_rate",
+            "target": ">=95%",
+            "description": "Percentage of media uploads that receive an acknowledgement message.",
+        },
+        {
+            "name": "processing_error_rate",
+            "target": "<=5%",
+            "description": "Share of media interactions that fail due to processing errors.",
+        },
+    ]
+
     def __init__(self, bot: TelegramBotAPI):
         self.bot = bot
         self.media_handlers = {

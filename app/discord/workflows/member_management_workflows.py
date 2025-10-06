@@ -18,6 +18,8 @@ __all__ = [
 class MemberManagementWorkflow(WorkflowDefinition):
     """Comprehensive member management for Discord server."""
 
+    title = "Discord Member Management"
+    description = "Coordinate onboarding, verification, and cleanup tasks for Discord members."
     name = "discord_member_management"
     goal = "Maintain healthy server membership with proper management tools."
     kpis = (
@@ -91,6 +93,8 @@ class MemberManagementWorkflow(WorkflowDefinition):
 class RoleManagementWorkflow(WorkflowDefinition):
     """Automated role management and assignment for Discord members."""
 
+    title = "Discord Role Management"
+    description = "Audit and correct Discord role assignments to maintain hierarchy integrity."
     name = "discord_role_management"
     goal = "Ensure proper role assignment and hierarchy management."
     kpis = (
@@ -153,6 +157,8 @@ class RoleManagementWorkflow(WorkflowDefinition):
 class MemberOnboardingWorkflow(WorkflowDefinition):
     """Automate the onboarding process for new Discord members."""
 
+    title = "Discord Member Onboarding"
+    description = "Guide new members through welcome, rules, and verification flows."
     name = "discord_member_onboarding"
     goal = "Ensure smooth onboarding experience for all new members."
     kpis = (
@@ -218,6 +224,8 @@ class MemberOnboardingWorkflow(WorkflowDefinition):
 class MemberRetentionWorkflow(WorkflowDefinition):
     """Monitor and improve member retention in Discord server."""
 
+    title = "Discord Member Retention"
+    description = "Measure churn risk and trigger engagement nudges to retain members."
     name = "discord_member_retention"
     goal = "Maintain high member retention through engagement and support."
     kpis = (

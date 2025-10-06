@@ -170,6 +170,8 @@ class DiscordWorkflowSuite:
         workflow = self.workflows[workflow_name]
         return {
             'name': workflow.name,
+            'title': workflow.title,
+            'description': workflow.description,
             'goal': workflow.goal,
             'kpis': [kpi.__dict__ for kpi in workflow.kpis],
         }

@@ -18,6 +18,8 @@ __all__ = [
 class RealTimeSubscriptionWorkflow(WorkflowDefinition):
     """Real-time event capture for Discord server monitoring."""
 
+    title = "Discord Real-Time Subscription"
+    description = "Capture live Discord channel activity and forward enriched events to analytics workers."
     name = "discord_real_time_subscription_monitoring"
     goal = "Capture 100% of real-time events with minimal latency."
     kpis = (
@@ -85,6 +87,8 @@ class RealTimeSubscriptionWorkflow(WorkflowDefinition):
 class AnalyticsWorkflow(WorkflowDefinition):
     """Comprehensive analytics collection for Discord server."""
 
+    title = "Discord Analytics Collection"
+    description = "Aggregate multi-signal analytics across guild membership, messaging, and reactions."
     name = "discord_analytics_collection"
     goal = "Collect comprehensive analytics data across all server activities."
     kpis = (
@@ -162,6 +166,8 @@ class AnalyticsWorkflow(WorkflowDefinition):
 class MessageAnalyticsWorkflow(WorkflowDefinition):
     """Detailed message analytics and engagement tracking."""
 
+    title = "Discord Message Analytics"
+    description = "Deliver deep engagement insights by analyzing Discord message sentiment and reactions."
     name = "discord_message_analytics"
     goal = "Provide detailed insights into message patterns and engagement."
     kpis = (
