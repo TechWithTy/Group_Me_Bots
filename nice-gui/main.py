@@ -14,4 +14,14 @@ if str(CURRENT_DIR) not in sys.path:
 from app import build
 
 
-ui.run(build)
+try:
+    print('Starting NiceGUI server...')
+    ui.run(build, port=8081)
+    print('Server started on port 8081')
+except Exception as e:
+    print(f'Error: {e}')
+    import traceback
+    traceback.print_exc()
+
+# Keep the server running
+input('Server is running on http://localhost:8081. Press Enter to stop...')
