@@ -7,7 +7,7 @@ This module extends the TelegramBotAPI with inline query and callback methods.
 from typing import Optional, List, Dict, Any, Union
 
 # Import base classes from telegram_api.py
-from .telegram_api import TelegramBotAPI
+from .telegram_api import TelegramBotAPI, Message
 
 
 class TelegramInlineAPI(TelegramBotAPI):
