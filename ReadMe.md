@@ -253,7 +253,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For support and questions:
 - Create an issue in the repository
 - Check the documentation in `_docs/` folder
-- Review the API documentation in `_docs/callbacks/`
+- Review the API documentation in `_docs/platforms/` and `_docs/callbacks/`
 
 ---
 
