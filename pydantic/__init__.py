@@ -44,19 +44,37 @@ if not _real_loaded:
             default: Any = _UNDEFINED,
             *,
             default_factory: Optional[Callable[[], Any]] = None,
+            metadata: Optional[Dict[str, Any]] = None,
         ) -> None:
             self.default = default
             self.default_factory = default_factory
+            self.metadata = metadata or {}
 
 
     def Field(
         default: Any = _UNDEFINED,
         *,
         default_factory: Optional[Callable[[], Any]] = None,
+        **metadata: Any,
     ) -> FieldInfo:
         """Capture default metadata for lazy instantiation."""
 
-        return FieldInfo(default=default, default_factory=default_factory)
+        return FieldInfo(
+            default=default,
+            default_factory=default_factory,
+            metadata=dict(metadata),
+        )
+
+
+    class EmailStr(str):
+        """Fallback type representing validated email strings."""
+
+
+    class ConfigDict(dict):
+        """Lightweight stand-in for :class:`pydantic.ConfigDict`."""
+
+        def __init__(self, **kwargs: Any) -> None:
+            super().__init__(**kwargs)
 
 
     def validator(*_fields: str, **_kwargs: Any) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
