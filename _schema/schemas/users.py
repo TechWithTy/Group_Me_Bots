@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Optional, Dict, Any
 from enum import Enum
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 class ContactMethod(str, Enum):
     EMAIL = "email"
@@ -91,5 +91,4 @@ class GroupMember(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

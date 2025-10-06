@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Dict, Any
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 class MonetizationSourceType(str, Enum):
     AFFILIATE_LINK = "affiliate_link"
@@ -45,5 +45,4 @@ class MonetizationSource(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
