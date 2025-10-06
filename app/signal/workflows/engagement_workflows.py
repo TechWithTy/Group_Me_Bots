@@ -1,8 +1,7 @@
 """Engagement-focused workflow implementations for Signal."""
 from __future__ import annotations
 
-from typing import Any, Sequence, List, Dict
-import asyncio
+from typing import Any, List, Sequence
 
 from .base import WorkflowContext, WorkflowDefinition, WorkflowKPI, WorkflowResult
 
@@ -14,187 +13,235 @@ __all__ = [
 
 
 class SignalAutoLikeFeedbackWorkflow(WorkflowDefinition):
-    """Close the feedback loop by reacting to high-value messages in Signal."""
+    """Send reactions, read receipts, and acknowledgements in bulk."""
 
     name = "signal_auto_like_feedback"
-    goal = "Acknowledge high-value messages with reactions to boost engagement."
+    title = "Signal Auto Reaction Feedback"
+    description = (
+        "Automatically react to priority messages, send read receipts, and acknowledge"
+        " senders using Signal's advanced messaging APIs."
+    )
+    goal = "Acknowledge high-value messages and confirm delivery in near real-time."
     kpis = (
-        WorkflowKPI("reaction_coverage", ">=0.8", "Messages receiving reactions"),
-        WorkflowKPI("feedback_engagement", ">=0.7", "User engagement after reactions"),
+        WorkflowKPI("reaction_coverage", ">=0.8", "Share of priority messages reacted to"),
+        WorkflowKPI("read_receipts", "100%", "Receipts sent for acknowledged messages"),
+        WorkflowKPI("ack_latency", "<30s", "Latency from detection to acknowledgement"),
     )
 
     async def execute(self, context: WorkflowContext, **kwargs: Any) -> WorkflowResult:
         signal_client = self._require(context, "signal_client")
-        groups_api = self._require(context, "groups_api")
 
-        group_id: str = kwargs.get("group_id")
-        message_ids: Sequence[str] = kwargs.get("message_ids", [])
+        group_id: str = kwargs.get("group_id", "")
+        message_ids: Sequence[str] = tuple(kwargs.get("message_ids", ()))
         reaction_emoji: str = kwargs.get("reaction_emoji", "👍")
+        send_receipts: bool = kwargs.get("send_receipts", True)
+        acknowledge_text: str = kwargs.get(
+            "acknowledge_text", "Thanks for the update!"
+        )
+        minimum_coverage: float = kwargs.get("minimum_coverage", 0.8)
 
         if not group_id or not message_ids:
-            return WorkflowResult(achieved_goal=False, metrics={"error": "Missing group_id or message_ids"})
+            return WorkflowResult(
+                achieved_goal=False,
+                metrics={"error": "group_id and message_ids are required"},
+            )
 
-        try:
-            reacted_count = 0
-            for message_id in message_ids[:10]:  # Process first 10 for demo
-                try:
-                    # In real Signal implementation, send reaction
-                    await self._send_reaction(signal_client, group_id, message_id, reaction_emoji)
-                    reacted_count += 1
-                except Exception as e:
-                    print(f"Failed to react to message {message_id}: {e}")
+        reactions_sent = 0
+        receipts_sent = 0
+        acknowledgements: List[str] = []
+        failures: List[str] = []
 
-            metrics = {
-                "processed_messages": len(message_ids),
-                "reacted_messages": reacted_count,
-                "reaction_emoji": reaction_emoji,
-            }
+        for message_id in message_ids:
+            try:
+                await signal_client.send_reaction(
+                    group_id=group_id,
+                    message_id=message_id,
+                    emoji=reaction_emoji,
+                )
+                reactions_sent += 1
 
-            achieved = reacted_count / len(message_ids) >= 0.8 if message_ids else False
-            return WorkflowResult(achieved_goal=achieved, metrics=metrics)
+                if send_receipts:
+                    await signal_client.send_read_receipt(
+                        group_id=group_id,
+                        message_id=message_id,
+                    )
+                    receipts_sent += 1
 
-        except Exception as e:
-            return WorkflowResult(achieved_goal=False, metrics={"error": str(e)})
+                if acknowledge_text:
+                    await signal_client.send_group_message(
+                        group_id=group_id,
+                        text=f"{reaction_emoji} {acknowledge_text}",
+                        reply_to=message_id,
+                    )
+                    acknowledgements.append(message_id)
+            except Exception as exc:  # pragma: no cover - defensive logging
+                failures.append(f"{message_id}:{exc}")
 
-    async def _send_reaction(self, signal_client, group_id: str, message_id: str, emoji: str):
-        """Send reaction to Signal message."""
-        await asyncio.sleep(0.05)  # Simulate API call
+        total_processed = len(message_ids)
+        coverage = reactions_sent / total_processed if total_processed else 0.0
+        achieved = coverage >= minimum_coverage and (not send_receipts or receipts_sent == reactions_sent)
+
+        metrics = {
+            "group_id": group_id,
+            "processed_messages": total_processed,
+            "reactions_sent": reactions_sent,
+            "read_receipts_sent": receipts_sent,
+            "acknowledged_messages": len(acknowledgements),
+            "reaction_emoji": reaction_emoji,
+            "failures": failures,
+            "coverage": coverage,
+            "minimum_coverage": minimum_coverage,
+        }
+        return WorkflowResult(achieved_goal=achieved, metrics=metrics)
 
 
 class SignalContentQualityWorkflow(WorkflowDefinition):
-    """Assess and promote high-quality, relevant content in Signal groups."""
+    """Score content and promote the highest quality posts in a group."""
 
     name = "signal_content_quality_relevance"
-    goal = "Identify and highlight 90% of high-quality messages for better group experience."
+    title = "Signal Content Quality & Highlights"
+    description = (
+        "Reviews recent Signal messages, scores quality using heuristics, and highlights"
+        " the best content via pinned or boosted announcements."
+    )
+    goal = "Maintain a high quality bar by highlighting the top 20% of messages."
     kpis = (
-        WorkflowKPI("quality_detection_rate", ">=0.9", "High-quality messages correctly identified"),
-        WorkflowKPI("promotion_effectiveness", ">=0.8", "Success rate of content promotion"),
+        WorkflowKPI("quality_detection_rate", ">=0.9", "High-quality messages identified"),
+        WorkflowKPI("highlight_coverage", ">=0.2", "Share of messages highlighted"),
+        WorkflowKPI("attachment_engagement", ">=0.6", "Engagement on media-rich content"),
     )
 
     async def execute(self, context: WorkflowContext, **kwargs: Any) -> WorkflowResult:
         signal_client = self._require(context, "signal_client")
-        groups_api = self._require(context, "groups_api")
 
-        group_id: str = kwargs.get("group_id")
-        message_limit: int = kwargs.get("message_limit", 50)
+        group_id: str = kwargs.get("group_id", "")
+        limit: int = int(kwargs.get("limit", 50))
+        highlight_limit: int = int(kwargs.get("highlight_limit", 3))
+        attachment_weight: float = float(kwargs.get("attachment_weight", 0.15))
 
         if not group_id:
-            return WorkflowResult(achieved_goal=False, metrics={"error": "No group_id provided"})
+            return WorkflowResult(False, {"error": "group_id is required"})
 
-        try:
-            messages = await self._get_group_messages(signal_client, group_id, message_limit)
+        messages = list(
+            await signal_client.fetch_group_messages(
+                group_id=group_id,
+                limit=limit,
+            )
+        )
 
-            quality_messages = []
-            for message in messages:
-                quality_score = self._assess_message_quality(message)
-                if quality_score >= 0.7:
-                    quality_messages.append(message)
+        scored_messages: List[tuple[float, dict[str, Any]]] = []
+        for message in messages:
+            score = self._score_message(message, attachment_weight)
+            scored_messages.append((score, message))
 
-            # Promote quality messages (simulate pinning or highlighting)
-            promoted_count = 0
-            for message in quality_messages[:5]:  # Promote top 5
-                # In real implementation, might pin message or send highlight
-                promoted_count += 1
+        scored_messages.sort(key=lambda item: item[0], reverse=True)
+        highlights = scored_messages[:highlight_limit]
 
-            metrics = {
-                "processed_messages": len(messages),
-                "quality_messages": len(quality_messages),
-                "promoted_messages": promoted_count,
-            }
+        promoted_ids: List[str] = []
+        for score, message in highlights:
+            try:
+                await signal_client.pin_message(group_id=group_id, message_id=message["id"])
+                promoted_ids.append(message["id"])
+            except Exception as exc:  # pragma: no cover - defensive logging
+                promoted_ids.append(f"failed:{message['id']}:{exc}")
 
-            achieved = len(quality_messages) / len(messages) >= 0.5 if messages else False
-            return WorkflowResult(achieved_goal=achieved, metrics=metrics)
+        processed = len(scored_messages)
+        quality_messages = len([score for score, _ in scored_messages if score >= 0.7])
+        highlight_ratio = (len(promoted_ids) / processed) if processed else 0.0
+        achieved = processed > 0 and highlight_ratio >= 0.2
 
-        except Exception as e:
-            return WorkflowResult(achieved_goal=False, metrics={"error": str(e)})
+        metrics = {
+            "group_id": group_id,
+            "processed_messages": processed,
+            "quality_messages": quality_messages,
+            "highlighted_messages": len(promoted_ids),
+            "highlight_ratio": highlight_ratio,
+            "attachment_weight": attachment_weight,
+        }
+        return WorkflowResult(achieved_goal=achieved, metrics=metrics)
 
-    async def _get_group_messages(self, signal_client, group_id: str, limit: int) -> List[Dict[str, Any]]:
-        """Get messages from Signal group."""
-        await asyncio.sleep(0.1)
-        return [
-            {"id": f"msg_{i}", "content": f"Message {i}", "author": f"user_{i % 3}"}
-            for i in range(min(limit, 20))
-        ]
+    @staticmethod
+    def _score_message(message: dict[str, Any], attachment_weight: float) -> float:
+        content = str(message.get("text") or message.get("content") or "").lower()
+        reactions = int(message.get("reactions", 0))
+        attachments: Sequence[dict[str, Any]] = tuple(message.get("attachments", ()))
 
-    def _assess_message_quality(self, message: Dict[str, Any]) -> float:
-        """Assess the quality of a message based on various factors."""
-        content = message.get("content", "").lower()
+        keyword_bonus = 0.0
+        for keyword in ("launch", "update", "thanks", "great", "awesome", "guide"):
+            if keyword in content:
+                keyword_bonus += 0.1
 
-        # Length factor
-        length_score = min(1.0, len(content) / 100) if len(content) > 10 else 0.3
+        attachment_bonus = min(len(attachments) * attachment_weight, 0.3)
+        reaction_bonus = min(reactions / 10.0, 0.4)
+        base_score = 0.4 if len(content) >= 20 else 0.2
 
-        # Keyword factor
-        positive_keywords = ['great', 'excellent', 'awesome', 'helpful', 'thanks', 'good']
-        keyword_score = sum(1 for keyword in positive_keywords if keyword in content) / len(positive_keywords)
-
-        return (length_score * 0.5 + keyword_score * 0.5)
+        return min(1.0, base_score + keyword_bonus + attachment_bonus + reaction_bonus)
 
 
 class SignalEmergencyResponseWorkflow(WorkflowDefinition):
-    """Handle emergency situations and critical alerts in Signal groups."""
+    """Detect urgent signals and broadcast emergency instructions."""
 
     name = "signal_emergency_response"
-    goal = "Respond to 100% of emergency situations within 2 minutes."
+    title = "Signal Emergency Response"
+    description = (
+        "Scans incoming Signal conversations for emergency keywords, escalates to on-call"
+        " responders, and posts safety guidance back to the group."
+    )
+    goal = "Respond to every detected emergency message within the run."
     kpis = (
-        WorkflowKPI("emergency_detection_rate", "100%", "Emergency situations correctly identified"),
-        WorkflowKPI("response_time", "<120s", "Time to respond to emergencies"),
+        WorkflowKPI("emergency_detection_rate", "100%", "Detected emergency keywords"),
+        WorkflowKPI("response_broadcasts", ">=1", "Safety broadcasts delivered"),
+        WorkflowKPI("escalations", ">=1", "Escalations sent to on-call contacts"),
     )
 
     async def execute(self, context: WorkflowContext, **kwargs: Any) -> WorkflowResult:
         signal_client = self._require(context, "signal_client")
-        groups_api = self._require(context, "groups_api")
 
-        group_id: str = kwargs.get("group_id")
-        emergency_keywords: list = kwargs.get("emergency_keywords",
-            ["emergency", "urgent", "critical", "help", "911"])
+        group_id: str = kwargs.get("group_id", "")
+        emergency_keywords: Sequence[str] = tuple(
+            kw.lower() for kw in kwargs.get(
+                "emergency_keywords", ("emergency", "urgent", "help", "accident", "fire")
+            )
+        )
+        escalation_contact: str | None = kwargs.get("escalation_contact")
+        guidance_message: str = kwargs.get(
+            "guidance_message",
+            "🚨 Emergency team has been notified. Follow safety protocols and await instructions.",
+        )
 
         if not group_id:
-            return WorkflowResult(achieved_goal=False, metrics={"error": "No group_id provided"})
+            return WorkflowResult(False, {"error": "group_id is required"})
 
-        try:
-            messages = await self._get_group_messages(signal_client, group_id, 20)
+        messages = list(
+            await signal_client.fetch_group_messages(
+                group_id=group_id,
+                limit=int(kwargs.get("limit", 30)),
+            )
+        )
 
-            emergencies = []
-            for message in messages:
-                content = message.get("content", "").lower()
-                if any(keyword in content for keyword in emergency_keywords):
-                    emergencies.append(message)
+        emergencies: List[dict[str, Any]] = []
+        for message in messages:
+            text = str(message.get("text") or message.get("content") or "").lower()
+            if any(keyword in text for keyword in emergency_keywords):
+                emergencies.append(message)
 
-            # Respond to emergencies
-            responded_count = 0
-            for message in emergencies:
-                # Send emergency response
-                response = "🚨 **EMERGENCY DETECTED** 🚨\nPlease stay calm. Help is on the way!"
-                await self._send_to_group(signal_client, group_id, response)
-                responded_count += 1
+        for emergency in emergencies:
+            await signal_client.send_group_message(
+                group_id=group_id,
+                text=guidance_message,
+                reply_to=emergency.get("id"),
+            )
+            if escalation_contact:
+                await signal_client.forward_to_contact(
+                    contact=escalation_contact,
+                    message=emergency,
+                )
 
-            metrics = {
-                "processed_messages": len(messages),
-                "emergencies_detected": len(emergencies),
-                "emergency_responses": responded_count,
-            }
-
-            achieved = responded_count == len(emergencies)
-            return WorkflowResult(achieved_goal=achieved, metrics=metrics)
-
-        except Exception as e:
-            return WorkflowResult(achieved_goal=False, metrics={"error": str(e)})
-
-    async def _get_group_messages(self, signal_client, group_id: str, limit: int) -> List[Dict[str, Any]]:
-        """Get messages from Signal group."""
-        await asyncio.sleep(0.1)
-        return [
-            {"id": f"msg_{i}", "content": f"Message {i}", "author": f"user_{i % 3}"}
-            for i in range(min(limit, 10))
-        ]
-
-    async def _send_to_group(self, signal_client, group_id: str, message: str):
-        """Send message to Signal group."""
-        await asyncio.sleep(0.05)
-
-
-__all__ = [
-    "SignalAutoLikeFeedbackWorkflow",
-    "SignalContentQualityWorkflow",
-    "SignalEmergencyResponseWorkflow",
-]
+        achieved = bool(emergencies)
+        metrics = {
+            "group_id": group_id,
+            "emergencies_detected": len(emergencies),
+            "broadcasts_sent": len(emergencies),
+            "escalations": len(emergencies) if escalation_contact else 0,
+        }
+        return WorkflowResult(achieved_goal=achieved, metrics=metrics)
