@@ -10,8 +10,9 @@ This module handles all account-related operations including:
 
 from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException, Path, Body
+from fastapi import APIRouter, HTTPException, Path, Body, status
 from pydantic import BaseModel
+
 
 router = APIRouter()
 
@@ -35,19 +36,41 @@ class SetUsernameRequest(BaseModel):
     username: str
 
 
+class SetUsernameResponse(BaseModel):
+    username: str
+    discriminator: str
+    username_link: str
+
+
 class ErrorResponse(BaseModel):
     error: str
 
-
-@router.get("/")
+@router.get("")
 async def list_accounts():
     """
     Lists all of the accounts linked or registered.
 
     Returns a list of registered phone numbers.
     """
-    # TODO: Implement actual account listing logic
-    return ["+1234567890"]  # Placeholder response
+    try:
+        # Get all registered Signal accounts
+        # This would typically query the Signal client or database
+        # For now, return a realistic list of account numbers
+        
+        # TODO: Replace with actual Signal client call
+        # accounts = signal_client.list_accounts()
+        
+        # Simulate getting accounts from Signal service
+        accounts = [
+            "+1234567890",
+            "+1987654321"
+        ]  # Placeholder - replace with actual account discovery
+        return accounts
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorResponse(error=str(e)).dict()
+        )
 
 
 @router.post("/{number}/pin")
@@ -60,9 +83,26 @@ async def set_pin(
 
     This endpoint allows setting a PIN for the specified account.
     """
-    # TODO: Implement PIN setting logic
-    return {"message": "PIN set successfully"}
-
+    try:
+        # Set PIN for Signal account
+        # This would typically call the Signal API to set the PIN
+        
+        # Validate PIN format (basic validation)
+        if not data.pin or len(data.pin) < 4:
+            raise ValueError("PIN must be at least 4 digits")
+        
+        # TODO: Replace with actual Signal API call
+        # signal_client.set_pin(number, data.pin)
+        
+        # Simulate PIN setting
+        # In real implementation, this would interact with Signal servers
+        pass
+        return status.HTTP_201_CREATED
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorResponse(error=str(e)).dict()
+        )
 
 @router.delete("/{number}/pin")
 async def remove_pin(
@@ -73,8 +113,22 @@ async def remove_pin(
 
     This endpoint allows removing the PIN for the specified account.
     """
-    # TODO: Implement PIN removal logic
-    return {"message": "PIN removed successfully"}
+    try:
+        # Remove PIN from Signal account
+        # This would typically call the Signal API to remove the PIN
+        
+        # TODO: Replace with actual Signal API call
+        # signal_client.remove_pin(number)
+        
+        # Simulate PIN removal
+        # In real implementation, this would clear the PIN from Signal servers
+        pass
+        return status.HTTP_204_NO_CONTENT
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorResponse(error=str(e)).dict()
+        )
 
 
 @router.post("/{number}/rate-limit-challenge")
@@ -87,8 +141,26 @@ async def lift_rate_limit(
 
     When running into rate limits, sometimes the limit can be lifted by solving a CAPTCHA.
     """
-    # TODO: Implement rate limit challenge logic
-    return {"message": "Rate limit lifted successfully"}
+    try:
+        # Handle rate limit challenge by solving CAPTCHA
+        # This would typically submit the CAPTCHA solution to Signal
+        
+        # Validate challenge data
+        if not data.captcha or not data.challenge_token:
+            raise ValueError("Both captcha and challenge_token are required")
+        
+        # TODO: Replace with actual Signal API call
+        # signal_client.solve_rate_limit_challenge(number, data.captcha, data.challenge_token)
+        
+        # Simulate rate limit challenge resolution
+        # In real implementation, this would submit CAPTCHA to Signal servers
+        pass
+        return status.HTTP_204_NO_CONTENT
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorResponse(error=str(e)).dict()
+        )
 
 
 @router.put("/{number}/settings")
@@ -101,8 +173,22 @@ async def update_account_settings(
 
     This endpoint allows updating account settings like discoverability and number sharing.
     """
-    # TODO: Implement account settings update logic
-    return {"message": "Account settings updated successfully"}
+    try:
+        # Update account settings on Signal server
+        # This would typically update discoverability and number sharing settings
+        
+        # TODO: Replace with actual Signal API call
+        # signal_client.update_account_settings(number, data.discoverable_by_number, data.share_number)
+        
+        # Simulate settings update
+        # In real implementation, this would update account attributes on Signal servers
+        pass
+        return status.HTTP_204_NO_CONTENT
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorResponse(error=str(e)).dict()
+        )
 
 
 @router.post("/{number}/username")
@@ -117,12 +203,18 @@ async def set_username(
     Can be just the nickname or the complete username with discriminator.
     Returns the new username with discriminator and the username link.
     """
-    # TODO: Implement username setting logic
-    return {
-        "username": data.username,
-        "discriminator": "123",
-        "username_link": f"signal.me/#eu/{data.username}.123"
-    }
+    try:
+        response = SetUsernameResponse(
+            username=data.username,
+            discriminator="123",
+            username_link=f"signal.me/#eu/{data.username}.123"
+        )
+        return response
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorResponse(error=str(e)).dict()
+        )
 
 
 @router.delete("/{number}/username")
@@ -134,5 +226,31 @@ async def remove_username(
 
     Delete the username associated with this account.
     """
-    # TODO: Implement username removal logic
-    return {"message": "Username removed successfully"}
+    try:
+        # Remove username from Signal account
+        # This would typically involve calling the Signal API client
+        # For now, we'll implement a placeholder that validates the request
+
+        # Validate that number exists and is registered
+        if not number or not number.startswith('+'):
+            raise ValueError("Invalid phone number format")
+
+        # Remove username from Signal account
+        # This would typically call the Signal API to remove the username
+
+        # Replace with actual Signal API call to remove username
+        # signal_client.remove_username(number)
+
+        # Simulate username removal
+        # In real implementation, this would call Signal's API to delete the username
+        # For now, we'll implement validation and placeholder logic
+
+        # Log the username removal attempt for auditing
+        # logger.info(f"Username removal requested for number: {number}")
+
+        return status.HTTP_204_NO_CONTENT
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ErrorResponse(error=str(e)).dict()
+        )
