@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
-from nicegui import ui
+import logging
+import os
+
+from nicegui import app, ui
 
 CURRENT_DIR = Path(__file__).resolve().parent
 if str(CURRENT_DIR) not in sys.path:
@@ -13,21 +16,30 @@ if str(CURRENT_DIR) not in sys.path:
 
 from app import build
 
+PORT = int(os.environ.get("NICEGUI_PORT", "8081"))
+HOST = os.environ.get("NICEGUI_HOST", "127.0.0.1")
 
-import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("nicegui")
 
-# Enable debug logging for NiceGUI
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger('nicegui')
 
-try:
-    print('Starting NiceGUI server...')
-    ui.run(build, port=8081, host='127.0.0.1', reload=False)
-    print('Server started on port 8081')
-except Exception as e:
-    print(f'Error: {e}')
-    import traceback
-    traceback.print_exc()
+@app.on_startup
+def _log_startup() -> None:
+    """Announce that the NiceGUI server finished booting."""
 
-# Keep the server running
-input('Server is running on http://localhost:8081. Press Enter to stop...')
+    logger.info("NiceGUI server is ready at http://%s:%s", HOST, PORT)
+
+
+def main() -> None:
+    """Launch the NiceGUI application."""
+
+    logger.info("Starting NiceGUI server on %s:%s", HOST, PORT)
+    ui.run(build, port=PORT, host=HOST, reload=False, show=False)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception:
+        logger.exception("NiceGUI failed to start")
+        raise
