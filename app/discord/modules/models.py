@@ -252,6 +252,15 @@ class EditMessageRequest(BaseModel):
     components: Optional[List[Dict[str, Any]]] = None
     attachments: Optional[List[Dict[str, Any]]] = None
 
+
+class EditWebhookMessageRequest(BaseModel):
+    """Request to edit a webhook message."""
+    content: Optional[str] = None
+    embeds: Optional[List[Dict[str, Any]]] = None
+    allowed_mentions: Optional[Dict[str, Any]] = None
+    components: Optional[List[Dict[str, Any]]] = None
+    attachments: Optional[List[Dict[str, Any]]] = None
+
 class CreateGuildRequest(BaseModel):
     """Request to create a guild."""
     name: str
@@ -349,6 +358,16 @@ class ApplicationCommandUpdateRequest(BaseModel):
     default_member_permissions: Optional[str] = None
     dm_permission: Optional[bool] = None
 
+
+class ApplicationRoleConnectionsMetadataItem(BaseModel):
+    """Metadata item for application role connections."""
+    type: int
+    key: str
+    name: str
+    name_localizations: Optional[Dict[str, str]] = None
+    description: str
+    description_localizations: Optional[Dict[str, str]] = None
+
 # Emoji models
 class Emoji(BaseModel):
     """Discord emoji object."""
@@ -443,6 +462,48 @@ class VoiceRegion(BaseModel):
     deprecated: bool = False
     custom: bool = False
 
+
+class UpdateVoiceStateRequest(BaseModel):
+    """Request to update a voice state."""
+    channel_id: Optional[SnowflakeType] = None
+    suppress: Optional[bool] = None
+    request_to_speak_timestamp: Optional[datetime] = None
+    self_mute: Optional[bool] = None
+    self_deaf: Optional[bool] = None
+
+
+class GuildMember(BaseModel):
+    """Minimal guild member representation."""
+    user: User
+    nick: Optional[str] = None
+    avatar: Optional[str] = None
+    roles: List[SnowflakeType] = Field(default_factory=list)
+    joined_at: Optional[datetime] = None
+    premium_since: Optional[datetime] = None
+    deaf: bool = False
+    mute: bool = False
+    pending: bool = False
+    permissions: Optional[str] = None
+
+
+class Ban(BaseModel):
+    """Guild ban representation."""
+    reason: Optional[str] = None
+    user: User
+
+
+class Connection(BaseModel):
+    """User connection representation."""
+    id: str
+    name: str
+    type: str
+    revoked: Optional[bool] = False
+    integrations: Optional[List[Dict[str, Any]]] = None
+    verified: Optional[bool] = False
+    friend_sync: Optional[bool] = False
+    show_activity: Optional[bool] = False
+    visibility: Optional[int] = 0
+
 # Permission models
 class PermissionOverwrite(BaseModel):
     """Discord permission overwrite object."""
@@ -514,6 +575,22 @@ def discord_channel_to_channel(discord_channel) -> Channel:
 
 def discord_message_to_message(discord_message) -> Message:
     """Convert discord.py Message to API Message model."""
+    raw_type = getattr(discord_message, "type", None)
+    if isinstance(raw_type, MessageType):
+        message_type = raw_type
+    elif hasattr(raw_type, "name"):
+        try:
+            message_type = MessageType(str(raw_type.name))
+        except ValueError:
+            message_type = MessageType.DEFAULT
+    elif isinstance(raw_type, str):
+        try:
+            message_type = MessageType(raw_type)
+        except ValueError:
+            message_type = MessageType.DEFAULT
+    else:
+        message_type = MessageType.DEFAULT
+
     return Message(
         id=discord_message.id,
         channel_id=discord_message.channel.id,
@@ -523,5 +600,5 @@ def discord_message_to_message(discord_message) -> Message:
         edited_timestamp=discord_message.edited_at,
         tts=discord_message.tts,
         mention_everyone=discord_message.mention_everyone,
-        type=MessageType(str(discord_message.type))
+        type=message_type
     )
