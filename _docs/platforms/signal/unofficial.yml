@@ -1,0 +1,218 @@
+openapi: 3.0.3
+info:
+  title: Signal CLI REST API + Bot Framework + Python Client
+  description: >
+    This specification covers three layers around Signal:
+    - **Core REST API**: signal-cli-rest-api endpoints.  
+    - **Bot Framework**: Python package `signalbot` for building Signal bots.  
+    - **Python Client**: Python wrapper `pysignalclirestapi` providing a programmatic interface to the REST API.  
+    - **File Utilities**: signal-cli-to-file for saving incoming messages.  
+  version: 1.4.0
+servers:
+  - url: http://localhost:8080
+
+externalDocs:
+  description: Related projects and documentation
+  url: https://github.com/bbernhard/signal-cli-rest-api
+
+tags:
+  - name: Core API
+    description: Endpoints provided by signal-cli-rest-api
+    externalDocs:
+      description: signal-cli-rest-api (GitHub)
+      url: https://github.com/bbernhard/signal-cli-rest-api/tree/master
+
+  - name: Bot Framework
+    description: Signal Bot Framework (Python package `signalbot`)
+    externalDocs:
+      description: signalbot (PyPI)
+      url: https://pypi.org/project/signalbot/
+
+  - name: Python CLI Wrapper
+    description: Python library `pysignalclirestapi` for interacting with the Signal REST API
+    externalDocs:
+      description: pysignalclirestapi (GitHub)
+      url: https://github.com/bbernhard/pysignalclirestapi
+
+  - name: File Utilities
+    description: Scripts to save incoming messages as files
+    externalDocs:
+      description: signal-cli-to-file (GitHub)
+      url: https://github.com/jneidel/signal-cli-to-file
+
+paths:
+  /bot/framework:
+    get:
+      tags: [Bot Framework]
+      summary: Info about Signalbot integration
+      responses:
+        "200":
+          description: Framework details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignalBotInfo"
+
+  /python/client:
+    get:
+      tags: [Python CLI Wrapper]
+      summary: Info about pysignalclirestapi client
+      description: >
+        Python wrapper around signal-cli-rest-api. Provides convenience methods
+        to send, receive, and manage Signal messages, groups, attachments, profiles, and identities.
+      responses:
+        "200":
+          description: Python client details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PySignalCliRestApiInfo"
+
+components:
+  schemas:
+    # --- Signalbot (already added previously) ---
+    SignalBotInfo:
+      type: object
+      properties:
+        install:
+          type: string
+          example: pip install signalbot
+        env_vars:
+          type: object
+          properties:
+            SIGNAL_SERVICE:
+              type: string
+              example: "127.0.0.1:8080"
+            PHONE_NUMBER:
+              type: string
+              example: "+49123456789"
+        example:
+          type: string
+          example: |
+            from signalbot import SignalBot, Command, Context, triggered
+            class PingCommand(Command):
+                @triggered("Ping")
+                async def handle(self, c: Context) -> None:
+                    await c.send("Pong")
+
+            bot = SignalBot({
+                "signal_service": "127.0.0.1:8080",
+                "phone_number": "+49123456789"
+            })
+            bot.register(PingCommand())
+            bot.start()
+
+    # --- Python client ---
+    PySignalCliRestApiInfo:
+      type: object
+      properties:
+        install:
+          type: string
+          example: pip install pysignalclirestapi
+        usage_example:
+          type: string
+          example: |
+            from pysignalclirestapi import SignalCliRestApi
+            SERVER = "http://localhost:8080"
+            SERVER_NUMBER = "+123456789"
+            signal = SignalCliRestApi(SERVER, SERVER_NUMBER)
+            signal.send_message(message="Hello World", recipients=["+987654321"])
+            messages = signal.receive(send_read_receipts=True)
+        methods:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClientMethod"
+
+    ClientMethod:
+      type: object
+      description: Method provided by pysignalclirestapi
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [Working, In Progress, Untested]
+        description:
+          type: string
+        notes:
+          type: string
+      example:
+        name: send_message
+        status: Working
+        description: Send a message to one or more recipients
+        notes: May need API v1 compatibility testing
+
+    # Example categories
+    Groups:
+      type: object
+      properties:
+        list_groups:
+          $ref: "#/components/schemas/ClientMethod"
+        create_group:
+          $ref: "#/components/schemas/ClientMethod"
+        update_group:
+          $ref: "#/components/schemas/ClientMethod"
+        delete_group:
+          $ref: "#/components/schemas/ClientMethod"
+
+    Messages:
+      type: object
+      properties:
+        send_message:
+          $ref: "#/components/schemas/ClientMethod"
+        receive:
+          $ref: "#/components/schemas/ClientMethod"
+
+    Attachments:
+      type: object
+      properties:
+        list_attachments:
+          $ref: "#/components/schemas/ClientMethod"
+        get_attachment:
+          $ref: "#/components/schemas/ClientMethod"
+        delete_attachment:
+          $ref: "#/components/schemas/ClientMethod"
+
+    Profiles:
+      type: object
+      properties:
+        update_profile:
+          $ref: "#/components/schemas/ClientMethod"
+
+    Identities:
+      type: object
+      properties:
+        list_identities:
+          $ref: "#/components/schemas/ClientMethod"
+        verify_identity:
+          $ref: "#/components/schemas/ClientMethod"
+
+    Reactions:
+      type: object
+      properties:
+        add_reaction:
+          $ref: "#/components/schemas/ClientMethod"
+        remove_reaction:
+          $ref: "#/components/schemas/ClientMethod"
+
+    Receipts:
+      type: object
+      properties:
+        send_receipt:
+          $ref: "#/components/schemas/ClientMethod"
+
+    Search:
+      type: object
+      properties:
+        search:
+          $ref: "#/components/schemas/ClientMethod"
+
+    Contacts:
+      type: object
+      properties:
+        get_contacts:
+          $ref: "#/components/schemas/ClientMethod"
+        update_contact:
+          $ref: "#/components/schemas/ClientMethod"
+        sync_contacts:
+          $ref: "#/components/schemas/ClientMethod"
