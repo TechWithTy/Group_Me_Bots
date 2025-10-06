@@ -3,16 +3,18 @@
 from __future__ import annotations
 
 from collections import deque
-from dataclasses import dataclass
-from datetime import datetime, timedelta
+from dataclasses import dataclass, field
 from typing import Callable, Deque, List, Sequence
-from uuid import uuid4
 
 from _schema.schemas.bots import ChatBot
-from _schema.schemas.subscriptions import Plan, PlanTier, Subscription
-from _schema.schemas.users import ContactMethod, NotificationType, User
+from _schema.schemas.subscriptions import Plan, Subscription
+from _schema.schemas.users import NotificationType, User
 
 from .controllers import BotController
+from .factories import demo_payload
+from .models.auth import AuthState
+from .services.authentication import AuthenticationController
+from .services.billing import CheckoutService
 
 
 class Role:
@@ -33,11 +35,13 @@ class DashboardState:
     bot_controller: BotController
     role: str = Role.USER
     activation_credit_cost: int = 40
+    auth: AuthState = field(default_factory=AuthState)
+    addon_credits: int = 0
 
     def __post_init__(self) -> None:
         self.activity_log: Deque[str] = deque(maxlen=8)
         self._activity_listeners: List[Callable[[List[str]], None]] = []
-        self._credit_listeners: List[Callable[[int, int], None]] = []
+        self._credit_listeners: List[Callable[[int, int, int], None]] = []
         self._role_listeners: List[Callable[[str], None]] = []
 
         self.bot_controller.subscribe_log(self._log)
@@ -46,84 +50,40 @@ class DashboardState:
                 bot.bot_name, self._handle_status_update(bot.bot_name)
             )
 
+        if not self.auth.is_authenticated:
+            self.auth = AuthState(
+                is_authenticated=True,
+                method="Demo",
+                email=self.user.email,
+                token="demo-token",
+            )
+
+        self.auth_controller = AuthenticationController(
+            initial=self.auth,
+            default_email=self.user.email,
+            on_change=self._set_auth_state,
+            log=self._log,
+        )
+        self.checkout_service = CheckoutService(
+            on_change=self._update_addon_credits,
+            log=self._log,
+        )
+        self._set_auth_state(self.auth_controller.state)
+
     # Construction helpers -------------------------------------------------
     @classmethod
     def demo(cls) -> "DashboardState":
         """Create demo data derived from repository schemas."""
 
-        tenant_id = uuid4()
-        plan = Plan(
-            name="Growth",
-            tier=PlanTier.PRO,
-            description="Automation and analytics for scaling teams",
-            price_cents=12900,
-            currency="USD",
-            max_groups=25,
-            max_users_per_group=250,
-            ai_credits_per_month=320,
-            max_custom_commands=25,
-            moderation_level="advanced",
-            features={"analytics": True, "sso": True},
+        user, plan, subscription, bots, controller, auth = demo_payload()
+        return cls(
+            user=user,
+            plan=plan,
+            subscription=subscription,
+            bots=bots,
+            bot_controller=controller,
+            auth=auth,
         )
-        subscription = Subscription(
-            tenant_id=tenant_id,
-            plan_id=plan.id,
-            current_period_end=datetime.utcnow() + timedelta(days=12),
-            ai_credits_used=160,
-        )
-        user = User(
-            tenant_id=tenant_id,
-            groupme_user_id="ops-admin",
-            nickname="Alex Doe",
-            email="alex@example.com",
-            timezone="US/Eastern",
-            preferred_contact_method=ContactMethod.EMAIL,
-            two_factor_enabled=True,
-        )
-        user.notification_preferences = {
-            NotificationType.MODERATION_ALERTS: True,
-            NotificationType.GROUP_MESSAGES: True,
-            NotificationType.ORDER_UPDATES: False,
-            NotificationType.SYSTEM_ANNOUNCEMENTS: True,
-            NotificationType.SECURITY_ALERTS: True,
-        }
-        bots = (
-            ChatBot(
-                id="bot-announcements",
-                tenant_id=tenant_id,
-                bot_name="Announcements",
-                bot_model="gpt-4o-mini",
-                function="broadcasts",
-                monetization_source_id="sponsorship",
-                capabilities=["announcements", "campaigns"],
-                settings={"cadence": "daily"},
-                is_active=False,
-            ),
-            ChatBot(
-                id="bot-support",
-                tenant_id=tenant_id,
-                bot_name="Support",
-                bot_model="claude-3-sonnet",
-                function="customer_support",
-                monetization_source_id="support",
-                capabilities=["triage", "handoff"],
-                settings={"sla_minutes": 5},
-                is_active=False,
-            ),
-            ChatBot(
-                id="bot-moderation",
-                tenant_id=tenant_id,
-                bot_name="Moderation",
-                bot_model="gpt-4o",
-                function="moderation",
-                monetization_source_id="compliance",
-                capabilities=["content_filtering"],
-                settings={"escalation": "auto"},
-                is_active=False,
-            ),
-        )
-        controller = BotController(bots)
-        return cls(user=user, plan=plan, subscription=subscription, bots=bots, bot_controller=controller)
 
     # Observers ------------------------------------------------------------
     def subscribe_activity(self, callback: Callable[[List[str]], None]) -> None:
@@ -132,17 +92,26 @@ class DashboardState:
         self._activity_listeners.append(callback)
         callback(list(self.activity_log))
 
-    def subscribe_credits(self, callback: Callable[[int, int], None]) -> None:
+    def subscribe_credits(self, callback: Callable[[int, int, int], None]) -> None:
         """Subscribe to credit usage updates."""
 
         self._credit_listeners.append(callback)
-        callback(self.subscription.ai_credits_used, self.plan.ai_credits_per_month)
+        callback(
+            self.subscription.ai_credits_used,
+            self.plan.ai_credits_per_month,
+            self.addon_credits,
+        )
 
     def subscribe_role(self, callback: Callable[[str], None]) -> None:
         """Subscribe to role changes."""
 
         self._role_listeners.append(callback)
         callback(self.role)
+
+    def subscribe_auth(self, callback: Callable[[AuthState], None]) -> None:
+        """Subscribe to authentication state changes."""
+
+        self.auth_controller.subscribe(callback)
 
     # Mutators -------------------------------------------------------------
     def set_role(self, role: str) -> None:
@@ -176,6 +145,36 @@ class DashboardState:
         state = "enabled" if enabled else "disabled"
         self._log(f"Two-factor authentication {state}")
 
+    def authenticate_with_dice(self, email: str, password: str) -> None:
+        """Authenticate using local Dice credentials."""
+
+        self.auth_controller.authenticate_with_dice(email, password)
+
+    def logout(self) -> None:
+        """Reset authentication state."""
+
+        self.auth_controller.logout()
+
+    def generate_saas_login_url(self) -> str:
+        """Return a simulated SaaS login URL."""
+
+        return self.auth_controller.generate_saas_login_url()
+
+    def authenticate_with_token(self, token: str) -> None:
+        """Authenticate using a returned SaaS token."""
+
+        self.auth_controller.authenticate_with_token(token)
+
+    def create_checkout_session(self, credit_amount: int) -> tuple[str, str]:
+        """Create a demo checkout session and return its id and URL."""
+
+        return self.checkout_service.create_session(credit_amount)
+
+    def complete_checkout(self, session_id: str) -> int:
+        """Finalize a checkout session and allocate credits."""
+
+        return self.checkout_service.complete(session_id)
+
     # Derived data ---------------------------------------------------------
     def bot_summary(self) -> str:
         """Return a human friendly automation summary."""
@@ -187,9 +186,12 @@ class DashboardState:
     def credit_summary(self) -> str:
         """Return the current credit usage string."""
 
-        return (
+        base = (
             f"Credits used: {self.subscription.ai_credits_used} / {self.plan.ai_credits_per_month}"
         )
+        if self.addon_credits:
+            return f"{base} | Add-on credits: {self.addon_credits}"
+        return base
 
     def notification_label(self, notification: NotificationType) -> str:
         """Return a human friendly notification label."""
@@ -212,9 +214,21 @@ class DashboardState:
                     self.subscription.ai_credits_used + delta,
                 ),
             )
-            for callback in self._credit_listeners:
-                callback(
-                    self.subscription.ai_credits_used, self.plan.ai_credits_per_month
-                )
+            self._notify_credit_subscribers()
 
         return handler
+
+    def _set_auth_state(self, auth: AuthState) -> None:
+        self.auth = auth
+
+    def _update_addon_credits(self, addon: int) -> None:
+        self.addon_credits = addon
+        self._notify_credit_subscribers()
+
+    def _notify_credit_subscribers(self) -> None:
+        for callback in self._credit_listeners:
+            callback(
+                self.subscription.ai_credits_used,
+                self.plan.ai_credits_per_month,
+                self.addon_credits,
+            )
