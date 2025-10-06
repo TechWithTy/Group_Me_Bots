@@ -7,9 +7,16 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 import discord
-from discord.ext import commands
 
-from workflows.base import WorkflowContext
+if not hasattr(discord, "Message"):
+    class _StubMessage:  # pragma: no cover - shim for tests
+        """Lightweight stand-in for discord.Message when unavailable."""
+
+        pass
+
+    discord.Message = _StubMessage  # type: ignore[attr-defined]
+
+from workflows.base import WorkflowContext, WorkflowKPI
 from workflows.commerce_workflows import CommerceIntentWorkflow
 from workflows.growth_workflows import GhostInvitationWorkflow, ServerGrowthWorkflow
 from workflows.tracking_workflows import RealTimeSubscriptionWorkflow, AnalyticsWorkflow, MessageAnalyticsWorkflow
@@ -17,6 +24,67 @@ from workflows.data_management_workflows import DataBackupWorkflow, DataCleanupW
 from workflows.media_processing_workflows import MediaProcessingWorkflow, ImageOptimizationWorkflow, VideoProcessingWorkflow, FileUploadWorkflow
 from workflows.member_management_workflows import MemberManagementWorkflow, RoleManagementWorkflow, MemberOnboardingWorkflow, MemberRetentionWorkflow
 from workflows.notification_workflows import NotificationWorkflow, ScheduledMessagingWorkflow, AnnouncementWorkflow, ReminderWorkflow
+from workflows.message_workflows import (
+    MessageStitchingWorkflow as ContentEchoStitchWorkflow,
+    SecurityModerationWorkflow,
+    ContentEchoWorkflow,
+)
+from workflows.engagement_workflows import (
+    AutoLikeFeedbackWorkflow,
+    ContentQualityRelevanceWorkflow,
+    AutomatedCustomerSupportWorkflow,
+    EmergencyResponseWorkflow,
+)
+
+
+def _assert_workflow_metadata(workflow):
+    assert isinstance(workflow.title, str) and workflow.title.strip()
+    assert isinstance(workflow.description, str) and workflow.description.strip()
+    assert isinstance(workflow.goal, str) and workflow.goal.strip()
+    assert isinstance(workflow.kpis, (list, tuple)) and workflow.kpis
+    for kpi in workflow.kpis:
+        assert isinstance(kpi, WorkflowKPI)
+        assert kpi.name.strip()
+        assert kpi.target.strip()
+        assert kpi.description.strip()
+
+
+def test_discord_workflows_include_metadata():
+    """Every Discord workflow should expose descriptive metadata."""
+
+    workflows = [
+        CommerceIntentWorkflow(),
+        GhostInvitationWorkflow(),
+        ServerGrowthWorkflow(),
+        RealTimeSubscriptionWorkflow(),
+        AnalyticsWorkflow(),
+        MessageAnalyticsWorkflow(),
+        DataBackupWorkflow(),
+        DataCleanupWorkflow(),
+        DataMigrationWorkflow(),
+        MediaProcessingWorkflow(),
+        ImageOptimizationWorkflow(),
+        VideoProcessingWorkflow(),
+        FileUploadWorkflow(),
+        MemberManagementWorkflow(),
+        RoleManagementWorkflow(),
+        MemberOnboardingWorkflow(),
+        MemberRetentionWorkflow(),
+        NotificationWorkflow(),
+        ScheduledMessagingWorkflow(),
+        AnnouncementWorkflow(),
+        ReminderWorkflow(),
+        ContentEchoStitchWorkflow(),
+        SecurityModerationWorkflow(),
+        ContentEchoWorkflow(),
+        AutoLikeFeedbackWorkflow(),
+        ContentQualityRelevanceWorkflow(),
+        AutomatedCustomerSupportWorkflow(),
+        EmergencyResponseWorkflow(),
+    ]
+
+    for workflow in workflows:
+        _assert_workflow_metadata(workflow)
 
 
 class TestCommerceWorkflows:

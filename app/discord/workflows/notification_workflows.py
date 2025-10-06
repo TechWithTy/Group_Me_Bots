@@ -19,6 +19,8 @@ __all__ = [
 class NotificationWorkflow(WorkflowDefinition):
     """Comprehensive notification system for Discord server events."""
 
+    title = "Discord Notification System"
+    description = "Distribute lifecycle notifications across Discord channels and cohorts."
     name = "discord_notification_system"
     goal = "Deliver timely and relevant notifications to all server members."
     kpis = (
@@ -87,6 +89,8 @@ class NotificationWorkflow(WorkflowDefinition):
 class ScheduledMessagingWorkflow(WorkflowDefinition):
     """Schedule and automate message delivery in Discord channels."""
 
+    title = "Discord Scheduled Messaging"
+    description = "Automate recurring Discord announcements with reliable scheduling."
     name = "discord_scheduled_messaging"
     goal = "Deliver scheduled messages with perfect timing and reliability."
     kpis = (
@@ -146,6 +150,8 @@ class ScheduledMessagingWorkflow(WorkflowDefinition):
 class AnnouncementWorkflow(WorkflowDefinition):
     """Create and distribute announcements across Discord server."""
 
+    title = "Discord Announcement Distribution"
+    description = "Deliver announcements to targeted Discord channels with measurable reach."
     name = "discord_announcement_distribution"
     goal = "Ensure all important announcements reach maximum audience."
     kpis = (
@@ -216,6 +222,8 @@ class AnnouncementWorkflow(WorkflowDefinition):
 class ReminderWorkflow(WorkflowDefinition):
     """Set up and manage reminders for Discord server members."""
 
+    title = "Discord Reminder System"
+    description = "Orchestrate event, task, and deadline reminders to keep members engaged."
     name = "discord_reminder_system"
     goal = "Deliver timely reminders to improve member engagement and retention."
     kpis = (

@@ -14,6 +14,27 @@ from app.telegram.api.telegram_api import TelegramBotAPI, Update, Message
 class AutoLikeFeedbackWorkflow:
     """Workflow for automatic liking and feedback on messages."""
 
+    title = "Telegram Auto-Like Feedback"
+    description = "React to positive conversations and acknowledge community feedback automatically."
+    goal = "Surface appreciation and maintain conversational momentum by engaging with high-sentiment messages."
+    kpis = [
+        {
+            "name": "positive_feedback_responses",
+            "target": ">=80%",
+            "description": "Share of positive sentiment messages that receive a tailored response.",
+        },
+        {
+            "name": "reaction_rate",
+            "target": ">=30%",
+            "description": "Percentage of processed messages that receive an emoji reaction.",
+        },
+        {
+            "name": "duplicate_processing_rate",
+            "target": "<=1%",
+            "description": "Rate of duplicate message handling due to idempotency issues.",
+        },
+    ]
+
     def __init__(self, bot: TelegramBotAPI, like_probability: float = 0.3, feedback_keywords: Optional[List[str]] = None):
         self.bot = bot
         self.like_probability = like_probability  # Probability to "like" (react) to messages

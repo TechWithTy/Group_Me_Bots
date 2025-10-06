@@ -15,6 +15,27 @@ from app.telegram.api.telegram_api import TelegramBotAPI, Update, Message
 class MessageStitchingWorkflow:
     """Workflow for stitching messages together based on patterns."""
 
+    title = "Telegram Message Stitching"
+    description = "Aggregate related Telegram messages into cohesive summaries for easier consumption."
+    goal = "Combine contextual message sequences into stitched updates before notifying the chat."
+    kpis = [
+        {
+            "name": "stitched_threads",
+            "target": ">=1/run",
+            "description": "Number of message groups successfully combined during processing.",
+        },
+        {
+            "name": "average_stitch_size",
+            "target": "3-5 messages",
+            "description": "Average count of individual messages merged per stitched output.",
+        },
+        {
+            "name": "stitch_success_rate",
+            "target": ">=85%",
+            "description": "Share of detected threads that produce a stitched message without errors.",
+        },
+    ]
+
     def __init__(self, bot: TelegramBotAPI, stitch_timeout: int = 300, max_stitch_length: int = 5):
         self.bot = bot
         self.stitch_timeout = stitch_timeout  # Seconds to wait before stitching

@@ -60,7 +60,8 @@ class WorkflowSuite:
         return {
             'enabled_workflows': self.enabled_workflows,
             'running': self.running,
-            'workflow_stats': self.integration.get_workflow_stats()
+            'workflow_stats': self.integration.get_workflow_stats(),
+            'workflow_metadata': self.integration.get_workflow_metadata(),
         }
 
     def add_workflow(self, workflow_name: str) -> bool:

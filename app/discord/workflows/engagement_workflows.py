@@ -18,6 +18,8 @@ __all__ = [
 class AutoLikeFeedbackWorkflow(WorkflowDefinition):
     """Close the feedback loop by reacting to high-value messages in Discord."""
 
+    title = "Discord Auto-Like Feedback"
+    description = "React to high-signal messages to encourage ongoing community engagement."
     name = "discord_auto_like_feedback"
     goal = "Acknowledge high-value messages with bot reactions to boost engagement."
     kpis = (
@@ -64,6 +66,8 @@ class AutoLikeFeedbackWorkflow(WorkflowDefinition):
 class ContentQualityRelevanceWorkflow(WorkflowDefinition):
     """Assess and promote high-quality, relevant content in Discord channels."""
 
+    title = "Discord Content Quality & Relevance"
+    description = "Surface high-signal content and promote it across the Discord community."
     name = "discord_content_quality_relevance"
     goal = "Identify and highlight 90% of high-quality messages for better community experience."
     kpis = (
@@ -141,6 +145,8 @@ class ContentQualityRelevanceWorkflow(WorkflowDefinition):
 class AutomatedCustomerSupportWorkflow(WorkflowDefinition):
     """Provide automated support responses for common queries in Discord."""
 
+    title = "Discord Automated Customer Support"
+    description = "Handle repetitive support questions with automated Discord responses."
     name = "discord_automated_customer_support"
     goal = "Resolve 80% of common support queries automatically within Discord channels."
     kpis = (
@@ -211,6 +217,8 @@ class AutomatedCustomerSupportWorkflow(WorkflowDefinition):
 class EmergencyResponseWorkflow(WorkflowDefinition):
     """Handle emergency situations and critical alerts in Discord."""
 
+    title = "Discord Emergency Response"
+    description = "Detect critical incidents in Discord channels and trigger rapid response workflows."
     name = "discord_emergency_response"
     goal = "Respond to 100% of emergency situations within 2 minutes."
     kpis = (

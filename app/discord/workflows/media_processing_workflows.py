@@ -18,6 +18,8 @@ __all__ = [
 class MediaProcessingWorkflow(WorkflowDefinition):
     """Comprehensive media processing for Discord server content."""
 
+    title = "Discord Media Processing"
+    description = "Process, classify, and respond to media shared across Discord channels."
     name = "discord_media_processing"
     goal = "Process and optimize all media content for better user experience."
     kpis = (
@@ -113,6 +115,8 @@ class MediaProcessingWorkflow(WorkflowDefinition):
 class ImageOptimizationWorkflow(WorkflowDefinition):
     """Optimize images for Discord's file size limits and performance."""
 
+    title = "Discord Image Optimization"
+    description = "Optimize large Discord images to meet delivery limits without losing fidelity."
     name = "discord_image_optimization"
     goal = "Optimize all images to meet Discord's requirements while maintaining quality."
     kpis = (
@@ -175,6 +179,8 @@ class ImageOptimizationWorkflow(WorkflowDefinition):
 class VideoProcessingWorkflow(WorkflowDefinition):
     """Process and optimize video content for Discord."""
 
+    title = "Discord Video Processing"
+    description = "Transcode and compress Discord video uploads for smooth playback."
     name = "discord_video_processing"
     goal = "Ensure all videos are properly formatted and optimized for Discord playback."
     kpis = (
@@ -236,6 +242,8 @@ class VideoProcessingWorkflow(WorkflowDefinition):
 class FileUploadWorkflow(WorkflowDefinition):
     """Manage and optimize file uploads in Discord channels."""
 
+    title = "Discord File Upload Management"
+    description = "Coordinate chunked uploads and recovery paths for large Discord file transfers."
     name = "discord_file_upload_management"
     goal = "Ensure all file uploads are properly managed and optimized."
     kpis = (

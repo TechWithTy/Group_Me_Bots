@@ -17,6 +17,8 @@ __all__ = [
 class DataBackupWorkflow(WorkflowDefinition):
     """Automated backup of Discord server data."""
 
+    title = "Discord Data Backup"
+    description = "Capture resilient snapshots of Discord channels, roles, and metadata."
     name = "discord_data_backup"
     goal = "Ensure 100% of critical server data is backed up regularly."
     kpis = (
@@ -107,6 +109,8 @@ class DataBackupWorkflow(WorkflowDefinition):
 class DataCleanupWorkflow(WorkflowDefinition):
     """Automated cleanup of old or unnecessary Discord data."""
 
+    title = "Discord Data Cleanup"
+    description = "Purge outdated channels, bot messages, and unused assets to improve signal quality."
     name = "discord_data_cleanup"
     goal = "Maintain optimal server performance by cleaning up old data."
     kpis = (
@@ -188,6 +192,8 @@ class DataCleanupWorkflow(WorkflowDefinition):
 class DataMigrationWorkflow(WorkflowDefinition):
     """Migrate data between Discord servers or platforms."""
 
+    title = "Discord Data Migration"
+    description = "Transfer guild configuration and artifacts safely between Discord servers."
     name = "discord_data_migration"
     goal = "Successfully migrate server data with zero data loss."
     kpis = (
