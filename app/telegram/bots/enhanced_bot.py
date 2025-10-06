@@ -1,12 +1,10 @@
 import logging
-import asyncio
 import httpx
-from typing import Dict, Any, Optional
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo, LabeledPrice, ShippingOption
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo, LabeledPrice
 from telegram.ext import (
     ApplicationBuilder, ContextTypes, CommandHandler, CallbackQueryHandler,
     MessageHandler, ConversationHandler, PreCheckoutQueryHandler,
-    ShippingQueryHandler, PollAnswerHandler, PollHandler, filters
+    PollAnswerHandler, filters
 )
 
 # Import our custom API settings
@@ -229,6 +227,22 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         return await checkout(update, context)
     return SELECTING_ACTION
 
+async def set_reminder(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Set a reminder timer."""
+    try:
+        minutes = int(context.args[0])
+        if minutes < 0:
+            await update.message.reply_text("Sorry, can't go back in time!")
+            return
+        context.job_queue.run_once(reminder, minutes * 60, chat_id=update.effective_chat.id, name=str(update.effective_chat.id), data="Order reminder!")
+        await update.message.reply_text(f"Reminder set for {minutes} minutes.")
+    except (IndexError, ValueError):
+        await update.message.reply_text("Usage: /remind <minutes>")
+
+async def reminder(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Send the reminder message."""
+    await context.bot.send_message(context.job.chat_id, text=f"Reminder: {context.job.data}")
+
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Echo messages."""
     await update.message.reply_text(update.message.text)
@@ -256,6 +270,7 @@ if __name__ == '__main__':
         fallbacks=[CommandHandler('start', start)]
     )
     application.add_handler(conv_handler)
+    application.add_handler(CommandHandler('remind', set_reminder))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
     application.add_error_handler(error_handler)
     
