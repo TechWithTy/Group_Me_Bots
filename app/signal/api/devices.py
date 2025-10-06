@@ -8,15 +8,19 @@ This module handles all device-related operations including:
 - Account unregistration
 """
 
-from typing import List, Optional
+from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException, Path, Body, Query
+from typing import Optional
+
+from fastapi import APIRouter, Body, HTTPException, Path, Query, Response, status
 from pydantic import BaseModel
+
+from .helpers import ensure_account, now_ms, placeholder_image, state
+from .state.models import Device
 
 router = APIRouter()
 
 
-# Pydantic models for request/response bodies
 class RegisterNumberRequest(BaseModel):
     captcha: Optional[str] = None
     use_voice: Optional[bool] = False
@@ -40,101 +44,94 @@ class ListDevicesResponse(BaseModel):
     name: str
     created: int
     last_seen: int
-    # Additional fields would be added based on actual API response
 
 
-class ErrorResponse(BaseModel):
-    error: str
+def _ensure_primary_device(account) -> None:
+    if account.devices:
+        return
+    ident = account.next_device_id
+    account.devices[ident] = Device(
+        identifier=ident,
+        name="Primary Device",
+        created=now_ms(),
+        last_seen=now_ms(),
+        uri="device://primary",
+    )
+    account.next_device_id += 1
 
 
-@router.post("/register/{number}")
+@router.post("/register/{number}", status_code=status.HTTP_201_CREATED)
 async def register_number(
     number: str = Path(..., description="Registered Phone Number"),
-    data: Optional[RegisterNumberRequest] = Body(None, description="Additional Settings")
-):
-    """
-    Register a phone number with the signal network.
-
-    Initiates the registration process for a phone number.
-    """
-    # TODO: Implement number registration logic
-    return {"message": "Registration initiated"}
+    data: Optional[RegisterNumberRequest] = Body(None, description="Additional Settings"),
+) -> Response:
+    account = ensure_account(number)
+    account.registered = True
+    _ensure_primary_device(account)
+    return Response(status_code=status.HTTP_201_CREATED)
 
 
-@router.post("/register/{number}/verify/{token}")
+@router.post("/register/{number}/verify/{token}", status_code=status.HTTP_201_CREATED)
 async def verify_number(
     number: str = Path(..., description="Registered Phone Number"),
     token: str = Path(..., description="Verification Code"),
-    data: Optional[VerifyNumberSettings] = Body(None, description="Additional Settings")
-):
-    """
-    Verify a registered phone number with the signal network.
-
-    Completes the verification process using the SMS or voice code.
-    """
-    # TODO: Implement number verification logic
-    return {"message": "Number verified successfully"}
+    data: Optional[VerifyNumberSettings] = Body(None, description="Additional Settings"),
+) -> Response:
+    account = ensure_account(number)
+    if not account.registered:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Number not registered")
+    account.verified = True
+    if data and data.pin:
+        account.pin = data.pin
+    return Response(status_code=status.HTTP_201_CREATED)
 
 
 @router.get("/qrcodelink")
 async def link_device_qr(
     device_name: str = Query(..., description="Device Name"),
-    qrcode_version: Optional[int] = Query(10, description="QRCode Version")
-):
-    """
-    Link device and generate QR code.
-
-    Generates a QR code for linking a new device to the account.
-    """
-    # TODO: Implement QR code generation logic
-    return {"qr_code": "base64_encoded_qr_code"}
+    qrcode_version: Optional[int] = Query(10, description="QRCode Version"),
+) -> dict:
+    return {"qr_code": placeholder_image(f"{device_name}:{qrcode_version or 10}")}
 
 
-@router.get("/devices/{number}")
-async def list_devices(
-    number: str = Path(..., description="Registered Phone Number")
-):
-    """
-    List linked devices associated to this device.
-
-    Returns a list of all devices linked to this account.
-    """
-    # TODO: Implement device listing logic
+@router.get("/devices/{number}", response_model=list[ListDevicesResponse])
+async def list_devices(number: str = Path(..., description="Registered Phone Number")) -> list[ListDevicesResponse]:
+    account = ensure_account(number)
+    _ensure_primary_device(account)
     return [
-        ListDevicesResponse(
-            id=1,
-            name="Primary Device",
-            created=1234567890,
-            last_seen=1234567890
-        )
+        ListDevicesResponse(id=device.identifier, name=device.name, created=device.created, last_seen=device.last_seen)
+        for device in account.devices.values()
     ]
 
 
-@router.post("/devices/{number}")
+@router.post("/devices/{number}", status_code=status.HTTP_204_NO_CONTENT)
 async def link_device(
     number: str = Path(..., description="Registered Phone Number"),
-    data: AddDeviceRequest = Body(..., description="Request")
-):
-    """
-    Links another device to this device.
+    data: AddDeviceRequest = Body(..., description="Request"),
+) -> Response:
+    account = ensure_account(number)
+    _ensure_primary_device(account)
+    ident = account.next_device_id
+    account.devices[ident] = Device(
+        identifier=ident,
+        name=f"Linked Device {ident}",
+        created=now_ms(),
+        last_seen=now_ms(),
+        uri=data.uri,
+    )
+    account.next_device_id += 1
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-    Links a new device to the existing account.
-    Only works if this is the master device.
-    """
-    # TODO: Implement device linking logic
-    return {"message": "Device linked successfully"}
 
-
-@router.post("/unregister/{number}")
+@router.post("/unregister/{number}", status_code=status.HTTP_204_NO_CONTENT)
 async def unregister_number(
     number: str = Path(..., description="Registered Phone Number"),
-    data: Optional[UnregisterNumberRequest] = Body(None, description="Additional Settings")
-):
-    """
-    Unregister a phone number.
-
-    Disables push support for this device.
-    WARNING: If delete_account is true, the account will be deleted permanently.
-    """
-    # TODO: Implement number unregistration logic
-    return {"message": "Number unregistered successfully"}
+    data: Optional[UnregisterNumberRequest] = Body(None, description="Additional Settings"),
+) -> Response:
+    if data and data.delete_account:
+        state.accounts.pop(number, None)
+    else:
+        account = ensure_account(number)
+        account.registered = False
+        account.verified = False
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

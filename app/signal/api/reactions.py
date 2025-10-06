@@ -1,42 +1,45 @@
-"""
-Signal Reactions API Routes
+"""Endpoints for sending and removing message reactions."""
 
-This module handles message reaction operations.
-Note: Reactions are also handled in the messages module for sending/removing reactions.
-This module provides a separate endpoint if needed for reaction-specific operations.
-"""
+from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Body, Path, Response, status
 from pydantic import BaseModel
+
+from .helpers import ensure_account
+
 
 router = APIRouter()
 
 
-@router.get("/")
-async def get_reactions():
-    """
-    Get message reactions.
+class ReactionRequest(BaseModel):
+    reaction: str
+    recipient: str
+    target_author: str
+    timestamp: int
 
-    This endpoint would be used to retrieve reactions for messages.
-    Currently, reaction operations are handled in the messages module.
-    """
-    try:
-        # Get message reactions for the account
-        # This would typically query Signal for reactions data
 
-        # TODO: Replace with actual Signal API call
-        # reactions = signal_client.get_reactions()
+@router.post("/{number}", status_code=status.HTTP_204_NO_CONTENT)
+async def send_reaction(
+    number: str = Path(..., description="Registered phone number"),
+    data: ReactionRequest = Body(..., description="Reaction"),
+) -> Response:
+    """Record that ``number`` reacted to a message."""
 
-        # For now, return a placeholder indicating reactions are handled in messages module
-        return {
-            "message": "Reactions endpoint - see messages module for reaction operations",
-            "reactions_handled_in": "/v1/reactions/{number}"
-        }
-    except Exception as e:
-        class ErrorResponse(BaseModel):
-            error: str
+    account = ensure_account(number)
+    ensure_account(data.recipient)
+    key = (data.recipient, data.target_author, data.timestamp)
+    account.reactions[key] = data.reaction
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=ErrorResponse(error=str(e)).dict()
-        )
+
+@router.delete("/{number}", status_code=status.HTTP_204_NO_CONTENT)
+async def remove_reaction(
+    number: str = Path(..., description="Registered phone number"),
+    data: ReactionRequest = Body(..., description="Reaction"),
+) -> Response:
+    """Remove a previously recorded reaction."""
+
+    account = ensure_account(number)
+    key = (data.recipient, data.target_author, data.timestamp)
+    account.reactions.pop(key, None)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

@@ -1,27 +1,24 @@
-"""
-Signal General API Routes
+"""General informational and configuration endpoints for the Signal API."""
 
-This module handles general API operations including:
-- API information and health checks
-- Configuration management
-- Account-specific settings
-"""
+from __future__ import annotations
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException, Path, Body
-from pydantic import BaseModel
+from fastapi import APIRouter, Body, Path, Response, status
+from pydantic import BaseModel, Field
+
+from .helpers import ensure_account, state
+
 
 router = APIRouter()
 
 
-# Pydantic models for request/response bodies
 class LoggingConfiguration(BaseModel):
-    level: Optional[str] = None
+    level: Optional[str] = Field(default="INFO")
 
 
 class Configuration(BaseModel):
-    logging: Optional[LoggingConfiguration] = None
+    logging: LoggingConfiguration = Field(default_factory=LoggingConfiguration)
 
 
 class TrustModeRequest(BaseModel):
@@ -34,93 +31,70 @@ class TrustModeResponse(BaseModel):
 
 class AboutResponse(BaseModel):
     build: int
-    capabilities: dict
+    capabilities: Dict[str, object]
     mode: str
     version: str
     versions: List[str]
 
 
-class ErrorResponse(BaseModel):
-    error: str
+@router.get("/about", response_model=AboutResponse)
+async def get_about() -> AboutResponse:
+    """Return static build metadata enriched with basic usage stats."""
 
-
-@router.get("/about")
-async def get_about():
-    """
-    Returns the supported API versions and the internal build nr.
-
-    Provides general information about the API including supported versions.
-    """
-    # TODO: Implement about endpoint logic
+    account_count = len(state.accounts)
+    attachment_count = len(state.attachments)
     return AboutResponse(
-        build=12345,
-        capabilities={"gv2": ["create", "update"]},
+        build=1,
+        capabilities={
+            "accounts": ["register", "verify", "settings"],
+            "attachments": ["list", "retrieve", "delete"],
+            "messages": ["send", "receive", "react"],
+            "stats": {"accounts": account_count, "attachments": attachment_count},
+        },
         mode="native",
         version="1.0.0",
-        versions=["v1"]
+        versions=["v1"],
     )
 
 
 @router.get("/health")
-async def health_check():
-    """
-    API Health Check.
+async def health_check() -> Dict[str, str]:
+    """Expose a simple health indicator for readiness checks."""
 
-    Internally used by the docker container to perform health checks.
-    """
-    # TODO: Implement health check logic
     return {"status": "healthy"}
 
 
-@router.get("/configuration")
-async def get_configuration():
-    """
-    List the REST API configuration.
+@router.get("/configuration", response_model=Configuration)
+async def get_configuration() -> Configuration:
+    """Return the mutable API configuration tracked in memory."""
 
-    Returns the current API configuration settings.
-    """
-    # TODO: Implement configuration retrieval logic
-    return Configuration(
-        logging=LoggingConfiguration(level="INFO")
-    )
+    return Configuration(logging=LoggingConfiguration(level=state.configuration.logging.level))
 
 
-@router.post("/configuration")
-async def set_configuration(
-    data: Configuration = Body(..., description="Configuration")
-):
-    """
-    Set the REST API configuration.
+@router.post("/configuration", status_code=status.HTTP_204_NO_CONTENT)
+async def set_configuration(data: Configuration = Body(..., description="Configuration")) -> Response:
+    """Persist configuration changes provided by the caller."""
 
-    Updates the API configuration with the provided settings.
-    """
-    # TODO: Implement configuration update logic
-    return {"message": "Configuration updated successfully"}
+    if data.logging and data.logging.level:
+        state.configuration.logging.level = data.logging.level
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.get("/configuration/{number}/settings")
-async def get_account_settings(
-    number: str = Path(..., description="Registered Phone Number"),
-    data: TrustModeResponse = Body(..., description="Request")
-):
-    """
-    List account specific settings.
+@router.get("/configuration/{number}/settings", response_model=TrustModeResponse)
+async def get_account_settings(number: str = Path(..., description="Registered Phone Number")) -> TrustModeResponse:
+    """Return the trust mode associated with a specific account."""
 
-    Returns account-specific configuration settings.
-    """
-    # TODO: Implement account settings retrieval logic
-    return {"trust_mode": "TRUSTED_UNVERIFIED"}
+    account = ensure_account(number)
+    return TrustModeResponse(trust_mode=account.trust_mode)
 
 
-@router.post("/configuration/{number}/settings")
+@router.post("/configuration/{number}/settings", status_code=status.HTTP_204_NO_CONTENT)
 async def set_account_settings(
     number: str = Path(..., description="Registered Phone Number"),
-    data: TrustModeRequest = Body(..., description="Request")
-):
-    """
-    Set account specific settings.
+    data: TrustModeRequest = Body(..., description="Request"),
+) -> Response:
+    """Update the trust mode tracked for an account."""
 
-    Updates account-specific settings like trust mode.
-    """
-    # TODO: Implement account settings update logic
-    return {"message": "Account settings updated successfully"}
+    account = ensure_account(number)
+    account.trust_mode = data.trust_mode
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

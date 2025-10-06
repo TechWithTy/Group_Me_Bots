@@ -1,35 +1,30 @@
-"""
-Signal Groups API Routes
+"""Group management endpoints that emulate the Signal CLI behaviour."""
 
-This module handles all group-related operations including:
-- Group creation, updates, and deletion
-- Group member management
-- Group admin management
-- Group avatar handling
-- Group blocking and joining
-"""
+from __future__ import annotations
 
 from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException, Path, Body, Query
-from pydantic import BaseModel
+from fastapi import APIRouter, Body, HTTPException, Path, Response, status
+from pydantic import BaseModel, Field
+
+from .helpers import add_members, ensure_account, placeholder_image, state
+from .state.models import Group, GroupPermissions
 
 router = APIRouter()
 
 
-# Pydantic models for request/response bodies
-class GroupPermissions(BaseModel):
-    add_members: Optional[str] = None  # "only-admins" or "every-member"
-    edit_group: Optional[str] = None   # "only-admins" or "every-member"
-    send_messages: Optional[str] = None  # "only-admins" or "every-member"
+class GroupPermissionsPayload(BaseModel):
+    add_members: Optional[str] = None
+    edit_group: Optional[str] = None
+    send_messages: Optional[str] = None
 
 
 class CreateGroupRequest(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
-    members: List[str] = []
-    group_link: Optional[str] = None  # "disabled", "enabled", "enabled-with-approval"
-    permissions: Optional[GroupPermissions] = None
+    members: List[str] = Field(default_factory=list)
+    group_link: Optional[str] = None
+    permissions: Optional[GroupPermissionsPayload] = None
     expiration_time: Optional[int] = None
 
 
@@ -41,8 +36,8 @@ class UpdateGroupRequest(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     base64_avatar: Optional[str] = None
-    group_link: Optional[str] = None  # "disabled", "enabled", "enabled-with-approval"
-    permissions: Optional[GroupPermissions] = None
+    group_link: Optional[str] = None
+    permissions: Optional[GroupPermissionsPayload] = None
     expiration_time: Optional[int] = None
 
 
@@ -54,206 +49,192 @@ class ChangeGroupAdminsRequest(BaseModel):
     admins: List[str]
 
 
-class ErrorResponse(BaseModel):
-    error: str
-
-
 class GroupEntry(BaseModel):
     id: str
     name: Optional[str] = None
     description: Optional[str] = None
-    members: List[str] = []
-    admins: List[str] = []
-    # Additional fields would be added based on actual API response
+    members: List[str] = Field(default_factory=list)
+    admins: List[str] = Field(default_factory=list)
+    group_link: Optional[str] = None
+    expiration_time: Optional[int] = None
 
 
-@router.get("/{number}")
-async def list_groups(
-    number: str = Path(..., description="Registered Phone Number")
-):
-    """
-    List all Signal Groups.
-
-    Returns a list of all groups for the specified account.
-    """
-    # TODO: Implement actual group listing logic
-    return []  # Placeholder response
+def _fetch_group(number: str, group_id: str) -> Group:
+    account = ensure_account(number)
+    group = account.groups.get(group_id)
+    if group is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Group not found")
+    return group
 
 
-@router.post("/{number}")
+@router.get("/{number}", response_model=list[GroupEntry])
+async def list_groups(number: str = Path(..., description="Registered Phone Number")) -> list[GroupEntry]:
+    account = ensure_account(number)
+    return [
+        GroupEntry(
+            id=group.identifier,
+            name=group.name,
+            description=group.description,
+            members=sorted(group.members),
+            admins=sorted(group.admins),
+            group_link=group.group_link,
+            expiration_time=group.expiration_time,
+        )
+        for group in account.groups.values()
+    ]
+
+
+@router.post("/{number}", response_model=CreateGroupResponse, status_code=status.HTTP_201_CREATED)
 async def create_group(
     number: str = Path(..., description="Registered Phone Number"),
-    data: CreateGroupRequest = Body(..., description="Input Data")
-):
-    """
-    Create a new Signal Group with the specified members.
+    data: CreateGroupRequest = Body(..., description="Input Data"),
+) -> CreateGroupResponse:
+    account = ensure_account(number)
+    group_id = state.next_group_id()
+    group = Group(identifier=group_id, name=data.name, description=data.description, avatar=placeholder_image(group_id))
+    group.members.add(number)
+    add_members(group.members, data.members)
+    group.admins.add(number)
+    group.group_link = data.group_link
+    group.expiration_time = data.expiration_time
+    if data.permissions:
+        payload = data.permissions.dict(exclude_none=True)
+        group.permissions = GroupPermissions(**payload)
+    account.groups[group_id] = group
+    return CreateGroupResponse(id=group_id)
 
-    Creates a new group with the given configuration and members.
-    """
-    # TODO: Implement group creation logic
-    return CreateGroupResponse(id="group_1234567890")
 
-
-@router.get("/{number}/{groupid}")
+@router.get("/{number}/{groupid}", response_model=GroupEntry)
 async def get_group(
     number: str = Path(..., description="Registered Phone Number"),
-    groupid: str = Path(..., description="Group ID")
-):
-    """
-    List a specific Signal Group.
-
-    Returns detailed information about a specific group.
-    """
-    # TODO: Implement group retrieval logic
+    groupid: str = Path(..., description="Group ID"),
+) -> GroupEntry:
+    group = _fetch_group(number, groupid)
     return GroupEntry(
-        id=groupid,
-        name="Sample Group",
-        description="A sample group",
-        members=["+1234567890"],
-        admins=["+1234567890"]
+        id=group.identifier,
+        name=group.name,
+        description=group.description,
+        members=sorted(group.members),
+        admins=sorted(group.admins),
+        group_link=group.group_link,
+        expiration_time=group.expiration_time,
     )
 
 
-@router.put("/{number}/{groupid}")
+@router.put("/{number}/{groupid}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_group(
     number: str = Path(..., description="Registered Phone Number"),
     groupid: str = Path(..., description="Group ID"),
-    data: UpdateGroupRequest = Body(..., description="Input Data")
-):
-    """
-    Update the state of a Signal Group.
-
-    Updates various properties of an existing group.
-    """
-    # TODO: Implement group update logic
-    return {"message": "Group updated successfully"}
+    data: UpdateGroupRequest = Body(..., description="Input Data"),
+) -> Response:
+    group = _fetch_group(number, groupid)
+    if data.name is not None:
+        group.name = data.name
+    if data.description is not None:
+        group.description = data.description
+    if data.base64_avatar is not None:
+        group.avatar = data.base64_avatar
+    if data.group_link is not None:
+        group.group_link = data.group_link
+    if data.expiration_time is not None:
+        group.expiration_time = data.expiration_time
+    if data.permissions:
+        payload = data.permissions.dict(exclude_none=True)
+        group.permissions = GroupPermissions(**payload)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.delete("/{number}/{groupid}")
 async def delete_group(
     number: str = Path(..., description="Registered Phone Number"),
-    groupid: str = Path(..., description="Group ID")
-):
-    """
-    Delete the specified Signal Group.
-
-    Permanently deletes the specified group.
-    """
-    # TODO: Implement group deletion logic
+    groupid: str = Path(..., description="Group ID"),
+) -> dict:
+    account = ensure_account(number)
+    if account.groups.pop(groupid, None) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Group not found")
     return {"message": "Group deleted successfully"}
 
 
-@router.post("/{number}/{groupid}/admins")
+@router.post("/{number}/{groupid}/admins", status_code=status.HTTP_204_NO_CONTENT)
 async def add_group_admins(
     number: str = Path(..., description="Registered Phone Number"),
     groupid: str = Path(..., description="Group ID"),
-    data: ChangeGroupAdminsRequest = Body(..., description="Admins")
-):
-    """
-    Add one or more admins to an existing Signal Group.
-
-    Promotes specified members to admin role.
-    """
-    # TODO: Implement add admins logic
-    return {"message": "Admins added successfully"}
+    data: ChangeGroupAdminsRequest = Body(..., description="Admins"),
+) -> Response:
+    group = _fetch_group(number, groupid)
+    add_members(group.admins, data.admins)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.delete("/{number}/{groupid}/admins")
+@router.delete("/{number}/{groupid}/admins", status_code=status.HTTP_204_NO_CONTENT)
 async def remove_group_admins(
     number: str = Path(..., description="Registered Phone Number"),
     groupid: str = Path(..., description="Group ID"),
-    data: ChangeGroupAdminsRequest = Body(..., description="Admins")
-):
-    """
-    Remove one or more admins from an existing Signal Group.
-
-    Demotes specified admins back to regular members.
-    """
-    # TODO: Implement remove admins logic
-    return {"message": "Admins removed successfully"}
+    data: ChangeGroupAdminsRequest = Body(..., description="Admins"),
+) -> Response:
+    group = _fetch_group(number, groupid)
+    for admin in data.admins:
+        group.admins.discard(admin)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.get("/{number}/{groupid}/avatar")
 async def get_group_avatar(
     number: str = Path(..., description="Registered Phone Number"),
-    groupid: str = Path(..., description="Group ID")
-):
-    """
-    Returns the avatar of a Signal Group.
-
-    Returns the avatar image data for the specified group.
-    """
-    # TODO: Implement avatar retrieval logic
-    return {"avatar": "base64_encoded_image_data"}
+    groupid: str = Path(..., description="Group ID"),
+) -> dict:
+    group = _fetch_group(number, groupid)
+    return {"avatar": group.avatar or placeholder_image(groupid), "content_type": "image/png"}
 
 
-@router.post("/{number}/{groupid}/block")
+@router.post("/{number}/{groupid}/block", status_code=status.HTTP_204_NO_CONTENT)
 async def block_group(
     number: str = Path(..., description="Registered Phone Number"),
-    groupid: str = Path(..., description="Group ID")
-):
-    """
-    Block the specified Signal Group.
-
-    Blocks the group, preventing future messages from being received.
-    """
-    # TODO: Implement group blocking logic
-    return {"message": "Group blocked successfully"}
+    groupid: str = Path(..., description="Group ID"),
+) -> Response:
+    group = _fetch_group(number, groupid)
+    group.blocked = True
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.post("/{number}/{groupid}/join")
+@router.post("/{number}/{groupid}/join", status_code=status.HTTP_204_NO_CONTENT)
 async def join_group(
     number: str = Path(..., description="Registered Phone Number"),
-    groupid: str = Path(..., description="Group ID")
-):
-    """
-    Join the specified Signal Group.
-
-    Joins the group using the provided group ID.
-    """
-    # TODO: Implement group joining logic
-    return {"message": "Successfully joined group"}
+    groupid: str = Path(..., description="Group ID"),
+) -> Response:
+    group = _fetch_group(number, groupid)
+    group.members.add(number)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.post("/{number}/{groupid}/members")
+@router.post("/{number}/{groupid}/members", status_code=status.HTTP_204_NO_CONTENT)
 async def add_group_members(
     number: str = Path(..., description="Registered Phone Number"),
     groupid: str = Path(..., description="Group ID"),
-    data: ChangeGroupMembersRequest = Body(..., description="Members")
-):
-    """
-    Add one or more members to an existing Signal Group.
-
-    Adds new members to the specified group.
-    """
-    # TODO: Implement add members logic
-    return {"message": "Members added successfully"}
+    data: ChangeGroupMembersRequest = Body(..., description="Members"),
+) -> Response:
+    group = _fetch_group(number, groupid)
+    add_members(group.members, data.members)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.delete("/{number}/{groupid}/members")
+@router.delete("/{number}/{groupid}/members", status_code=status.HTTP_204_NO_CONTENT)
 async def remove_group_members(
     number: str = Path(..., description="Registered Phone Number"),
     groupid: str = Path(..., description="Group ID"),
-    data: ChangeGroupMembersRequest = Body(..., description="Members")
-):
-    """
-    Remove one or more members from an existing Signal Group.
-
-    Removes specified members from the group.
-    """
-    # TODO: Implement remove members logic
-    return {"message": "Members removed successfully"}
+    data: ChangeGroupMembersRequest = Body(..., description="Members"),
+) -> Response:
+    group = _fetch_group(number, groupid)
+    for member in data.members:
+        group.members.discard(member)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.post("/{number}/{groupid}/quit")
+@router.post("/{number}/{groupid}/quit", status_code=status.HTTP_204_NO_CONTENT)
 async def quit_group(
     number: str = Path(..., description="Registered Phone Number"),
-    groupid: str = Path(..., description="Group ID")
-):
-    """
-    Quit the specified Signal Group.
-
-    Leaves the specified group.
-    """
-    # TODO: Implement group quit logic
-    return {"message": "Successfully left group"}
+    groupid: str = Path(..., description="Group ID"),
+) -> Response:
+    group = _fetch_group(number, groupid)
+    group.members.discard(number)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
