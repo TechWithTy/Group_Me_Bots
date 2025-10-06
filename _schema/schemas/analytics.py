@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Optional, Dict, Any, List
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 class AIUsage(BaseModel):
     """Tracks individual AI usage events."""
@@ -24,8 +24,7 @@ class AIUsage(BaseModel):
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class CommandUsage(BaseModel):
     """Tracks executions of custom commands."""
@@ -45,8 +44,7 @@ class CommandUsage(BaseModel):
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class GroupDailyStats(BaseModel):
     """Daily aggregated statistics for a group."""
@@ -83,8 +81,7 @@ class GroupDailyStats(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class TenantMonthlyStats(BaseModel):
     """Monthly aggregated statistics for a tenant."""
@@ -119,8 +116,7 @@ class TenantMonthlyStats(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class SystemHealth(BaseModel):
     """Tracks overall system health and performance metrics."""
@@ -148,8 +144,7 @@ class SystemHealth(BaseModel):
     # Metadata
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional system metadata")
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class BotInteraction(BaseModel):
     """Logs every interaction between a user and a bot."""
@@ -175,8 +170,7 @@ class BotInteraction(BaseModel):
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class MonetizationEventLog(BaseModel):
     """Captures successful monetization events."""
@@ -196,8 +190,7 @@ class MonetizationEventLog(BaseModel):
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class MetricCategory(str, Enum):
     CUSTOMER_EXPERIENCE = "customer_experience"
@@ -285,8 +278,7 @@ class BotPerformanceMetrics(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class CustomerFeedback(BaseModel):
     """Stores customer feedback and satisfaction ratings."""
@@ -309,8 +301,7 @@ class CustomerFeedback(BaseModel):
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AggregatedKPIs(BaseModel):
     """Stores aggregated KPIs for reporting and analysis."""
@@ -354,8 +345,7 @@ class AggregatedKPIs(BaseModel):
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ConversionTracking(BaseModel):
     """Tracks bot-initiated conversions, checkouts, and user outcomes."""
@@ -403,5 +393,4 @@ class ConversionTracking(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     converted_at: Optional[datetime] = Field(None, description="When the conversion was completed")
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

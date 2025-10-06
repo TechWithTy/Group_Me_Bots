@@ -1,7 +1,7 @@
 from __future__ import annotations
 import uuid
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 class Infraction(BaseModel):
     """A log of a moderation action taken against a user."""
@@ -17,5 +17,4 @@ class Infraction(BaseModel):
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

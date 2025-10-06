@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Optional, Dict, Any, List
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 class PlanTier(str, Enum):
     BASIC = "basic"
@@ -37,8 +37,7 @@ class Plan(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class Subscription(BaseModel):
     """Represents a tenant's active subscription."""
@@ -63,5 +62,4 @@ class Subscription(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

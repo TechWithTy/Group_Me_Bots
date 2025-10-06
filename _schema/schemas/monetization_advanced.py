@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 from typing import Optional, Dict, Any, List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 class SponsoredContent(BaseModel):
     """Tracks sponsored messages and native advertising campaigns."""
@@ -28,8 +28,7 @@ class SponsoredContent(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class DataMonetization(BaseModel):
     """Tracks data collection and sales for market research."""
@@ -48,8 +47,7 @@ class DataMonetization(BaseModel):
     revenue_generated: float = Field(..., description="Revenue from this data sale")
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class B2BService(BaseModel):
     """Tracks B2B services like lead generation and consulting."""
@@ -70,5 +68,4 @@ class B2BService(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
