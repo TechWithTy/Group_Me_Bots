@@ -40,32 +40,43 @@ def render_bot_management(
     controller: BotController = state.bot_controller
     toggles: Dict[str, ui.switch] = {}
 
-    with ui.card().classes("w-full max-w-xl"):
-        ui.label("Bot Management").classes("text-lg font-semibold")
-        helper_label = ui.label("").classes("text-sm text-gray-600")
+    with ui.card().classes("w-full border border-gray-200 shadow-sm"):
+        with ui.column().classes("gap-3"):
+            ui.label("Automation Controls").classes("text-lg font-semibold")
+            helper_label = ui.label("").classes("text-sm text-gray-600")
 
-        for bot in state.bots:
-            status_label = ui.label(
-                f"{bot.bot_name} automation status: {'Active' if controller.get_status(bot.bot_name) else 'Paused'}"
-            ).classes("text-sm")
-            toggle = ui.switch(
-                f"Toggle {bot.bot_name} automation",
-                value=controller.get_status(bot.bot_name),
-            )
+            for bot in state.bots:
+                active = controller.get_status(bot.bot_name)
+                with ui.row().classes(
+                    "items-center justify-between gap-4 w-full bg-gray-50 border border-gray-100 rounded-lg px-3 py-2"
+                ):
+                    with ui.column().classes("gap-1"):
+                        ui.label(bot.bot_name).classes("text-sm font-medium")
+                        status_label = ui.label("").classes(
+                            "text-xs text-gray-500"
+                        )
+                        status_label.set_text(
+                            f"Automation status: {'Active' if active else 'Paused'}"
+                        )
+                    toggle = ui.switch(
+                        "", value=active
+                    ).props("dense")
 
-            def handle_change(event, name=bot.bot_name) -> None:
-                state.toggle_bot(name, bool(event.value))
+                def handle_change(event, name=bot.bot_name) -> None:
+                    state.toggle_bot(name, bool(event.value))
 
-            toggle.on_value_change(handle_change)
-            toggles[bot.bot_name] = toggle
+                toggle.on_value_change(handle_change)
+                toggles[bot.bot_name] = toggle
 
-            def handle_status_update(active: bool, name=bot.bot_name, label=status_label) -> None:
-                label.set_text(
-                    f"{name} automation status: {'Active' if active else 'Paused'}"
-                )
-                on_status_change()
+                def handle_status_update(
+                    active: bool, name=bot.bot_name, label=status_label
+                ) -> None:
+                    label.set_text(
+                        f"Automation status: {'Active' if active else 'Paused'}"
+                    )
+                    on_status_change()
 
-            controller.subscribe_status(bot.bot_name, handle_status_update)
+                controller.subscribe_status(bot.bot_name, handle_status_update)
 
     view = BotManagementView(toggles=toggles, helper_label=helper_label)
     view.apply_role(state.role)
