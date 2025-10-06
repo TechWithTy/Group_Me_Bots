@@ -14,9 +14,15 @@ if str(CURRENT_DIR) not in sys.path:
 from app import build
 
 
+import logging
+
+# Enable debug logging for NiceGUI
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger('nicegui')
+
 try:
     print('Starting NiceGUI server...')
-    ui.run(build, port=8081)
+    ui.run(build, port=8081, host='127.0.0.1', reload=False)
     print('Server started on port 8081')
 except Exception as e:
     print(f'Error: {e}')

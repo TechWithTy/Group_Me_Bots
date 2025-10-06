@@ -16,5 +16,6 @@ from .pages.dashboard import render_dashboard
 
 def build() -> None:
     """Construct the NiceGUI interface."""
-
+    print('Building dashboard...')
     render_dashboard()
+    print('Dashboard built successfully')
