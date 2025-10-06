@@ -10,7 +10,7 @@ from ..state import DashboardState
 def render_authentication(state: DashboardState) -> None:
     """Render login, logout, and SaaS token controls."""
 
-    with ui.card().classes("w-full max-w-xl"):
+    with ui.card().classes("w-full border border-gray-200 shadow-sm"):
         ui.label("Authentication").classes("text-lg font-semibold")
         status_label = ui.label("").classes("text-sm text-gray-600")
 
@@ -19,11 +19,14 @@ def render_authentication(state: DashboardState) -> None:
 
         state.subscribe_auth(update_status)
 
-        ui.button("Log out", on_click=state.logout).props("color=warning").classes(
-            "mt-2 self-start"
-        )
+        with ui.row().classes("gap-2 mt-2"):
+            ui.button("Switch Account", on_click=state.logout).props(
+                "color=warning"
+            )
 
-        with ui.expansion("Dice Email Login", value=True).classes("mt-2"):
+        with ui.expansion("Dice Email Login", value=True).classes(
+            "mt-2 rounded-lg border border-gray-100"
+        ):
             email_input = ui.input("Dice Email", placeholder="you@example.com").classes(
                 "w-full"
             )
@@ -45,7 +48,9 @@ def render_authentication(state: DashboardState) -> None:
 
             ui.button("Sign in", on_click=handle_login).classes("mt-2")
 
-        with ui.expansion("SaaS Provider Login").classes("mt-2"):
+        with ui.expansion("SaaS Provider Login").classes(
+            "mt-2 rounded-lg border border-gray-100"
+        ):
             token_input = ui.input("Paste token").classes("w-full")
             link_label = ui.label("").classes("text-xs text-gray-500")
 

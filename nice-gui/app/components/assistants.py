@@ -2,66 +2,76 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from typing import Dict
+
 from nicegui import ui
 
+from ..controllers import BotController
 from ..state import DashboardState
 
+_BADGE_BASE = "rounded-full px-2 py-1 text-xs font-medium"
 
-def render_ai_assistants(state: DashboardState) -> None:
-    """Render a grid of AI assistants with their capabilities."""
+
+@dataclass
+class AssistantOverview:
+    """Hold references to update assistant status badges."""
+
+    badges: Dict[str, ui.label]
+    controller: BotController
+
+    def apply_status(self, bot_name: str, active: bool) -> None:
+        """Update badge text and tone for ``bot_name``."""
+
+        badge = self.badges[bot_name]
+        badge.set_text("Active" if active else "Paused")
+        tone = "bg-green-100 text-green-700" if active else "bg-orange-100 text-orange-700"
+        badge.classes(replace=f"{_BADGE_BASE} {tone}")
+
+
+def render_ai_assistants(state: DashboardState) -> AssistantOverview:
+    """Render AI assistant capabilities and live status."""
 
     controller = state.bot_controller
-    with ui.card().classes("w-full max-w-4xl"):
-        ui.label("AI Assistant Overview").classes("text-lg font-semibold")
-        ui.label(
-            "Monitor each assistant's model, focus area, and readiness in one glance."
-        ).classes("text-sm text-gray-600")
+    badges: Dict[str, ui.label] = {}
 
-        with ui.element("div").classes(
-            "grid gap-3 mt-4 grid-cols-1 md:grid-cols-2"
-        ):
+    with ui.card().classes("w-full border border-gray-200 shadow-sm"):
+        with ui.column().classes("gap-3"):
+            ui.label("AI Assistants").classes("text-lg font-semibold")
+            ui.label(
+                "Monitor active assistants, their specialties, and supported workflows."
+            ).classes("text-sm text-gray-600")
+
             for bot in state.bots:
-                active = controller.get_status(bot.bot_name)
-                status_label = "Active" if active else "Paused"
-                status_color = "positive" if active else "grey"
-                with ui.card().classes(
-                    "shadow-none border border-gray-200 dark:border-gray-700 "
-                    "rounded-xl bg-white dark:bg-gray-900"
+                with ui.column().classes(
+                    "gap-2 w-full bg-gray-50 border border-gray-100 rounded-lg px-3 py-3"
                 ):
-                    with ui.column().classes("gap-2"):
-                        with ui.row().classes(
-                            "items-center justify-between gap-2"
-                        ):
-                            ui.label(bot.bot_name).classes("text-base font-semibold")
-                            ui.badge(status_label).props(f"color={status_color}")
+                    with ui.row().classes("items-center justify-between"):
+                        ui.label(bot.bot_name).classes("text-sm font-medium")
+                        badge = ui.label("").classes(_BADGE_BASE)
+                        badges[bot.bot_name] = badge
 
-                        ui.label(f"Model: {bot.bot_model}").classes(
-                            "text-sm text-gray-600"
-                        )
-                        ui.label(
-                            f"Focus: {bot.function.replace('_', ' ').title()}"
-                        ).classes("text-sm text-gray-600")
+                    ui.label(f"Model · {bot.bot_model}").classes(
+                        "text-xs text-gray-500"
+                    )
+                    ui.label(
+                        "Focus · " + bot.function.replace("_", " ").title()
+                    ).classes("text-xs text-gray-500")
 
-                        if bot.capabilities:
-                            ui.label("Capabilities").classes(
-                                "text-xs font-semibold text-gray-500 uppercase"
-                            )
-                            with ui.row().classes("gap-2 flex-wrap"):
-                                for capability in bot.capabilities:
-                                    ui.chip(capability.replace("_", " ").title()).props(
-                                        "color=primary"
-                                    ).classes("text-xs")
+                    if bot.capabilities:
+                        with ui.row().classes("flex-wrap gap-2"):
+                            for capability in sorted(bot.capabilities):
+                                ui.chip(capability.replace("_", " ").title()).classes(
+                                    "bg-white border border-gray-200 text-xs"
+                                )
 
-                        if bot.settings:
-                            ui.label("Key settings").classes(
-                                "text-xs font-semibold text-gray-500 uppercase"
-                            )
-                            with ui.column().classes("gap-1"):
-                                for key, value in bot.settings.items():
-                                    ui.label(f"{key.replace('_', ' ').title()}: {value}").classes(
-                                        "text-xs text-gray-600"
-                                    )
+    view = AssistantOverview(badges=badges, controller=controller)
 
-                        ui.label(
-                            "Automation is ready for handoff when enabled."
-                        ).classes("text-xs text-gray-500 pt-2")
+    for bot in state.bots:
+        view.apply_status(bot.bot_name, controller.get_status(bot.bot_name))
+        controller.subscribe_status(
+            bot.bot_name,
+            lambda active, name=bot.bot_name: view.apply_status(name, active),
+        )
+
+    return view
