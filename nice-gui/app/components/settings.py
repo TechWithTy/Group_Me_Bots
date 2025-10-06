@@ -14,19 +14,27 @@ from ..state import DashboardState
 def render_settings_panel(state: DashboardState) -> None:
     """Render switches for notification preferences and security settings."""
 
-    with ui.card().classes("w-full max-w-md"):
-        ui.label("Settings").classes("text-lg font-semibold")
-        ui.label(
-            "Tune notification channels and security without leaving the dashboard."
-        ).classes("text-sm text-gray-600")
+    with ui.card().classes("w-full border border-gray-200 shadow-sm"):
+        with ui.column().classes("gap-4"):
+            ui.label("Settings Center").classes("text-lg font-semibold")
+            ui.label(
+                "Personalize how updates and security prompts reach your team."
+            ).classes("text-sm text-gray-600")
 
-        _render_notification_switches(state)
-        _render_security_controls(state)
+            with ui.expansion("Notification Preferences", value=True).classes(
+                "rounded-lg border border-gray-100"
+            ):
+                _render_notification_switches(state)
+
+            with ui.expansion("Security Controls", value=True).classes(
+                "rounded-lg border border-gray-100"
+            ):
+                _render_security_controls(state)
 
 
 def _render_notification_switches(state: DashboardState) -> None:
     preferences = state.user.notification_preferences
-    ui.label("Notifications").classes("text-sm font-medium mt-3")
+    ui.label("Channels").classes("text-sm font-medium")
     for notification in _sorted_notifications(preferences.keys()):
         switch = ui.switch(
             state.notification_label(notification),
@@ -40,7 +48,7 @@ def _render_notification_switches(state: DashboardState) -> None:
 
 
 def _render_security_controls(state: DashboardState) -> None:
-    ui.label("Security").classes("text-sm font-medium mt-4")
+    ui.label("Authentication").classes("text-sm font-medium")
     two_factor_switch = ui.switch(
         "Two-factor authentication", value=state.user.two_factor_enabled
     )

@@ -12,12 +12,12 @@ from ..state import DashboardState
 def render_activity_log(state: DashboardState) -> None:
     """Render the latest activity feed."""
 
-    with ui.card().classes("w-full max-w-md"):
+    with ui.card().classes("w-full border border-gray-200 shadow-sm"):
         ui.label("Recent Activity").classes("text-lg font-semibold")
         ui.label("Latest configuration changes across the workspace.").classes(
             "text-sm text-gray-600"
         )
-        container = ui.column().classes("gap-1 mt-2")
+        container = ui.column().classes("gap-2 mt-3")
 
     def update(entries: List[str]) -> None:
         container.clear()
@@ -27,6 +27,8 @@ def render_activity_log(state: DashboardState) -> None:
             return
         for entry in entries:
             with container:
-                ui.label(entry).classes("text-sm")
+                ui.label(entry).classes(
+                    "text-sm bg-gray-50 border border-gray-100 rounded-md px-3 py-2"
+                )
 
     state.subscribe_activity(update)

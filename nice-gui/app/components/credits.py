@@ -12,16 +12,17 @@ def render_credit_summary(state: DashboardState) -> None:
 
     plan = state.plan
     subscription = state.subscription
-    with ui.card().classes("w-full max-w-md"):
+    with ui.card().classes("w-full border border-gray-200 shadow-sm"):
         ui.label("Credits & Billing").classes("text-lg font-semibold")
         ui.label(f"Plan: {plan.name} ({plan.tier.value})").classes("text-sm")
         ui.label(
             f"Renewal date: {subscription.current_period_end.date().isoformat()}"
         ).classes("text-sm text-gray-600")
         usage_label = ui.label(state.credit_summary()).classes("text-sm text-gray-600")
+        ui.separator().classes("my-2")
         ui.label(
             "Feature highlights: analytics, SSO, advanced moderation"
-        ).classes("text-xs text-gray-500 mt-2")
+        ).classes("text-xs text-gray-500")
 
         ui.label("Purchase add-on credits").classes("text-sm font-medium mt-4")
         selected = {"amount": 25}
