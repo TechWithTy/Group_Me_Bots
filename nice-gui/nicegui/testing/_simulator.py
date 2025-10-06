@@ -88,6 +88,14 @@ class _DashboardSession:
             self.state.notification_label(notification): notification
             for notification in self.state.user.notification_preferences
         }
+        self.tab_labels = (
+            "Bots & Automations",
+            "User Profile",
+            "User Settings",
+            "Connections",
+            "AI Assistants & Billing",
+        )
+        self.active_tab = self.tab_labels[0]
 
         self.state.subscribe_activity(self._set_activity)
         self.state.subscribe_credits(self._set_credits)
@@ -100,33 +108,23 @@ class _DashboardSession:
 
         lines = [
             "Operations Control Center",
+            *self.tab_labels,
             f"Current role: {self.state.role}",
-            self._role_helper_text,
             self.state.bot_summary(),
-            "Authentication",
-            self._auth_status,
-            "Credits & Billing",
-            self._credit_summary,
-            "Profile Management",
-            "Settings",
-            "Credits used: {used} / {limit}".format(
-                used=self.state.subscription.ai_credits_used,
-                limit=self.state.plan.ai_credits_per_month,
-            ),
-            "Purchase add-on credits",
-            f"Selected package: {self.selected_amount} credits",
         ]
 
-        if self._addon_credits:
+        lines.extend(self._tab_snapshot())
+
+        if self.active_tab == "AI Assistants & Billing" and self._addon_credits:
             lines.append(f"Add-on credits: {self._addon_credits}")
 
-        lines.extend(self._bot_status_lines())
-        lines.extend(self._activity)
-
-        if self.checkout_status:
+        if self.active_tab == "AI Assistants & Billing" and self.checkout_status:
             lines.append(self.checkout_status)
-        if self.checkout_link_ready:
+        if self.active_tab == "AI Assistants & Billing" and self.checkout_link_ready:
             lines.append("Complete Purchase")
+
+        if self.active_tab == "Bots & Automations":
+            lines.extend(self._activity)
 
         return "\n".join(lines)
 
@@ -139,6 +137,7 @@ class _DashboardSession:
         return [
             "View as User",
             "View as Admin",
+            *self.tab_labels,
             *bot_controls,
             "Two-factor authentication",
             "Dice Email",
@@ -165,6 +164,80 @@ class _DashboardSession:
             lines.append(f"{bot.bot_name} automation status: {status}")
         return lines
 
+    def _tab_snapshot(self) -> List[str]:
+        if self.active_tab == "Bots & Automations":
+            return [
+                "Bot Management",
+                self._role_helper_text,
+                *self._bot_status_lines(),
+                "Recent Activity",
+            ]
+        if self.active_tab == "User Profile":
+            user = self.state.user
+            details = [
+                "Profile Management",
+                f"{user.nickname} ({user.email})" if user.email else user.nickname,
+                f"Timezone: {user.timezone}",
+                f"Preferred contact: {user.preferred_contact_method.value.replace('_', ' ').title()}",
+                "Authentication",
+                self._auth_status,
+            ]
+            details.append(
+                "Two-factor authentication is enabled"
+                if user.two_factor_enabled
+                else "Two-factor authentication is disabled"
+            )
+            details.append("Profile Configuration")
+            details.extend(self._configuration_lines(self.state.profile_sections))
+            return details
+        if self.active_tab == "User Settings":
+            lines = ["Settings", "Notifications", "Security", "Workspace Settings"]
+            lines.extend(self._configuration_lines(self.state.settings_sections))
+            return lines
+        if self.active_tab == "Connections":
+            return [
+                "Connections",
+                *self._configuration_lines(self.state.connection_sections),
+            ]
+        if self.active_tab == "AI Assistants & Billing":
+            lines = ["AI Assistant Overview"]
+            lines.extend(self._assistant_lines())
+            lines.append("Credits & Billing")
+            lines.append(self._credit_summary)
+            lines.append("Purchase add-on credits")
+            lines.append(f"Selected package: {self.selected_amount} credits")
+            return lines
+        return []
+
+    def _assistant_lines(self) -> List[str]:
+        lines: List[str] = []
+        for bot in self.state.bots:
+            lines.append(f"{bot.bot_name} ({bot.bot_model})")
+            lines.append(
+                f"Focus: {bot.function.replace('_', ' ').title()}"
+            )
+            capabilities = [cap.replace("_", " ").title() for cap in bot.capabilities]
+            if capabilities:
+                lines.append("Capabilities: " + ", ".join(capabilities))
+            settings_pairs = [
+                f"{key.replace('_', ' ').title()}: {value}"
+                for key, value in bot.settings.items()
+            ]
+            if settings_pairs:
+                lines.extend(settings_pairs)
+            status = "Active" if self.state.bot_controller.get_status(bot.bot_name) else "Paused"
+            lines.append(f"Status: {status}")
+        return lines
+
+    def _configuration_lines(self, sections) -> List[str]:
+        lines: List[str] = []
+        for section in sections:
+            lines.append(section.title)
+            for key, value in section.items:
+                rendered_value = value if value else "Not configured"
+                lines.append(f"{key}: {rendered_value}")
+        return lines
+
     # ------------------------------------------------------------------
     def handle_click(self, label: str) -> None:
         if label == "View as Admin":
@@ -182,6 +255,9 @@ class _DashboardSession:
             )
             self._auth_inputs["Dice Email"] = ""
             self._auth_inputs["Password"] = ""
+            return
+        if label in self.tab_labels:
+            self.active_tab = label
             return
         if label == "Create checkout session":
             session_id, _url = self.state.create_checkout_session(self.selected_amount)

@@ -11,7 +11,9 @@ from _schema.schemas.subscriptions import Plan, Subscription
 from _schema.schemas.users import NotificationType, User
 
 from .controllers import BotController
+from .data.configuration import build_demo_configuration
 from .factories import demo_payload
+from .models.configuration import ConfigurationSection
 from .models.auth import AuthState
 from .services.authentication import AuthenticationController
 from .services.billing import CheckoutService
@@ -37,6 +39,9 @@ class DashboardState:
     activation_credit_cost: int = 40
     auth: AuthState = field(default_factory=AuthState)
     addon_credits: int = 0
+    profile_sections: Sequence[ConfigurationSection] = field(default_factory=tuple)
+    settings_sections: Sequence[ConfigurationSection] = field(default_factory=tuple)
+    connection_sections: Sequence[ConfigurationSection] = field(default_factory=tuple)
 
     def __post_init__(self) -> None:
         self.activity_log: Deque[str] = deque(maxlen=8)
@@ -76,6 +81,7 @@ class DashboardState:
         """Create demo data derived from repository schemas."""
 
         user, plan, subscription, bots, controller, auth = demo_payload()
+        profile_sections, settings_sections, connection_sections = build_demo_configuration()
         return cls(
             user=user,
             plan=plan,
@@ -83,6 +89,9 @@ class DashboardState:
             bots=bots,
             bot_controller=controller,
             auth=auth,
+            profile_sections=profile_sections,
+            settings_sections=settings_sections,
+            connection_sections=connection_sections,
         )
 
     # Observers ------------------------------------------------------------

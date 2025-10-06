@@ -56,17 +56,69 @@ if _REAL_MODULE is not None:
 
 else:
 
-    class _DummyUI:
-        """Minimal placeholder for the NiceGUI ``ui`` module."""
+    class _DummyApp:
+        """Small subset of the NiceGUI ``app`` object used by the project."""
 
-        def __getattr__(self, name: str) -> "_DummyUI":
-            def _noop(*_args, **_kwargs):  # type: ignore[override]
+        def __init__(self) -> None:
+            self._startup_callbacks = []
+            self._shutdown_callbacks = []
+
+        def on_startup(self, func):  # type: ignore[override]
+            """Register a startup callback and return the original function."""
+
+            self._startup_callbacks.append(func)
+            return func
+
+        def on_shutdown(self, func):  # type: ignore[override]
+            """Register a shutdown callback and return the original function."""
+
+            self._shutdown_callbacks.append(func)
+            return func
+
+        def _emit_startup(self) -> None:
+            for callback in list(self._startup_callbacks):
+                callback()
+
+        def _emit_shutdown(self) -> None:
+            for callback in list(self._shutdown_callbacks):
+                callback()
+
+
+    class _DummyElement:
+        """Placeholder element that mimics the fluent NiceGUI API."""
+
+        def __call__(self, *_args, **_kwargs) -> "_DummyElement":
+            return self
+
+        def __getattr__(self, _name: str):  # type: ignore[override]
+            def _noop(*_args, **_kwargs):
                 return self
 
             return _noop
 
-        def __call__(self, *_args, **_kwargs) -> "_DummyUI":
+        # Context manager support -------------------------------------------------
+        def __enter__(self) -> "_DummyElement":
             return self
 
-    ui = _DummyUI()
-    __all__ = ["ui"]
+        def __exit__(self, *_exc) -> None:
+            return None
+
+
+    class _DummyUI(_DummyElement):
+        """Minimal placeholder for the NiceGUI ``ui`` module."""
+
+        def __init__(self, dummy_app: _DummyApp) -> None:
+            super().__init__()
+            self._app = dummy_app
+
+        def run(self, builder, *_, **__):  # type: ignore[override]
+            """Invoke ``builder`` immediately and trigger lifecycle hooks."""
+
+            builder()
+            self._app._emit_startup()
+
+
+    _DUMMY_APP = _DummyApp()
+    app = _DUMMY_APP
+    ui = _DummyUI(_DUMMY_APP)
+    __all__ = ["app", "ui"]
