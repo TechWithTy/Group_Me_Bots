@@ -1,38 +1,33 @@
-"""
-Signal Profiles API Routes
+"""Profile update endpoints exposed by the unofficial Signal API."""
 
-This module handles profile-related operations including:
-- Profile updates (name, avatar, about)
-"""
+from __future__ import annotations
 
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Path, Body
+from fastapi import APIRouter, Body, Path, Response, status
 from pydantic import BaseModel
+
+from .helpers import ensure_account, placeholder_image
 
 router = APIRouter()
 
 
-# Pydantic models for request/response bodies
 class UpdateProfileRequest(BaseModel):
     name: Optional[str] = None
     about: Optional[str] = None
     base64_avatar: Optional[str] = None
 
 
-class ErrorResponse(BaseModel):
-    error: str
-
-
-@router.put("/{number}")
+@router.put("/{number}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_profile(
     number: str = Path(..., description="Registered Phone Number"),
-    data: UpdateProfileRequest = Body(..., description="Profile Data")
-):
-    """
-    Update Profile.
-
-    Set your name and optional avatar and about information.
-    """
-    # TODO: Implement profile update logic
-    return {"message": "Profile updated successfully"}
+    data: UpdateProfileRequest = Body(..., description="Profile Data"),
+) -> Response:
+    account = ensure_account(number)
+    if data.name is not None:
+        account.profile_name = data.name
+    if data.about is not None:
+        account.profile_about = data.about
+    if data.base64_avatar is not None:
+        account.profile_avatar = data.base64_avatar or placeholder_image(number)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

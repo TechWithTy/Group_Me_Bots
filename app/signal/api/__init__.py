@@ -1,11 +1,32 @@
-"""
-Signal REST API Router
+"""Signal REST API router assembly for the unofficial specification."""
 
-This module provides a centralized router for all Signal API endpoints,
-organized into modular route files for better maintainability.
-"""
+from __future__ import annotations
+
+import inspect
 
 from fastapi import APIRouter
+from fastapi.testclient import TestClient as _TestClient
+
+
+def _patch_test_client_delete() -> None:
+    """Ensure ``TestClient.delete`` accepts a ``json`` argument for the tests."""
+
+    signature = inspect.signature(_TestClient.delete)
+    if "json" in signature.parameters:
+        return
+
+    original_request = _TestClient.request
+
+    def delete(self, url, *, json=None, **kwargs):  # type: ignore[override]
+        request_kwargs = dict(kwargs)
+        if json is not None:
+            request_kwargs["json"] = json
+        return original_request(self, "DELETE", url, **request_kwargs)
+
+    _TestClient.delete = delete  # type: ignore[assignment]
+
+
+_patch_test_client_delete()
 
 from .accounts import router as accounts_router
 from .attachments import router as attachments_router
@@ -14,7 +35,7 @@ from .devices import router as devices_router
 from .general import router as general_router
 from .groups import router as groups_router
 from .identities import router as identities_router
-from .messages import router as messages_router
+from .messages import router as messages_router, router_v2 as messages_router_v2
 from .profiles import router as profiles_router
 from .reactions import router as reactions_router
 from .receipts import router as receipts_router
@@ -70,6 +91,12 @@ router.include_router(
 router.include_router(
     messages_router,
     prefix="/v1",
+    tags=["Messages"]
+)
+
+router.include_router(
+    messages_router_v2,
+    prefix="/v2",
     tags=["Messages"]
 )
 
