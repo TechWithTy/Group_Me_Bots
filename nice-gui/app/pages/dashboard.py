@@ -50,15 +50,15 @@ def render_dashboard() -> None:
                 with ui.row().classes("gap-2 flex-wrap"):
                     ui.button(
                         "View as User", on_click=lambda: state.set_role(Role.USER)
-                    ).props("color=primary")
+                    ).classes("bg-primary")
                     ui.button(
                         "View as Admin", on_click=lambda: state.set_role(Role.ADMIN)
-                    ).props("color=accent")
+                    ).classes("bg-accent")
         bot_view_holder: dict[str, BotManagementView | None] = {"view": None}
 
         with ui.row().classes("w-full gap-6 flex-col xl:flex-row"):
             with ui.column().classes("flex-1 gap-4 w-full"):
-                with ui.tabs().classes("w-full bg-white/80 border border-gray-200 rounded-lg") as tabs:
+                with ui.tabs().classes("w-full bg-white/80 border border-gray-200 rounded-lg flex justify-center") as tabs:
                     ui.tab("profile", "Profile").classes("px-4 py-2")
                     ui.tab("settings", "Settings").classes("px-4 py-2")
                     ui.tab("bots", "Bots").classes("px-4 py-2")
@@ -70,29 +70,30 @@ def render_dashboard() -> None:
                     "w-full bg-white/90 border border-gray-200 rounded-lg"
                 ):
                     with ui.tab_panel("profile"):
+                        with ui.column().classes("gap-4 p-4 mx-auto"):
                             render_profile_card(state)
                             render_authentication(state)
 
                     with ui.tab_panel("settings"):
-                        with ui.column().classes("gap-4 p-4"):
+                        with ui.column().classes("gap-4 p-4 mx-auto"):
                             render_settings_panel(state)
 
                     with ui.tab_panel("bots"):
-                        with ui.column().classes("gap-4 p-4"):
+                        with ui.column().classes("gap-4 p-4 mx-auto"):
                             bot_view_holder["view"] = render_bot_management(
                                 state, refresh_summary
                             )
 
                     with ui.tab_panel("assistants"):
-                        with ui.column().classes("gap-4 p-4"):
+                        with ui.column().classes("gap-4 p-4 mx-auto"):
                             render_ai_assistants(state)
 
                     with ui.tab_panel("connections"):
-                        with ui.column().classes("gap-4 p-4"):
+                        with ui.column().classes("gap-4 p-4 mx-auto"):
                             render_connections(state)
 
                     with ui.tab_panel("analytics"):
-                        with ui.column().classes("gap-4 p-4"):
+                        with ui.column().classes("gap-4 p-4 mx-auto"):
                             render_analytics(state)
 
             with ui.column().classes("w-full xl:max-w-sm gap-4"):

@@ -2,12 +2,7 @@
 
 from __future__ import annotations
 
-import asyncio
-import json
 import random
-import time
-from datetime import datetime, timedelta
-from typing import Dict, List
 
 import plotly.graph_objects as go
 from nicegui import ui
@@ -110,32 +105,36 @@ def _render_signal_analytics() -> None:
 
 
 def _render_channel_analytics(channel: str, platform: str) -> None:
-    """Render analytics charts for a specific channel."""
+    """Render analytics charts for a specific channel using organized dropdown sections."""
 
-    with ui.column().classes("gap-6 w-full"):
+    with ui.column().classes("gap-4 w-full"):
         ui.label(f"{platform}: {channel} Analytics").classes("text-md font-semibold mb-4")
 
-        # Real-time metrics cards
+        # Real-time metrics cards (always visible)
         _render_metrics_cards(channel, platform)
 
-        # Charts row
-        with ui.row().classes("gap-4 w-full"):
-            with ui.column().classes("flex-1"):
-                # Message volume chart
+        # Message Volume Chart - Full Width Dropdown
+        with ui.expansion("📊 Message Volume Analytics", value=False).classes("w-full"):
+            with ui.column().classes("gap-4 w-full"):
+                ui.label("Detailed message volume tracking over the last 24 hours").classes("text-sm text-gray-600")
                 _render_message_volume_chart(channel, platform)
 
-            with ui.column().classes("flex-1"):
-                # User activity chart
+        # User Activity Section
+        with ui.expansion("👥 User Activity Analysis", value=False).classes("w-full"):
+            with ui.column().classes("gap-4 w-full"):
+                ui.label("User engagement patterns and activity heatmap").classes("text-sm text-gray-600")
                 _render_user_activity_chart(channel, platform)
 
-        # Bot performance and workflows
-        with ui.row().classes("gap-4 w-full"):
-            with ui.column().classes("flex-1"):
-                # Bot performance chart
+        # Bot Performance Section
+        with ui.expansion("🤖 Bot Performance Metrics", value=False).classes("w-full"):
+            with ui.column().classes("gap-4 w-full"):
+                ui.label("Bot response times and success rates").classes("text-sm text-gray-600")
                 _render_bot_performance_chart(channel, platform)
 
-            with ui.column().classes("flex-1"):
-                # Workflow execution chart
+        # Workflow Analytics Section
+        with ui.expansion("⚙️ Workflow Execution Analytics", value=False).classes("w-full"):
+            with ui.column().classes("gap-4 w-full"):
+                ui.label("Automated workflow performance and execution statistics").classes("text-sm text-gray-600")
                 _render_workflow_chart(channel, platform)
 
 
@@ -175,7 +174,7 @@ def _render_message_volume_chart(channel: str, platform: str) -> None:
     ))
 
     fig.update_layout(
-        title=f"Message Volume - Last 24 Hours",
+        title="Message Volume - Last 24 Hours",
         xaxis_title="Hour",
         yaxis_title="Messages",
         margin=dict(l=20, r=20, t=40, b=20),
@@ -217,7 +216,7 @@ def _render_user_activity_chart(channel: str, platform: str) -> None:
     ))
 
     fig.update_layout(
-        title=f"User Activity Heatmap - Last 7 Days",
+        title="User Activity Heatmap - Last 7 Days",
         xaxis_title="Hour of Day",
         yaxis_title="Day of Week",
         margin=dict(l=40, r=40, t=40, b=40),
@@ -257,7 +256,7 @@ def _render_bot_performance_chart(channel: str, platform: str) -> None:
     ))
 
     fig.update_layout(
-        title=f"Bot Performance Metrics",
+        title="Bot Performance Metrics",
         yaxis=dict(title="Response Time (s)", side="left"),
         yaxis2=dict(title="Success Rate (%)", side="right", overlaying="y"),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
@@ -291,7 +290,7 @@ def _render_workflow_chart(channel: str, platform: str) -> None:
         ))
 
     fig.update_layout(
-        title=f"Workflow Executions - Last 24h",
+        title="Workflow Executions - Last 24h",
         xaxis_title="Workflow",
         yaxis_title="Executions",
         margin=dict(l=20, r=20, t=40, b=20),

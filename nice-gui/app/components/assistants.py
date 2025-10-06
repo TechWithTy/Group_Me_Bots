@@ -51,23 +51,57 @@ def render_ai_assistants(state: DashboardState) -> AssistantOverview:
                     "gap-2 w-full bg-gray-50 border border-gray-100 rounded-lg px-3 py-3"
                 ):
                     with ui.row().classes("items-center justify-between"):
-                        ui.label(bot.bot_name).classes("text-sm font-medium")
+                        with ui.column().classes("flex-1 gap-1"):
+                            ui.label(bot.bot_name).classes("text-sm font-medium")
+
+                            # Bot metadata
+                            with ui.row().classes("gap-4 text-xs text-gray-500"):
+                                ui.label(f"Model · {bot.bot_model}").classes("text-xs text-gray-500")
+                                ui.label(f"Focus · {bot.function.replace('_', ' ').title()}").classes("text-xs text-gray-500")
+
+                            # Capabilities
+                            if bot.capabilities:
+                                with ui.row().classes("flex-wrap gap-2"):
+                                    for capability in sorted(bot.capabilities):
+                                        ui.chip(capability.replace("_", " ").title()).classes(
+                                            "bg-white border border-gray-200 text-xs"
+                                        )
+
+                        # Action buttons
+                        with ui.row().classes("gap-1"):
+                            ui.button("Edit", on_click=lambda b=bot: edit_assistant(b)).classes(
+                                "bg-blue-500 hover:bg-blue-600 text-white"
+                            )
+                            ui.button("Delete", on_click=lambda b=bot: delete_assistant(b)).classes(
+                                "bg-red-500 hover:bg-red-600 text-white"
+                            )
+
+                    # Status badge row
+                    with ui.row().classes("items-center justify-between"):
                         badge = ui.label("").classes(_BADGE_BASE)
                         badges[bot.bot_name] = badge
 
-                    ui.label(f"Model · {bot.bot_model}").classes(
-                        "text-xs text-gray-500"
-                    )
-                    ui.label(
-                        "Focus · " + bot.function.replace("_", " ").title()
-                    ).classes("text-xs text-gray-500")
+                        # Show MCP servers if available (this would need to be added to ChatBot schema)
+                        # For now, we'll show a placeholder
+                        ui.label("MCP: Available").classes("text-xs text-gray-500")
 
-                    if bot.capabilities:
-                        with ui.row().classes("flex-wrap gap-2"):
-                            for capability in sorted(bot.capabilities):
-                                ui.chip(capability.replace("_", " ").title()).classes(
-                                    "bg-white border border-gray-200 text-xs"
-                                )
+                    # Assistant management functions
+                    def edit_assistant(bot):
+                        """Handle editing an existing assistant."""
+                        ui.notify(f"Edit functionality for {bot.bot_name} - Coming soon!", color="blue")
+
+                    def delete_assistant(bot):
+                        """Handle deleting an existing assistant."""
+                        def confirm_delete():
+                            # Here you would implement actual deletion logic
+                            ui.notify(f"Assistant {bot.bot_name} deleted successfully!", color="green")
+
+                        with ui.dialog() as dialog, ui.card():
+                            ui.label(f"Delete Assistant: {bot.bot_name}").classes("text-lg font-semibold")
+                            ui.label("This action cannot be undone.").classes("text-sm text-gray-600")
+                            with ui.row().classes("gap-2 mt-4"):
+                                ui.button("Cancel", on_click=dialog.close).classes("bg-gray-500 hover:bg-gray-600 text-white")
+                                ui.button("Delete", on_click=lambda: (confirm_delete(), dialog.close())).classes("bg-red-500 hover:bg-red-600 text-white")
 
     view = AssistantOverview(badges=badges, controller=controller)
 
@@ -96,6 +130,7 @@ def _render_create_assistant_form() -> None:
     max_tokens_input = None
     frequency_penalty_input = None
     presence_penalty_input = None
+    selected_servers = []
 
     def create_assistant():
         # Validate required fields
@@ -116,6 +151,7 @@ def _render_create_assistant_form() -> None:
             "max_tokens": max_tokens_input.value,
             "frequency_penalty": frequency_penalty_input.value,
             "presence_penalty": presence_penalty_input.value,
+            "mcp_servers": selected_servers.copy(),
             "created_at": ui.query("new Date().toISOString()")
         }
 
@@ -128,12 +164,41 @@ def _render_create_assistant_form() -> None:
         description_input.set_value("")
         avatar_url_input.set_value("")
         prompt_input.set_value("")
+        selected_servers.clear()
 
     with ui.expansion("Create New AI Assistant", value=False).classes(
         "rounded-lg border border-gray-100"
     ):
         with ui.column().classes("gap-4 w-full"):
             ui.label("Configure your new AI assistant").classes("text-sm font-medium text-gray-700")
+
+            # Avatar Section (moved to first position)
+            with ui.row().classes("gap-4 w-full"):
+                with ui.column().classes("flex-1 gap-2"):
+                    ui.label("Avatar Image").classes("text-xs font-semibold text-gray-600 uppercase")
+
+                    # Avatar upload section
+                    with ui.card().classes("p-3 border border-gray-200"):
+                        ui.label("Assistant Avatar").classes("text-sm font-medium")
+                        avatar_upload = ui.upload(
+                            label="Upload Avatar",
+                            auto_upload=True,
+                            max_files=1,
+                            max_file_size=5*1024*1024  # 5MB
+                        ).classes("w-full")
+
+                        avatar_url_input = ui.input("Or use URL",
+                                                  placeholder="https://example.com/avatar.png").classes("w-full")
+
+                        # Preview uploaded image
+                        avatar_preview = ui.image().classes("w-16 h-16 rounded-lg object-cover mt-2")
+
+                        def handle_avatar_upload(file_info):
+                            if file_info:
+                                avatar_preview.set_source(f"data:{file_info.type};base64,{file_info.content}")
+                                avatar_url_input.set_value("")  # Clear URL input when file uploaded
+
+                        avatar_upload.on_upload(handle_avatar_upload)
 
             # Basic Information
             with ui.row().classes("gap-4 w-full"):
@@ -144,6 +209,39 @@ def _render_create_assistant_form() -> None:
                                          validation={"Required": lambda x: len(x) > 0}).classes("w-full")
                     description_input = ui.textarea("Description",
                                                    placeholder="Describe what this assistant does...").classes("w-full")
+
+            # MCP Server Selection
+            with ui.row().classes("gap-4 w-full"):
+                with ui.column().classes("flex-1 gap-2"):
+                    ui.label("MCP Servers").classes("text-xs font-semibold text-gray-600 uppercase")
+                    ui.label("Select which MCP servers this assistant can access").classes("text-sm text-gray-600")
+
+                    # Available MCP servers
+                    available_servers = [
+                        "discord-mcp",
+                        "telegram-mcp",
+                        "signal-mcp",
+                        "github-mcp",
+                        "notion-mcp",
+                        "filesystem-mcp"
+                    ]
+
+                    with ui.row().classes("flex-wrap gap-2"):
+                        for server in available_servers:
+                            server_chip = ui.chip(server, on_click=lambda s=server: _update_selected_servers(
+                                s not in selected_servers, s, selected_servers
+                            )).classes("cursor-pointer")
+                            # Update chip appearance based on selection
+                            if server in selected_servers:
+                                server_chip.classes("bg-blue-100 text-blue-700 border-blue-300")
+                            else:
+                                server_chip.classes("bg-gray-100 text-gray-600 border-gray-200")
+
+                    # Selected servers display
+                    selected_display = ui.label(f"Selected: {', '.join(selected_servers) if selected_servers else 'None'}").classes("text-sm text-gray-600 mt-2")
+
+                    def update_selected_display():
+                        selected_display.set_text(f"Selected: {', '.join(selected_servers) if selected_servers else 'None'}")
 
             # Model and Provider Selection
             with ui.row().classes("gap-4 w-full"):
@@ -172,34 +270,10 @@ def _render_create_assistant_form() -> None:
                         label="AI Model"
                     ).classes("w-full")
 
-            # Avatar and Prompt
+            # Prompt
             with ui.row().classes("gap-4 w-full"):
                 with ui.column().classes("flex-1 gap-2"):
-                    ui.label("Avatar & Behavior").classes("text-xs font-semibold text-gray-600 uppercase")
-
-                    # Avatar upload section
-                    with ui.card().classes("p-3 border border-gray-200"):
-                        ui.label("Avatar Image").classes("text-sm font-medium")
-                        avatar_upload = ui.upload(
-                            label="Upload Avatar",
-                            auto_upload=True,
-                            max_files=1,
-                            max_file_size=5*1024*1024  # 5MB
-                        ).classes("w-full")
-
-                        avatar_url_input = ui.input("Or use URL",
-                                                  placeholder="https://example.com/avatar.png").classes("w-full")
-
-                        # Preview uploaded image
-                        avatar_preview = ui.image().classes("w-16 h-16 rounded-lg object-cover mt-2")
-
-                        def handle_avatar_upload(file_info):
-                            if file_info:
-                                avatar_preview.set_source(f"data:{file_info.type};base64,{file_info.content}")
-                                avatar_url_input.set_value("")  # Clear URL input when file uploaded
-
-                        avatar_upload.on_upload(handle_avatar_upload)
-
+                    ui.label("System Prompt").classes("text-xs font-semibold text-gray-600 uppercase")
                     prompt_input = ui.textarea("System Prompt",
                                              placeholder="You are a helpful assistant that...").classes("w-full")
 
@@ -270,13 +344,15 @@ def _render_create_assistant_form() -> None:
 
             # Action Buttons
             with ui.row().classes("gap-2 mt-4"):
-                ui.button("Create Assistant", on_click=create_assistant).props("color=primary")
+                ui.button("Create Assistant", on_click=create_assistant).classes("bg-green-500 hover:bg-green-600 text-white")
                 ui.button("Reset Form", on_click=lambda: (
                     title_input.set_value(""),
                     description_input.set_value(""),
                     avatar_url_input.set_value(""),
-                    prompt_input.set_value("")
-                )).props("color=grey")
+                    prompt_input.set_value(""),
+                    selected_servers.clear(),
+                    update_selected_display()
+                )).classes("bg-gray-500 hover:bg-gray-600 text-white")
 
 
 def _update_selected_servers(selected: bool, server_name: str, selected_servers: list) -> None:

@@ -178,7 +178,7 @@ def _render_bot_channel_management(state: DashboardState, controller: BotControl
                                     with ui.row().classes("items-center gap-2 w-full"):
                                         ui.label(f"Currently: {current_assignment['type']}").classes("text-sm flex-1")
                                         ui.button("Edit", on_click=lambda b=bot.bot_name, c=channel, p=platform:
-                                                 _show_channel_assignment_dialog(b, c, p, bot_types, on_status_change)).props("size=sm")
+                                                 _show_channel_assignment_dialog(state, b, c, p, bot_types, on_status_change)).props("size=sm")
                                         ui.button("Remove", on_click=lambda b=bot.bot_name, c=channel, p=platform:
                                                  _remove_channel_assignment(b, c, p, on_status_change)).props("size=sm color=warning")
                                 else:
@@ -186,7 +186,7 @@ def _render_bot_channel_management(state: DashboardState, controller: BotControl
                                     with ui.row().classes("gap-2 w-full"):
                                         ui.button(f"Assign to {channel}",
                                                  on_click=lambda b=bot.bot_name, c=channel, p=platform:
-                                                 _show_channel_assignment_dialog(b, c, p, bot_types, on_status_change)).props("size=sm color=primary")
+                                                 _show_channel_assignment_dialog(state, b, c, p, bot_types, on_status_change)).props("size=sm color=primary")
                                         ui.label("Not assigned").classes("text-xs text-gray-500")
 
             # Quick assignment buttons
@@ -412,6 +412,37 @@ def _clear_bot_assignments(bot_name: str) -> None:
     # Here you would clear all assignments for this bot in the backend
 
 
+def _get_bot_channel_assignment(bot_name: str, channel: str, platform: str) -> dict | None:
+    """Get current channel assignment for a bot on a specific channel."""
+    # Mock data - in real app this would query the database
+    assignments = {
+        "Zort Pro": {
+            "GroupMe": {"Tally Main": {"type": "moderator"}, "Tally Subleasing": {"type": "information"}},
+            "Discord": {"Main Server": {"type": "administrator"}}
+        },
+        "Bot 2": {
+            "Telegram": {"Support Group": {"type": "support"}}
+        },
+        "Bot 3": {
+            "GroupMe": {"Tally Main": {"type": "entertainment"}},
+            "Signal": {"Phone 1": {"type": "information"}}
+        }
+    }
+
+    # Handle case where bot has no assignments
+    bot_assignments = assignments.get(bot_name, {})
+    if not bot_assignments:
+        return None
+
+    # Handle case where platform has no assignments
+    platform_assignments = bot_assignments.get(platform, {})
+    if not platform_assignments:
+        return None
+
+    # Handle case where channel has no assignment
+    return platform_assignments.get(channel)
+
+
 def _get_bot_channel_assignments(bot_name: str) -> dict:
     """Get current channel assignments for a bot."""
     # Mock data - in real app this would query the database
@@ -431,42 +462,133 @@ def _get_bot_channel_assignments(bot_name: str) -> dict:
     return assignments.get(bot_name, {})
 
 
-def _get_bot_channel_assignment(bot_name: str, channel: str, platform: str) -> dict:
-    """Get specific channel assignment for a bot."""
-    assignments = _get_bot_channel_assignments(bot_name)
-    platform_assignments = assignments.get(platform, [])
-    for assignment in platform_assignments:
-        if assignment["channel"] == channel:
-            return assignment
-    return {}
+def _get_available_bots_for_channel(state: DashboardState, channel: str, platform: str) -> list:
+    """Get list of available bots for a specific channel and platform."""
+    # Mock data - in real app this would query the database for available bots
+    # based on channel requirements and bot capabilities
+
+    available_bots = []
+
+    # Define channel requirements and bot compatibility
+    channel_requirements = {
+        "GroupMe": {
+            "Tally Main": {"types": ["moderator", "administrator", "information"], "min_active_bots": 1},
+            "Tally Subleasing": {"types": ["information", "support"], "min_active_bots": 0},
+            "Tally TRVP House": {"types": ["entertainment", "information"], "min_active_bots": 0},
+            "Tally BLMA": {"types": ["moderator", "support"], "min_active_bots": 1},
+            "Tally 2K23": {"types": ["entertainment", "information"], "min_active_bots": 0},
+            "Tally FAMU FSU": {"types": ["information", "entertainment"], "min_active_bots": 0}
+        },
+        "Discord": {
+            "Main Server": {"types": ["administrator", "moderator", "support"], "min_active_bots": 2},
+            "Development Server": {"types": ["automation", "analytics"], "min_active_bots": 0},
+            "Test Server": {"types": ["custom", "automation"], "min_active_bots": 0},
+            "Community Server": {"types": ["moderator", "entertainment"], "min_active_bots": 1}
+        },
+        "Telegram": {
+            "Main Group": {"types": ["administrator", "information"], "min_active_bots": 1},
+            "Support Group": {"types": ["support", "information"], "min_active_bots": 1},
+            "Announcements": {"types": ["information", "automation"], "min_active_bots": 0},
+            "VIP Group": {"types": ["support", "entertainment"], "min_active_bots": 0}
+        },
+        "Signal": {
+            "Phone 1": {"types": ["support", "information"], "min_active_bots": 1},
+            "Phone 2": {"types": ["information", "support"], "min_active_bots": 0},
+            "Backup Phone": {"types": ["automation", "information"], "min_active_bots": 0},
+            "Emergency Line": {"types": ["support", "administrator"], "min_active_bots": 1}
+        }
+    }
+
+    # Get requirements for this specific channel
+    platform_requirements = channel_requirements.get(platform, {})
+    requirements = platform_requirements.get(channel, {"types": [], "min_active_bots": 0})
+
+    # Use actual bots from state and filter by compatibility
+    for bot in state.bots:
+        # Map bot function to bot type for compatibility checking
+        bot_type_mapping = {
+            "moderation": "moderator",
+            "admin": "administrator",
+            "support": "support",
+            "entertainment": "entertainment",
+            "information": "information",
+            "automation": "automation",
+            "analytics": "analytics",
+            "custom": "custom"
+        }
+
+        bot_type = bot_type_mapping.get(bot.function, "information")  # Default to information if not mapped
+
+        # Check if bot type is compatible with channel requirements
+        if bot_type in requirements["types"]:
+            bot_data = {
+                "name": bot.bot_name,
+                "type": bot_type,
+                "status": "Active" if state.bot_controller.get_status(bot.bot_name) else "Paused",
+                "current_type": bot_type
+            }
+            available_bots.append(bot_data)
+
+    return available_bots
 
 
-def _show_channel_assignment_dialog(bot_name: str, channel: str, platform: str, bot_types: list, on_status_change: Callable[[], None]) -> None:
-    """Show dialog for assigning bot to channel with type selection."""
+def _show_channel_assignment_dialog(state: DashboardState, bot_name: str, channel: str, platform: str, bot_types: list, on_status_change: Callable[[], None]) -> None:
+    """Show dialog for assigning bot to channel with available bots selection."""
 
-    with ui.dialog() as dialog, ui.card().classes("w-full max-w-md"):
-        ui.label(f"Assign {bot_name} to {platform}: {channel}").classes("text-lg font-semibold mb-4")
+    with ui.dialog() as dialog, ui.card().classes("w-full max-w-lg"):
+        ui.label(f"Assign Bot to {platform}: {channel}").classes("text-lg font-semibold mb-4")
 
-        # Bot type selection
+        # Show available bots for this channel
+        available_bots = _get_available_bots_for_channel(state, channel, platform)
+        if not available_bots:
+            ui.label("No bots available for this channel").classes("text-sm text-gray-600 mb-4")
+            ui.button("Close", on_click=dialog.close).classes("bg-gray-500 hover:bg-gray-600 text-white")
+            return
+
+        ui.label("Available Bots for this Channel:").classes("text-sm font-medium mb-2")
+
+        # Bot selection
+        bot_options = {bot["name"]: f"{bot['name']} - {bot['type']} ({bot['status']})" for bot in available_bots}
+        selected_bot = ui.select(
+            bot_options,
+            value=list(bot_options.keys())[0] if bot_options else None,
+            label="Select Bot"
+        ).classes("w-full mb-4")
+
+        # Bot type selection (for the selected bot)
+        current_bot = available_bots[0] if available_bots else None
         type_select = ui.select(
             bot_types,
-            value=bot_types[0] if bot_types else None,
-            label="Bot Type"
+            value=current_bot["current_type"] if current_bot else (bot_types[0] if bot_types else None),
+            label="Bot Type for this Channel"
         ).classes("w-full mb-4")
+
+        ui.label("Channel Requirements:").classes("text-sm font-medium mb-2")
+        ui.label("• Bot must be active and compatible with this platform").classes("text-xs text-gray-600")
+        ui.label("• Bot type determines its behavior in this channel").classes("text-xs text-gray-600")
+        ui.label("• Assignment will take effect immediately").classes("text-xs text-gray-600")
 
         with ui.row().classes("gap-2 mt-4"):
             def assign_bot():
-                if type_select.value:
-                    _update_bot_channel_assignment(bot_name, channel, platform, type_select.value, True)
-                    ui.notify(f"Assigned '{bot_name}' as {type_select.value} to {platform}: {channel}", color="green")
-                    on_status_change()
-                    dialog.close()
+                if not selected_bot.value:
+                    ui.notify("Please select a bot", color="red")
+                    return
+
+                if not type_select.value:
+                    ui.notify("Please select a bot type", color="red")
+                    return
+
+                # Assign the selected bot to this channel
+                _update_bot_channel_assignment(selected_bot.value, channel, platform, type_select.value, True)
+                ui.notify(f"Assigned '{selected_bot.value}' as {type_select.value} to {platform}: {channel}", color="green")
+                on_status_change()
+                dialog.close()
 
             def cancel():
                 dialog.close()
 
-            ui.button("Assign", on_click=assign_bot).props("color=primary")
-            ui.button("Cancel", on_click=cancel).props("color=grey")
+            ui.button("Assign Bot", on_click=assign_bot).classes("bg-green-500 hover:bg-green-600 text-white")
+            ui.button("Cancel", on_click=cancel).classes("bg-gray-500 hover:bg-gray-600 text-white")
 
 
 def _remove_channel_assignment(bot_name: str, channel: str, platform: str, on_status_change: Callable[[], None]) -> None:
