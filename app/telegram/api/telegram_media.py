@@ -70,10 +70,10 @@ class TelegramMediaAPI(TelegramBotAPI):
             return Message.from_dict(response['result'])
         raise Exception(response.get('description', 'Unknown error'))
 
-    def send_dice(self, chat_id: Union[int, str], **kwargs) -> Message:
-        """Send a dice."""
+    def send_Group Mint(self, chat_id: Union[int, str], **kwargs) -> Message:
+        """Send a Group Mint."""
         params = {'chat_id': chat_id, **kwargs}
-        response = self._make_request("sendDice", params)
+        response = self._make_request("sendGroup Mint", params)
         if response.get('ok'):
             return Message.from_dict(response['result'])
         raise Exception(response.get('description', 'Unknown error'))

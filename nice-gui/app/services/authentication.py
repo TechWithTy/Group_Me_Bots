@@ -32,18 +32,18 @@ class AuthenticationController:
         callback(self.state)
 
     # Mutators -------------------------------------------------------------
-    def authenticate_with_dice(self, email: str, password: str) -> None:
-        """Authenticate using local Dice credentials."""
+    def authenticate_with_GroupMint(self, email: str, password: str) -> None:
+        """Authenticate using local Group Mint credentials."""
 
         if "@" not in email or not password or len(password) < 6:
             raise ValueError("Invalid credentials")
         self.state = AuthState(
             is_authenticated=True,
-            method="Dice",
+            method="Group Mint",
             email=email,
-            token=f"dice-{uuid4().hex[:8]}",
+            token=f"Group Mint-{uuid4().hex[:8]}",
         )
-        self._log(f"Signed in as {email} via Dice")
+        self._log(f"Signed in as {email} via Group Mint")
         self._notify()
 
     def logout(self) -> None:

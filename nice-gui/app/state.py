@@ -145,10 +145,10 @@ class DashboardState:
         state = "enabled" if enabled else "disabled"
         self._log(f"Two-factor authentication {state}")
 
-    def authenticate_with_dice(self, email: str, password: str) -> None:
-        """Authenticate using local Dice credentials."""
+    def authenticate_with_GroupMint(self, email: str, password: str) -> None:
+        """Authenticate using local Group Mint credentials."""
 
-        self.auth_controller.authenticate_with_dice(email, password)
+        self.auth_controller.authenticate_with_GroupMint(email, password)
 
     def logout(self) -> None:
         """Reset authentication state."""

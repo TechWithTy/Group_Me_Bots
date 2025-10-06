@@ -1,0 +1,18 @@
+{
+    "mcpServers": {
+        "signal-mcp": {
+            "command": "uv",
+            "args": [
+                "run",
+                "main.py",
+                "--user-id",
+                "YOUR_PHONE_NUMBER",
+                "--transport",
+                "stdio"
+            ],
+            "env": {
+                "SIGNAL_PHONE_NUMBER": "YOUR_PHONE_NUMBER"
+            }
+        }
+    }
+}

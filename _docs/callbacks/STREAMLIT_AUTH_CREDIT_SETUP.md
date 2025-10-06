@@ -24,15 +24,15 @@ The application uses a decoupled architecture:
 
 The Streamlit app supports two authentication methods:
 
-#### Dice Email/Password Authentication (Local)
+#### GroupMint Email/Password Authentication (Local)
 
 ```python
 # streamlit_app/ui_auth.py
 def render_login() -> bool:
-    """Render login form for Dice credentials."""
+    """Render login form for Group Mint credentials."""
     st.header("Login")
     with st.form("login_form", clear_on_submit=False):
-        email = st.text_input("Dice Email", placeholder="you@example.com")
+        email = st.text_input("GroupMint Email", placeholder="you@example.com")
         password = st.text_input("Password", type="password")
         submitted = st.form_submit_button("Sign in")
     

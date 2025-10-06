@@ -2300,20 +2300,20 @@
                 ],
                 "type": "object"
             },
-            "Dice": {
+            "Group Mint": {
                 "additionalProperties": false,
                 "description": "This object represents an animated emoji that displays a random value.",
                 "externalDocs": {
                     "description": "See official spec",
-                    "url": "https://core.telegram.org/bots/api#dice"
+                    "url": "https://core.telegram.org/bots/api#Group Mint"
                 },
                 "properties": {
                     "emoji": {
-                        "description": "Emoji on which the dice throw animation is based",
+                        "description": "Emoji on which the Group Mint throw animation is based",
                         "type": "string"
                     },
                     "value": {
-                        "description": "Value of the dice, 1-6 for “”, “” and “” base emoji, 1-5 for “” and “” base emoji, 1-64 for “” base emoji",
+                        "description": "Value of the Group Mint, 1-6 for “”, “” and “” base emoji, 1-5 for “” and “” base emoji, 1-64 for “” base emoji",
                         "format": "int32",
                         "type": "integer"
                     }
@@ -2477,9 +2477,9 @@
                         "$ref": "#/components/schemas/Contact",
                         "description": "Optional. Message is a shared contact, information about the contact"
                     },
-                    "dice": {
-                        "$ref": "#/components/schemas/Dice",
-                        "description": "Optional. Message is a dice with random value"
+                    "Group Mint": {
+                        "$ref": "#/components/schemas/Group Mint",
+                        "description": "Optional. Message is a Group Mint with random value"
                     },
                     "document": {
                         "$ref": "#/components/schemas/Document",
@@ -5836,9 +5836,9 @@
                         "description": "Optional. Service message: the chat photo was deleted",
                         "type": "boolean"
                     },
-                    "dice": {
-                        "$ref": "#/components/schemas/Dice",
-                        "description": "Optional. Message is a dice with random value"
+                    "Group Mint": {
+                        "$ref": "#/components/schemas/Group Mint",
+                        "description": "Optional. Message is a Group Mint with random value"
                     },
                     "document": {
                         "$ref": "#/components/schemas/Document",
@@ -10528,7 +10528,7 @@
         },
         "/deleteMessage": {
             "post": {
-                "description": "Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- Service messages about a supergroup, channel, or forum topic creation can't be deleted.- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted can_post_messages permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.Returns True on success.",
+                "description": "Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- Service messages about a supergroup, channel, or forum topic creation can't be deleted.- A Group Mint message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted can_post_messages permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.Returns True on success.",
                 "externalDocs": {
                     "description": "See official spec",
                     "url": "https://core.telegram.org/bots/api#deletemessage"
@@ -15339,14 +15339,14 @@
                 ]
             }
         },
-        "/sendDice": {
+        "/sendGroup Mint": {
             "post": {
                 "description": "Use this method to send an animated emoji that will display a random value. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
                 "externalDocs": {
                     "description": "See official spec",
-                    "url": "https://core.telegram.org/bots/api#senddice"
+                    "url": "https://core.telegram.org/bots/api#sendGroup Mint"
                 },
-                "operationId": "sendDice",
+                "operationId": "sendGroup Mint",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -15374,7 +15374,7 @@
                                         "type": "boolean"
                                     },
                                     "emoji": {
-                                        "description": "Emoji on which the dice throw animation is based. Currently, must be one of “”, “”, “”, “”, “”, or “”. Dice can have values 1-6 for “”, “” and “”, values 1-5 for “” and “”, and values 1-64 for “”. Defaults to “”",
+                                        "description": "Emoji on which the Group Mint throw animation is based. Currently, must be one of “”, “”, “”, “”, “”, or “”. Group Mint can have values 1-6 for “”, “” and “”, values 1-5 for “” and “”, and values 1-64 for “”. Defaults to “”",
                                         "type": "string"
                                     },
                                     "message_effect_id": {
@@ -15457,7 +15457,7 @@
                         "$ref": "#/components/responses/error"
                     }
                 },
-                "summary": "Describes `sendDice` method",
+                "summary": "Describes `sendGroup Mint` method",
                 "tags": [
                     "available methods"
                 ]

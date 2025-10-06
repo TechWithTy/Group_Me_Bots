@@ -1,0 +1,1 @@
+- Update this to integrate signal-mcp with existing Signal workflows.

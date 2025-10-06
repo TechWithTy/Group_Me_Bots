@@ -79,7 +79,7 @@ class _DashboardSession:
         self.checkout_session: Optional[str] = None
         self.checkout_status: str = ""
         self.checkout_link_ready = False
-        self._auth_inputs: Dict[str, str] = {"Dice Email": "", "Password": ""}
+        self._auth_inputs: Dict[str, str] = {"GroupMint Email": "", "Password": ""}
         self._activity: List[str] = []
         self._credit_summary = self.state.credit_summary()
         self._addon_credits = 0
@@ -141,7 +141,7 @@ class _DashboardSession:
             "View as Admin",
             *bot_controls,
             "Two-factor authentication",
-            "Dice Email",
+            "GroupMint Email",
             "Password",
             "Sign in",
             "Log out",
@@ -177,10 +177,10 @@ class _DashboardSession:
             self.state.logout()
             return
         if label == "Sign in":
-            self.state.authenticate_with_dice(
-                self._auth_inputs["Dice Email"], self._auth_inputs["Password"]
+            self.state.authenticate_with_GroupMint(
+                self._auth_inputs["GroupMint Email"], self._auth_inputs["Password"]
             )
-            self._auth_inputs["Dice Email"] = ""
+            self._auth_inputs["GroupMint Email"] = ""
             self._auth_inputs["Password"] = ""
             return
         if label == "Create checkout session":

@@ -5,9 +5,11 @@ from __future__ import annotations
 from nicegui import ui
 
 from ..components.activity import render_activity_log
+from ..components.analytics import render_analytics
 from ..components.assistants import render_ai_assistants
 from ..components.auth import render_authentication
 from ..components.bots import BotManagementView, render_bot_management
+from ..components.connections import render_connections
 from ..components.credits import render_credit_summary
 from ..components.profile import render_profile_card
 from ..components.settings import render_settings_panel
@@ -52,26 +54,22 @@ def render_dashboard() -> None:
                     ui.button(
                         "View as Admin", on_click=lambda: state.set_role(Role.ADMIN)
                     ).props("color=accent")
-
         bot_view_holder: dict[str, BotManagementView | None] = {"view": None}
 
         with ui.row().classes("w-full gap-6 flex-col xl:flex-row"):
             with ui.column().classes("flex-1 gap-4 w-full"):
-                tabs = ui.tabs(
-                    {
-                        "profile": "Profile",
-                        "settings": "Settings",
-                        "bots": "Bots",
-                        "assistants": "AI Assistants",
-                    },
-                    value="profile",
-                ).classes("w-full bg-white/80 border border-gray-200 rounded-lg")
+                with ui.tabs().classes("w-full bg-white/80 border border-gray-200 rounded-lg") as tabs:
+                    ui.tab("profile", "Profile").classes("px-4 py-2")
+                    ui.tab("settings", "Settings").classes("px-4 py-2")
+                    ui.tab("bots", "Bots").classes("px-4 py-2")
+                    ui.tab("assistants", "AI Assistants").classes("px-4 py-2")
+                    ui.tab("connections", "Connections").classes("px-4 py-2")
+                    ui.tab("analytics", "Analytics").classes("px-4 py-2")
 
                 with ui.tab_panels(tabs, value="profile").classes(
                     "w-full bg-white/90 border border-gray-200 rounded-lg"
                 ):
                     with ui.tab_panel("profile"):
-                        with ui.column().classes("gap-4 p-4"):
                             render_profile_card(state)
                             render_authentication(state)
 
@@ -88,6 +86,14 @@ def render_dashboard() -> None:
                     with ui.tab_panel("assistants"):
                         with ui.column().classes("gap-4 p-4"):
                             render_ai_assistants(state)
+
+                    with ui.tab_panel("connections"):
+                        with ui.column().classes("gap-4 p-4"):
+                            render_connections(state)
+
+                    with ui.tab_panel("analytics"):
+                        with ui.column().classes("gap-4 p-4"):
+                            render_analytics(state)
 
             with ui.column().classes("w-full xl:max-w-sm gap-4"):
                 render_credit_summary(state)

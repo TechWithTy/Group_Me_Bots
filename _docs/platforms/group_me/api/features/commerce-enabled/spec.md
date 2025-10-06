@@ -242,7 +242,7 @@ CREATE TABLE bot_logs (
 );
 ```
 
-Indices should be added on frequently queried fields: `group_id`, `user_id`, `status`, etc.
+InGroup Mints should be added on frequently queried fields: `group_id`, `user_id`, `status`, etc.
 
 ---
 

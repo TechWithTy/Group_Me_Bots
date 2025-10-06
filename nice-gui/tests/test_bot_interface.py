@@ -65,7 +65,7 @@ def test_profile_settings_updates_log_activity(user: User) -> None:
 
 
 def test_local_login_updates_authentication_status(user: User) -> None:
-    """Dice login form authenticates the dashboard session."""
+    """Group Mint login form authenticates the dashboard session."""
 
     user.open("/")
     user.should_see("Authentication")
@@ -73,12 +73,12 @@ def test_local_login_updates_authentication_status(user: User) -> None:
     user.find("Log out").click()
     user.should_see("Not signed in.")
 
-    user.find("Dice Email").type("pilot@example.com")
+    user.find("GroupMint Email").type("pilot@example.com")
     user.find("Password").type("hunter2!")
     user.find("Sign in").click()
 
-    user.should_see("Signed in as pilot@example.com via Dice")
-    user.should_see("Signed in as pilot@example.com via Dice")
+    user.should_see("Signed in as pilot@example.com via Group Mint")
+    user.should_see("Signed in as pilot@example.com via Group Mint")
 
 
 def test_credit_purchase_flow_adds_addon_credits(user: User) -> None:

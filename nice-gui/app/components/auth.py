@@ -6,7 +6,6 @@ from nicegui import ui
 
 from ..state import DashboardState
 
-
 def render_authentication(state: DashboardState) -> None:
     """Render login, logout, and SaaS token controls."""
 
@@ -24,31 +23,7 @@ def render_authentication(state: DashboardState) -> None:
                 "color=warning"
             )
 
-        with ui.expansion("Dice Email Login", value=True).classes(
-            "mt-2 rounded-lg border border-gray-100"
-        ):
-            email_input = ui.input("Dice Email", placeholder="you@example.com").classes(
-                "w-full"
-            )
-            password_input = ui.input("Password", password=True).classes("w-full")
-            feedback = ui.label("").classes("text-xs text-red-500")
-
-            def handle_login() -> None:
-                try:
-                    state.authenticate_with_dice(
-                        email_input.value or "", password_input.value or ""
-                    )
-                except ValueError:
-                    feedback.set_text("Invalid email or password. Minimum length 6.")
-                    return
-                feedback.set_text("")
-                email_input.value = ""
-                password_input.value = ""
-                ui.notify("Signed in successfully", type="positive")
-
-            ui.button("Sign in", on_click=handle_login).classes("mt-2")
-
-        with ui.expansion("SaaS Provider Login").classes(
+        with ui.expansion("GroupMint Redirect Login", value=True).classes(
             "mt-2 rounded-lg border border-gray-100"
         ):
             token_input = ui.input("Paste token").classes("w-full")

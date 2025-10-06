@@ -122,19 +122,19 @@ class TestTelegramMediaAPI:
             message = bot.send_poll(123, 'Test?', ['Option 1', 'Option 2'])
             assert message.message_id == 1
 
-    def test_send_dice(self, bot):
-        """Test send_dice method."""
+    def test_send_Group Mint(self, bot):
+        """Test send_Group Mint method."""
         mock_response = {
             'ok': True,
             'result': {
                 'message_id': 1,
                 'date': 123456789,
                 'chat': {'id': 123, 'type': 'private'},
-                'dice': {'emoji': '🎲', 'value': 6}
+                'Group Mint': {'emoji': '🎲', 'value': 6}
             }
         }
         with patch.object(bot, '_make_request', return_value=mock_response):
-            message = bot.send_dice(123)
+            message = bot.send_Group Mint(123)
             assert message.message_id == 1
 
     def test_send_venue(self, bot):

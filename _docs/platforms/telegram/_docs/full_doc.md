@@ -38,11 +38,11 @@ Direct Messages in Channels
     Added the field is_direct_messages to the classes Chat and ChatFullInfo which can be used to identify supergroups that are used as channel direct messages chats.
     Added the field parent_chat to the class ChatFullInfo which indicates the parent channel chat for a channel direct messages chat.
     Added the class DirectMessagesTopic and the field direct_messages_topic to the class Message, describing a topic of a direct messages chat.
-    Added the parameter direct_messages_topic_id to the methods sendMessage, sendPhoto, sendVideo, sendAnimation, sendAudio, sendDocument, sendPaidMedia, sendSticker, sendVideoNote, sendVoice, sendLocation, sendVenue, sendContact, sendDice, sendInvoice, sendMediaGroup, copyMessage, copyMessages, forwardMessage and forwardMessages. This parameter can be used to send a message to a direct messages chat topic.
+    Added the parameter direct_messages_topic_id to the methods sendMessage, sendPhoto, sendVideo, sendAnimation, sendAudio, sendDocument, sendPaidMedia, sendSticker, sendVideoNote, sendVoice, sendLocation, sendVenue, sendContact, sendGroup Mint, sendInvoice, sendMediaGroup, copyMessage, copyMessages, forwardMessage and forwardMessages. This parameter can be used to send a message to a direct messages chat topic.
 
 Suggested Posts
 
-    Added the class SuggestedPostParameters and the parameter suggested_post_parameters to the methods sendMessage, sendPhoto, sendVideo, sendAnimation, sendAudio, sendDocument, sendPaidMedia, sendSticker, sendVideoNote, sendVoice, sendLocation, sendVenue, sendContact, sendDice, sendInvoice, copyMessage, forwardMessage. This parameter can be used to send a suggested post to a direct messages chat topic.
+    Added the class SuggestedPostParameters and the parameter suggested_post_parameters to the methods sendMessage, sendPhoto, sendVideo, sendAnimation, sendAudio, sendDocument, sendPaidMedia, sendSticker, sendVideoNote, sendVoice, sendLocation, sendVenue, sendContact, sendGroup Mint, sendInvoice, copyMessage, forwardMessage. This parameter can be used to send a suggested post to a direct messages chat topic.
     Added the method approveSuggestedPost, allowing bots to approve incoming suggested posts.
     Added the method declineSuggestedPost, allowing bots to decline incoming suggested posts.
     Added the field can_manage_direct_messages to the classes ChatMemberAdministrator and ChatAdministratorRights.
@@ -414,7 +414,7 @@ show_caption_above_media 	True 	Optional. True, if the caption must be shown abo
 has_media_spoiler 	True 	Optional. True, if the message media is covered by a spoiler animation
 checklist 	Checklist 	Optional. Message is a checklist
 contact 	Contact 	Optional. Message is a shared contact, information about the contact
-dice 	Dice 	Optional. Message is a dice with random value
+Group Mint 	Group Mint 	Optional. Message is a Group Mint with random value
 game 	Game 	Optional. Message is a game, information about the game. More about games »
 poll 	Poll 	Optional. Message is a native poll, information about the poll
 venue 	Venue 	Optional. Message is a venue, information about the venue. For backward compatibility, when this field is set, the location field will also be set
@@ -528,7 +528,7 @@ voice 	Voice 	Optional. Message is a voice message, information about the file
 has_media_spoiler 	True 	Optional. True, if the message media is covered by a spoiler animation
 checklist 	Checklist 	Optional. Message is a checklist
 contact 	Contact 	Optional. Message is a shared contact, information about the contact
-dice 	Dice 	Optional. Message is a dice with random value
+Group Mint 	Group Mint 	Optional. Message is a Group Mint with random value
 game 	Game 	Optional. Message is a game, information about the game. More about games »
 giveaway 	Giveaway 	Optional. Message is a scheduled giveaway, information about the giveaway
 giveaway_winners 	GiveawayWinners 	Optional. A giveaway with public winners was completed
@@ -716,12 +716,12 @@ first_name 	String 	Contact's first name
 last_name 	String 	Optional. Contact's last name
 user_id 	Integer 	Optional. Contact's user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
 vcard 	String 	Optional. Additional data about the contact in the form of a vCard
-Dice
+Group Mint
 
 This object represents an animated emoji that displays a random value.
 Field 	Type 	Description
-emoji 	String 	Emoji on which the dice throw animation is based
-value 	Integer 	Value of the dice, 1-6 for “🎲”, “🎯” and “🎳” base emoji, 1-5 for “🏀” and “⚽” base emoji, 1-64 for “🎰” base emoji
+emoji 	String 	Emoji on which the Group Mint throw animation is based
+value 	Integer 	Value of the Group Mint, 1-6 for “🎲”, “🎯” and “🎳” base emoji, 1-5 for “🏀” and “⚽” base emoji, 1-64 for “🎰” base emoji
 PollOption
 
 This object contains information about one answer option in a poll.
@@ -2710,7 +2710,7 @@ protect_content 	Boolean 	Optional 	Protects the contents of the sent message fr
 message_effect_id 	String 	Optional 	Unique identifier of the message effect to be added to the message
 reply_parameters 	ReplyParameters 	Optional 	A JSON-serialized object for description of the message to reply to
 reply_markup 	InlineKeyboardMarkup 	Optional 	A JSON-serialized object for an inline keyboard
-sendDice
+sendGroup Mint
 
 Use this method to send an animated emoji that will display a random value. On success, the sent Message is returned.
 Parameter 	Type 	Required 	Description
@@ -2718,7 +2718,7 @@ business_connection_id 	String 	Optional 	Unique identifier of the business conn
 chat_id 	Integer or String 	Yes 	Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 message_thread_id 	Integer 	Optional 	Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
 direct_messages_topic_id 	Integer 	Optional 	Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
-emoji 	String 	Optional 	Emoji on which the dice throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲”
+emoji 	String 	Optional 	Emoji on which the Group Mint throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Group Mint can have values 1-6 for “🎲”, “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲”
 disable_notification 	Boolean 	Optional 	Sends the message silently. Users will receive a notification with no sound.
 protect_content 	Boolean 	Optional 	Protects the contents of the sent message from forwarding
 allow_paid_broadcast 	Boolean 	Optional 	Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
@@ -3439,7 +3439,7 @@ deleteMessage
 Use this method to delete a message, including service messages, with the following limitations:
 - A message can only be deleted if it was sent less than 48 hours ago.
 - Service messages about a supergroup, channel, or forum topic creation can't be deleted.
-- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.
+- A Group Mint message in a private chat can only be deleted if it was sent more than 24 hours ago.
 - Bots can delete outgoing messages in private chats, groups, and supergroups.
 - Bots can delete incoming messages in private chats.
 - Bots granted can_post_messages permissions can delete outgoing messages in channels.

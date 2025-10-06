@@ -2829,9 +2829,9 @@
                 }
             ]
         },
-        "sendDice": {
-            "name": "sendDice",
-            "href": "https://core.telegram.org/bots/api#senddice",
+        "sendGroup Mint": {
+            "name": "sendGroup Mint",
+            "href": "https://core.telegram.org/bots/api#sendGroup Mint",
             "description": [
                 "Use this method to send an animated emoji that will display a random value. On success, the sent Message is returned."
             ],
@@ -2878,7 +2878,7 @@
                         "String"
                     ],
                     "required": false,
-                    "description": "Emoji on which the dice throw animation is based. Currently, must be one of \"\ud83c\udfb2\", \"\ud83c\udfaf\", \"\ud83c\udfc0\", \"\u26bd\", \"\ud83c\udfb3\", or \"\ud83c\udfb0\". Dice can have values 1-6 for \"\ud83c\udfb2\", \"\ud83c\udfaf\" and \"\ud83c\udfb3\", values 1-5 for \"\ud83c\udfc0\" and \"\u26bd\", and values 1-64 for \"\ud83c\udfb0\". Defaults to \"\ud83c\udfb2\""
+                    "description": "Emoji on which the Group Mint throw animation is based. Currently, must be one of \"\ud83c\udfb2\", \"\ud83c\udfaf\", \"\ud83c\udfc0\", \"\u26bd\", \"\ud83c\udfb3\", or \"\ud83c\udfb0\". Group Mint can have values 1-6 for \"\ud83c\udfb2\", \"\ud83c\udfaf\" and \"\ud83c\udfb3\", values 1-5 for \"\ud83c\udfc0\" and \"\u26bd\", and values 1-64 for \"\ud83c\udfb0\". Defaults to \"\ud83c\udfb2\""
                 },
                 {
                     "name": "disable_notification",
@@ -6551,7 +6551,7 @@
                 "Use this method to delete a message, including service messages, with the following limitations:",
                 "- A message can only be deleted if it was sent less than 48 hours ago.",
                 "- Service messages about a supergroup, channel, or forum topic creation can't be deleted.",
-                "- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.",
+                "- A Group Mint message in a private chat can only be deleted if it was sent more than 24 hours ago.",
                 "- Bots can delete outgoing messages in private chats, groups, and supergroups.",
                 "- Bots can delete incoming messages in private chats.",
                 "- Bots granted can_post_messages permissions can delete outgoing messages in channels.",
@@ -9456,12 +9456,12 @@
                     "description": "Optional. Message is a shared contact, information about the contact"
                 },
                 {
-                    "name": "dice",
+                    "name": "Group Mint",
                     "types": [
-                        "Dice"
+                        "Group Mint"
                     ],
                     "required": false,
-                    "description": "Optional. Message is a dice with random value"
+                    "description": "Optional. Message is a Group Mint with random value"
                 },
                 {
                     "name": "game",
@@ -10216,12 +10216,12 @@
                     "description": "Optional. Message is a shared contact, information about the contact"
                 },
                 {
-                    "name": "dice",
+                    "name": "Group Mint",
                     "types": [
-                        "Dice"
+                        "Group Mint"
                     ],
                     "required": false,
-                    "description": "Optional. Message is a dice with random value"
+                    "description": "Optional. Message is a Group Mint with random value"
                 },
                 {
                     "name": "game",
@@ -11225,9 +11225,9 @@
                 }
             ]
         },
-        "Dice": {
-            "name": "Dice",
-            "href": "https://core.telegram.org/bots/api#dice",
+        "Group Mint": {
+            "name": "Group Mint",
+            "href": "https://core.telegram.org/bots/api#Group Mint",
             "description": [
                 "This object represents an animated emoji that displays a random value."
             ],
@@ -11238,7 +11238,7 @@
                         "String"
                     ],
                     "required": true,
-                    "description": "Emoji on which the dice throw animation is based"
+                    "description": "Emoji on which the Group Mint throw animation is based"
                 },
                 {
                     "name": "value",
@@ -11246,7 +11246,7 @@
                         "Integer"
                     ],
                     "required": true,
-                    "description": "Value of the dice, 1-6 for \"\ud83c\udfb2\", \"\ud83c\udfaf\" and \"\ud83c\udfb3\" base emoji, 1-5 for \"\ud83c\udfc0\" and \"\u26bd\" base emoji, 1-64 for \"\ud83c\udfb0\" base emoji"
+                    "description": "Value of the Group Mint, 1-6 for \"\ud83c\udfb2\", \"\ud83c\udfaf\" and \"\ud83c\udfb3\" base emoji, 1-5 for \"\ud83c\udfc0\" and \"\u26bd\" base emoji, 1-64 for \"\ud83c\udfb0\" base emoji"
                 }
             ]
         },
