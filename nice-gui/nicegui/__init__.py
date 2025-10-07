@@ -56,17 +56,7 @@ if _REAL_MODULE is not None:
 
 else:
 
-    class _DummyUI:
-        """Minimal placeholder for the NiceGUI ``ui`` module."""
+    from ._stub_runtime import app, ui  # noqa: WPS347
+    from ._stub_runtime import __all__ as __all_stub
 
-        def __getattr__(self, name: str) -> "_DummyUI":
-            def _noop(*_args, **_kwargs):  # type: ignore[override]
-                return self
-
-            return _noop
-
-        def __call__(self, *_args, **_kwargs) -> "_DummyUI":
-            return self
-
-    ui = _DummyUI()
-    __all__ = ["ui"]
+    __all__ = __all_stub

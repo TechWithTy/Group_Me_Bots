@@ -9,6 +9,7 @@ def test_admin_can_toggle_bots(user: User) -> None:
     """Administrators can activate automations and see usage updates."""
 
     user.open("/")
+    user.should_see("Bots & Automations")
     user.should_see("Operations Control Center")
     user.should_see("Current role: User")
     user.should_see("Bot controls are locked while in user mode.")
@@ -20,13 +21,23 @@ def test_admin_can_toggle_bots(user: User) -> None:
     user.find("Toggle Announcements automation").click()
     user.should_see("Announcements automation status: Active")
     user.should_see("Active automations: 1 of 3")
-    user.should_see("Credits used: 200 / 320")
     user.should_see("Announcements automation activated")
 
+    user.find("AI Assistants & Billing").click()
+    user.should_see("Credits & Billing")
+    user.should_see("Credits used: 200 / 320")
+
+    user.find("Connections").click()
+    user.should_see("DISCORD_BOT_TOKEN")
+    user.should_see("Connections")
+
+    user.find("Bots & Automations").click()
     user.find("Toggle Announcements automation").click()
     user.should_see("Announcements automation status: Paused")
-    user.should_see("Credits used: 160 / 320")
     user.should_see("Announcements automation paused")
+
+    user.find("AI Assistants & Billing").click()
+    user.should_see("Credits used: 160 / 320")
 
 
 def test_user_mode_keeps_automations_locked(user: User) -> None:
@@ -55,12 +66,14 @@ def test_profile_settings_updates_log_activity(user: User) -> None:
     """Profile settings interactions appear in the activity log."""
 
     user.open("/")
-    user.should_see("Profile Management")
+    user.find("User Settings").click()
+    user.should_see("Workspace Settings")
 
     user.find("Security alerts").click()
-    user.should_see("Security alerts notifications disabled")
-
     user.find("Two-factor authentication").click()
+
+    user.find("Bots & Automations").click()
+    user.should_see("Security alerts notifications disabled")
     user.should_see("Two-factor authentication disabled")
 
 
@@ -68,6 +81,7 @@ def test_local_login_updates_authentication_status(user: User) -> None:
     """Group Mint login form authenticates the dashboard session."""
 
     user.open("/")
+    user.find("User Profile").click()
     user.should_see("Authentication")
 
     user.find("Log out").click()
@@ -85,6 +99,7 @@ def test_credit_purchase_flow_adds_addon_credits(user: User) -> None:
     """Simulated checkout allocates add-on credits."""
 
     user.open("/")
+    user.find("AI Assistants & Billing").click()
     user.should_see("Credits & Billing")
 
     user.find("25 Credits ($25)").click()

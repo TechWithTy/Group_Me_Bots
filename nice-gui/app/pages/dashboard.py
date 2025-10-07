@@ -11,6 +11,7 @@ from ..components.auth import render_authentication
 from ..components.bots import BotManagementView, render_bot_management
 from ..components.connections import render_connections
 from ..components.credits import render_credit_summary
+from ..components.configuration import render_configuration_sections
 from ..components.profile import render_profile_card
 from ..components.settings import render_settings_panel
 from ..state import DashboardState, Role
